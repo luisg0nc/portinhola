@@ -19,7 +19,8 @@ from collections.abc import Awaitable, Callable
 from fastapi import WebSocket
 
 LOGIN_URL = "https://balcaodigital.e-redes.pt/login"
-VIEWPORT = {"width": 1024, "height": 768}
+VIEWPORT_W = 1024
+VIEWPORT_H = 768
 FRAME_INTERVAL = 0.7
 
 
@@ -37,7 +38,9 @@ async def run_login_session(
 
     async with async_playwright() as pw:
         browser = await pw.chromium.launch(headless=True)
-        context = await browser.new_context(viewport=VIEWPORT)
+        context = await browser.new_context(
+            viewport={"width": VIEWPORT_W, "height": VIEWPORT_H}
+        )
         page = await context.new_page()
         try:
             await page.goto(LOGIN_URL)
@@ -56,8 +59,8 @@ async def run_login_session(
                                     {
                                         "type": "frame",
                                         "data": base64.b64encode(shot).decode(),
-                                        "w": VIEWPORT["width"],
-                                        "h": VIEWPORT["height"],
+                                        "w": VIEWPORT_W,
+                                        "h": VIEWPORT_H,
                                     }
                                 )
                             )
