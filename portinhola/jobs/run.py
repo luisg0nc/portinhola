@@ -14,6 +14,7 @@ from sqlalchemy.orm import sessionmaker
 from portinhola.config import Config
 from portinhola.db.base import make_engine
 from portinhola.db.models import Job
+from portinhola.jobs import eredes_sync as _eredes_sync  # noqa: F401  (registers job)
 from portinhola.jobs.registry import JOB_TYPES
 
 
