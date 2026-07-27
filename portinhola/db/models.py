@@ -35,6 +35,11 @@ class Contract(Base):
     gas_tier: Mapped[int | None] = mapped_column(default=None)
     start_date: Mapped[date] = mapped_column()
     end_date: Mapped[date | None] = mapped_column(default=None)
+    reading_day_start: Mapped[int | None] = mapped_column(default=None)
+    reading_day_end: Mapped[int | None] = mapped_column(default=None)
+    submit_url: Mapped[str] = mapped_column(default="")
+    submit_phone: Mapped[str] = mapped_column(default="")
+    submit_reference: Mapped[str] = mapped_column(default="")
 
     supply_point: Mapped[SupplyPoint] = relationship()
 
@@ -61,6 +66,18 @@ class Bill(Base):
     lines: Mapped[list["BillLine"]] = relationship(
         back_populates="bill", cascade="all, delete-orphan"
     )
+
+
+class Reading(Base):
+    __tablename__ = "readings"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    supply_point_id: Mapped[int] = mapped_column(ForeignKey("supply_points.id"))
+    register: Mapped[str] = mapped_column()
+    value: Mapped[float] = mapped_column()
+    taken_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    submission_status: Mapped[str] = mapped_column(default="not_submitted")
+    note: Mapped[str] = mapped_column(default="")
 
 
 class IntervalConsumption(Base):
