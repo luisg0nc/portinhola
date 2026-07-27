@@ -1,0 +1,19 @@
+# Goldenergy; competitive segment per July 2026 comparators (estimates
+# pending direct price-sheet transcription).
+supplier: Goldenergy
+supplier_nif: "508846135"
+name: Goldenergy Tarifa Flex
+utility: electricity
+valid_from: 2026-07-01
+valid_to: null
+source_url: https://selectra.pt/energia/empresas/goldenergy/tarifas
+retrieved: 2026-07-28
+electricity:
+  power_eur_day:
+    "3.45": 0.1800
+    "4.6": 0.2400
+    "5.75": 0.3000
+    "6.9": 0.3600
+  energy_eur_kwh:
+    simples:
+      total: 0.1490

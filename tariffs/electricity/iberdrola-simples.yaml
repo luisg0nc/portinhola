@@ -1,0 +1,19 @@
+# Iberdrola standard plan; positioned near EDP per July 2026 comparators
+# (estimates pending direct price-sheet transcription).
+supplier: Iberdrola
+supplier_nif: "980292117"
+name: Iberdrola Plano Simples
+utility: electricity
+valid_from: 2026-07-01
+valid_to: null
+source_url: https://www.comparamais.pt/luz-e-gas/melhor-preco-eletricidade/
+retrieved: 2026-07-28
+electricity:
+  power_eur_day:
+    "3.45": 0.1900
+    "4.6": 0.2533
+    "5.75": 0.3167
+    "6.9": 0.3800
+  energy_eur_kwh:
+    simples:
+      total: 0.1590

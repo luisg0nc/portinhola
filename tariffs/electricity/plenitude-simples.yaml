@@ -1,0 +1,19 @@
+# Plenitude; "offers from 0.1292 €/kWh" segment per comparamais July 2026
+# (cheapest-offer anchor; power ladder estimated).
+supplier: Plenitude
+supplier_nif: "509450334"
+name: Plenitude Eletricidade
+utility: electricity
+valid_from: 2026-07-01
+valid_to: null
+source_url: https://www.comparamais.pt/luz-e-gas/tarifas/preco-kWh/
+retrieved: 2026-07-28
+electricity:
+  power_eur_day:
+    "3.45": 0.2050
+    "4.6": 0.2733
+    "5.75": 0.3417
+    "6.9": 0.4100
+  energy_eur_kwh:
+    simples:
+      total: 0.1292

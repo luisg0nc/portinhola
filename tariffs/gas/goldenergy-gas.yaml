@@ -1,0 +1,18 @@
+# Goldenergy gás natural; escalão prices estimated from July 2026
+# comparator positioning (pending direct transcription).
+supplier: Goldenergy
+supplier_nif: "508846135"
+name: Goldenergy Gás Natural
+utility: gas
+valid_from: 2026-07-01
+valid_to: null
+source_url: https://selectra.pt/energia/empresas/goldenergy/tarifas
+retrieved: 2026-07-28
+gas:
+  tiers:
+    "1":
+      fixed_eur_day: 0.0980
+      energy_eur_kwh: 0.1040
+    "2":
+      fixed_eur_day: 0.1180
+      energy_eur_kwh: 0.1010

@@ -1,0 +1,18 @@
+# EDP gás natural; escalão prices estimated from July 2026 comparator
+# positioning (pending direct transcription).
+supplier: EDP Comercial
+supplier_nif: "503504564"
+name: EDP Gás Natural
+utility: gas
+valid_from: 2026-07-01
+valid_to: null
+source_url: https://www.comparamais.pt/luz-e-gas/melhor-preco-eletricidade/
+retrieved: 2026-07-28
+gas:
+  tiers:
+    "1":
+      fixed_eur_day: 0.1100
+      energy_eur_kwh: 0.1130
+    "2":
+      fixed_eur_day: 0.1310
+      energy_eur_kwh: 0.1090

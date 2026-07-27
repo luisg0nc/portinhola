@@ -61,3 +61,17 @@ def test_duplicate_id_raises(tmp_path) -> None:
 def test_missing_dir_is_error() -> None:
     with pytest.raises(TariffLoadError):
         load_tariffs(Path("/nonexistent-tariffs"))
+
+
+def test_seed_coverage() -> None:
+    tariffs = load_tariffs()
+    electricity = [t for t in tariffs if t.utility == "electricity"]
+    gas = [t for t in tariffs if t.utility == "gas"]
+    assert len(electricity) >= 6
+    assert len(gas) >= 3
+    for t in electricity:
+        assert t.electricity is not None
+        for kva in (3.45, 4.6, 5.75, 6.9):
+            covered = any(abs(float(k) - kva) < 1.2 for k in t.electricity.power_eur_day)
+            assert covered, f"{t.id} lacks power price near {kva}"
+        assert t.source_url and t.retrieved
