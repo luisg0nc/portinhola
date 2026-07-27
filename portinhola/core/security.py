@@ -1,5 +1,5 @@
 import base64
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from argon2 import PasswordHasher
 from argon2.exceptions import InvalidHashError, VerifyMismatchError
@@ -32,4 +32,4 @@ def session_age(key: bytes, token: str) -> int | None:
         _, issued_at = _serializer(key).loads(token, return_timestamp=True)
     except BadSignature:
         return None
-    return int((datetime.now(timezone.utc) - issued_at).total_seconds())
+    return int((datetime.now(UTC) - issued_at).total_seconds())

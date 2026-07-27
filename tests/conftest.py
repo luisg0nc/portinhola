@@ -10,6 +10,10 @@ from portinhola.db.base import Base
 def app(tmp_path):
     application = create_app(Config(data_dir=tmp_path))
     Base.metadata.create_all(application.state.engine)
+
+    from portinhola.api import auth as auth_api
+
+    auth_api._failed_logins.clear()
     return application
 
 
