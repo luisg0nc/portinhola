@@ -20,6 +20,11 @@ class ContractIn(BaseModel):
     cycle: str | None = None
     gas_tier: int | None = None
     start_date: date
+    reading_day_start: int | None = None
+    reading_day_end: int | None = None
+    submit_url: str = ""
+    submit_phone: str = ""
+    submit_reference: str = ""
 
 
 class ContractPatch(BaseModel):
@@ -31,6 +36,11 @@ class ContractPatch(BaseModel):
     gas_tier: int | None = None
     start_date: date | None = None
     end_date: date | None = None
+    reading_day_start: int | None = None
+    reading_day_end: int | None = None
+    submit_url: str | None = None
+    submit_phone: str | None = None
+    submit_reference: str | None = None
 
 
 class ContractOut(BaseModel):
@@ -43,6 +53,11 @@ class ContractOut(BaseModel):
     gas_tier: int | None
     start_date: date
     end_date: date | None
+    reading_day_start: int | None
+    reading_day_end: int | None
+    submit_url: str
+    submit_phone: str
+    submit_reference: str
 
     model_config = {"from_attributes": True}
 
