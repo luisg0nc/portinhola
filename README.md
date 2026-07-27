@@ -24,6 +24,22 @@ add yours.
 | G9 | electricity + gas (dual-fuel bills) | `g9` |
 | Águas de Valongo (Be Water) | water | `bewater` |
 
+## Consumption (E-Redes)
+
+15-minute electricity consumption, two ways in:
+
+- **File import** — download a consumption export (XLSX) from the E-Redes
+  Balcão Digital and upload it on the Consumption page. Both the monthly
+  and the date-range export layouts are supported; values are converted
+  from average kW to kWh and stored DST-safely in UTC.
+- **Connected account** — Settings → E-Redes → Connect opens the real
+  E-Redes login streamed inside Portinhola; you type your credentials and
+  solve the CAPTCHA yourself. Only the session cookies are stored
+  (encrypted); a daily job then syncs new data automatically and alerts
+  you (in-app + Apprise) when the session expires.
+
+Charts: day (15-min curve), month, year, and period comparison.
+
 ## Run with Docker
 
 ```bash
