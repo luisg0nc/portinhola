@@ -1,0 +1,153 @@
+Documento de Pagamento
+1/3
+Documento: Emissão:
+25110100000000001 2025-11-21
+2025-12-16
+MARIA EXEMPLO SILVA
+Titular da conta: MARIA EXEMPLO SILVA
+RUA EXEMPLO 1
+Cliente / Conta: 3000000 / 001
+CIDADE
+NIF: 299999998
+4000-000 CIDADE
+Local Consumo: 200000
+Morada: RUA EXEMPLO 1
+CIDADE
+otroP
+.C.R.C
+040
+480
+505
+TP:.C.P.N
+,soruE
+000
+005
+laicoS
+latipaC
+,ognolaV
+305-0444
+- 603
+,orbutuO
+ed
+5 .ªvA
+-
+.A.S
+,ognolaV
+ed
+saugÁ
+)IGC(
+rodatupmoc
+rop
+odassecorP
+*
+açnarboc
+aob
+sópa
+obicer
+omoc
+odiláV
+Resumo de faturação Período Faturação: 2025-10-22 ~ 2025-11-21
+Débito a
+2025-12-16
+Valor a Pagar
+Água Saneamento RSU- Rec. Câmara Taxas Estado Outros IVA
+15,6036€ 11,0218€ 10,0864€ 0,7351€ 0,0000€ 1,6131€ 39,06€
+Histórico de Consumo Conta Corrente
+Saldo Anterior 2025-10-21 50,98
+Pagamento - 018251112004646 2025-11-20 -50,98
+32,50 - FAC 0210182025/0000000001 2025-11-21 39,06
+Saldo Atual 2025-11-21 39,06
+média
+(m3)
+Comunicação de Leituras
+Gasto médio diário em m3 (366 dias): 1,07 Período de Comunicação 2025-12-15 ~ 2025-12-18
+Telefone: Referência Leitura: Dígitos a comunicar:
+Média Consumo dos últimos 12 meses
+10000 litros a cada 30 dias 800 205 484 0464960186
+Mensagens
+Caso o valor da sua fatura seja a receber, antes de se deslocar a um dos nossos balcões, contacte-nos pelo 224227390. Horário de atendimento -
+Valongo (dias úteis, das 8h30-15h30), Loja Cidadão Ermesinde (Dias úteis, das 9h-16h30. sábados das 9h-13h).
+Comunicação Leituras Linha geral Linha Piquete aguas.valongo@bewater.com.pt
+800 205 484 224 227 390 224 222 423 www.valongo-bewater.com.pt
+Linha gratuita Chamada para rede fixa nacional Chamada para rede fixa nacional
+(24h/24h) todo o ano (dias úteis, das 8h30 às 16h30) 24h
+Dados da sua Conta Bancária
+Estimado Cliente,
+Se verificar que o número da sua conta bancária não está correto, solicitamos que nos comunique o facto. Poderá também, proceder facilmente
+à alteração da morada de envio da fatura.
+Nº Cliente / Conta IBAN Banco
+3000000 / 001 PT50000000000000000000000 ACTIVOBANK SA
+Data de Emissão Mandato
+10000000000 nov 2025 01813482258
+Débito a partir de Identificação do Credor Balcão
+16 dez 2025 PT85110436 GERAL
+Valor a enviar ao banco:
+39,06€Fatura Tipo de Cliente Tipo de Leitura 2/3
+FAC 0210182025/0000000001 Domésticos Empresa
+Data de Fatura Tarifa Período
+2025-11-21 510 - Domestica (água/saneam) 2025-10-22 ~ 2025-11-21
+Resumo Média de Consumo (m3 = 1000 l): Entre 2025-03-20 (299m3) e 2025-07-21 (345m3): 11130 litros/30 dias
+Contador Nº Diâmetro / Caudal Tipo de Consumo Data Origem Leitura Fator Multipl. Consumo
+21550103 15.00/ 2.5m3/h Consumo de Água 2025-07-21 345
+2025-11-21 Empresa 387 1,00000 Real 42,00 m3
+Descrição Explicação de valores Faturado Valor Unit. Valor IVA ATCUD:AAAAAAAA-0000000001
+Água-Receita Águas Valongo 15,6036
+Consumo Água [0 - 5] 20 m3 em 123 dias 20,0000 0,935400 18,7080 (2)
+Consumo Água [5 - 15] 22 m3 em 123 dias 22,0000 1,366600 30,0652 (2)
+Consumo Água Acerto Períodos Anteriores -34,0000 -39,1340 (2)
+Tarifa de Disponibilidade 15 mm 123,0000 0,192400 23,6652 (2)
+Tarifa de Disponibilidade Acerto Períodos Anteriores -92,0000 -17,7008 (2)
+Saneamento-Rec Águas Valongo 11,0218
+Saneamento Variável [0 - 5] 20,0 m3 em 123 dias 20,0000 0,754500 15,0900 (3)
+Saneamento Variável [5 - 15] 17,8 m3 em 123 dias 17,8000 1,056400 18,8039 (3)
+Saneamento Variável Acerto Períodos Anteriores -30,6000 -27,1935 (3)
+Tar.Disp. Serv.Saneamento 123 dias 123,0000 0,139400 17,1462 (3)
+e/zx- Processado por programa
+Tar.Disp. Serv.Saneamento Acerto Períodos Anteriores -92,0000 -12,8248 (3) certificado nº.2516/AT
+TRSU-Receita Câmara Municipal 10,0864
+Resíduos Sólidos Fixo 123 dias 123,0000 0,092800 11,4144 (23)
+Resíduos Sólidos Fixo Acerto Períodos Anteriores -92,0000 -8,5376 (23)
+Resíduos Sólidos Variável 42 m3 42,0000 0,901200 37,8504 (23)
+Resíduos Sólidos Variável Acerto Períodos Anteriores -34,0000 -30,6408 (23)
+Taxas Estado 0,7351
+Taxa Recursos Hídricos Água Acerto Períodos Anteriores -68,0000 -1,1254 (2)
+Taxa Recursos Hídricos Água 42 m3 42,0000 0,033100 1,3902 (2)
+Taxa Recursos Hídricos Saneam Acerto Períodos Anteriores -68,0000 -0,0034 (3)
+Taxa Recursos Hídricos Saneam 42 m3 42,0000 0,000100 0,0042 (3)
+Taxa Recursos Hídricos Saneam 37,8 m3 em 123 dias 37,8000 0,000100 0,0038 (3)
+Taxa Recursos Hídricos Saneam Acerto Períodos Anteriores -30,6000 -0,0031 (3)
+Taxa Gestão Resíduos 42 m3 42,0000 0,058600 2,4612 (23)
+Taxa Gestão Resíduos Acerto Períodos Anteriores -34,0000 -1,9924 (23)
+IVA 1,6131
+Arredondamento base 6% 1,0000 0,001600 0,0016 (2)
+Arredondamento base 6% 1,0000 -0,003300 -0,0033 (3)
+Arredondamento base 0% 1,0000 0,004800 0,0048 (23)
+(23) N sujeito nº2 artº2 CIVA (23) N sujeito nº2 artº2 CIVA 0,0000
+(2) IVA 6% 15,8700×6,00/100 0,9500
+(3) IVA 6% 11,0200×6,00/100 0,6600
+Total sem IVA 37,45€
+TOTAL 39,06€
+Informação
+O volume de RSU faturado está indexado ao volume de água consumida no período.
+O volume de saneamento faturado corresponde a 0,9 do volume de água consumida no período.
+Controlo de Prestação em Alta
+Custo Médio
+Entidade Serviço (euro/m3)
+LIPOR Gestão de Resíduos Urbanos 0,4900000
+Águas Douro e Paiva Abastecimento de Água 0,5245000
+Nota: O valor de referência tem em consideração o custo médio do ano 2024. TGR relativa ano 2024 (faturas
+LIPOR): 250.278,91 Eur (IVA incluído)
+CONTROLO DA QUALIDADE DA RESULTADOS OBTIDOS NO DESTINO DOS RESIDUOS
+ÁGUA PARA CONSUMO HUMANO SANEAMENTO DE ÁGUAS RESIDUAIS URBANOS RECOLHIDOS
+Os últimos resultados obtidos sobre a qualidade da A instalação de tratamento de águas residuais
+água distribuída na sua zona de abastecimento urbanas da área do utilizador encontra-se
+estão em conformidade com as normas de qualidade licenciada?
+fixadas na legislação.
+SIM NÃO
+A instalação de tratamento de águas residuais da
+área de saneamento do utilizador cumpre a licença
+de descarga?
+SIM NÃO
+Resultados obtidos na implementação do PCQA aprovado pela ERSAR, Informação anual sobre os resultados do processo de avaliação de
+conforme o artº 14.º do DL n.º 69/2023, de 21 de agosto qualidade de serviço 2024
+Informação mais detalhada pode ser consultada no sítio da internet: www.valongo-bewater.com.pt e em www.ersar.pt3/3

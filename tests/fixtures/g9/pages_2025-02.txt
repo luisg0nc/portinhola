@@ -1,0 +1,241 @@
+R esumo da Factura: FC FAE/0000001
+Data:09-02-2025
+T itular: Maria Exemplo Silva
+Maria Exemplo Silva
+N º cliente: 60000 Rua Exemplo, 1
+N º contrato: 80000 4000-000 CIDADE
+N IF: PT299999998 PORTUGAL
+E -mail: maria@example.com
+M orada: Rua Exemplo, 1
+4000-000 CIDADE
+PORTUGAL
+L ocal de fornecimento
+Rua Exemplo, 1
+Resumo da Factura: F C FAE/0000001 de 09-02-2025 IVA Valor s/IVA Valor c/IVA
+F ornecimento de eletricidade 6 % 1,765 29,415 31,180
+F ornecimento de eletricidade 23% 5,692 24,749 30,441
+F ornecimento de gás natural 23% 3,622 15,750 19,372
+F ornecimento de gás natural 6% 0,083 1,389 1,472
+Im posto especial consumo eletricidade 23% 0,077 0,335 0,412
+C ontribuição audiovisual (2,85€ x 12 meses / 365,25 dias) 6% 0,174 2,903 3,077
+T axa de exploração da DGEG 23% 0,016 0,070 0,086
+Im posto especial consumo gás 23% 0,572 2,486 3,058
+T axa de ocupação de subsolo 23% 0,663 2,882 3,545
+T axa de ocupação de subsolo 23% 0,077 0,334 0,411
+TOTAIS 12,74 € 80,31 € 93,05 €
+Autorização de débito bancário: Multibanco:
+Valor a pagar: 93,05 €
+D ébito a partir de: 14-02-2025 Entidade: 10288
+I BAN: PT50000000000000000000000 Referência: 999999994
+I D Credor:PT37ZZZ102958 Montante: 93,05 Euro
+Data limite de pagamento: 24-02-2025
+M andato: 10006000075
+Contador de eletricidade nº 2100000000 Contador de gás nº 5000000
+Rua Exemplo, 1
+CPE: PT0002000000000000XX CUI: PT1601000000000000XX
+Serviço: 4,60 kVA (Simples) Serviço: Escalão-2
+(Real a 08-02-2025)
+(Estimado a 08-02-2025)
+Vazio 2 8 7 8
+m³ 2 9 9 8
+Ponta 1 5 0 0
+Cheia 3 5 0 6 *O cálculo utilizado para conversão de kWh em m3
+encontra-se detalhado nas observações.
+Integrado em Rede Inteligente Comunique leituras entre os dias 7 e 9
+CONTACTOS Telecomunicações Eletricidade Gás
+Atendimento (dias úteis 8 - 22h) 211 456 789
+Avarias (24h) 211 459 459 221 456 800 221 456 801
+Leituras (dias úteis 8 - 22h) 211 456 800 211 456 801
+Chamada para a rede fixa nacional
+Data limite de pagamento
+A falta de pagamento ou o pagamento após o prazo limite, pode implicar a suspensão do serviço e a
+cobrança de custos adicionais.
+Simplifique
+Obtenha as suas faturas e comunique connosco através da sua área privada em my.g9.pt
+G9, S.A. Rua Bernardim Ribeiro, 76 Tel: +351 221 456 789 geral@g9.pt V.Jun24A
+NIF/NPC 504 435 302 3000-069 COIMBRA – PORTUGAL Fax: +351 221 456 780 - Chamada para a rede fixa nacional www.g9.pt Pág. 1CCCCCCCC-000001
+Número: FC FAE/0000001 Cliente:
+Data: 09-02-2025 Maria Exemplo Silva
+Cliente: 60000 Morada
+Contrato: 80000 Rua Exemplo, 1
+NIF: PT299999998 4000-000 CIDADE
+PORTUGAL
+Designação Período Quantidade IVA P. Unit s/IVA Desconto Total s/IVA
+E letricidade - energia (real) 2025-01-09 2025-02-08 207kWh 6% 0,0804 16,64
+E letricidade - energia (real) 2025-01-09 2025-02-08 128kWh 23% 0,0804 10,29
+R edes SEN - energia (real) 2025-01-09 2025-02-08 207kWh 6% 0,0600 12,42
+R edes SEN - energia (real) 2025-01-09 2025-02-08 128kWh 23% 0,0600 7,68
+Eletricidade - potência (4,60 kVA) 2025-01-09 2025-02-08 31dias 23% 0,0000 0,00
+Redes SEN - potência (4,60 kVA) 2025-01-09 2025-02-08 31dias 23% 0,2116 6,56
+Repartição dos custos da tarifa social da eletricidade (real) 2025-01-09 2025-02-08 207kWh 6% 0,0017 0,35
+R epartição dos custos da tarifa social da eletricidade (real) 2025-01-09 2025-02-08 128kWh 23% 0,0017 0,22
+I mposto especial consumo eletricidade (real) 2025-01-09 2025-02-08 335kWh 23% 0,0010 0,34
+C ontribuição audiovisual (2,85€ x 12 meses / 365,25 dias) 2025-01-09 2025-02-08 31dias 6% 0,0936345 2,90
+T axa de exploração da DGEG 2025-01-09 2025-02-08 1mês 23% 0,0700 0,07
+G ás natural - energia (escalão-2) (estimado) 2025-01-09 2025-02-08 169kWh 23% 0,0572060 9,67
+R edes SNG - energia (escalão-2) (estimado) 2025-01-09 2025-02-08 169kWh 23% 0,0359880 6,08
+G ás natural - termo fixo (escalão-2) 2025-01-09 2025-02-08 31dias 23% 0,0000 0,00
+R edes SNG - termo fixo (escalão-2) 2025-01-09 2025-02-08 31dias 6% 0,0448 1,39
+I mposto especial consumo gás (estimado) 2025-01-09 2025-02-08 169kWh 23% 0,0147132 2,49
+Taxa de ocupação de subsolo (VALONGO) 2024-12-19 2024-12-31 130kWh 23% 0,0075726 0,98
+Taxa de ocupação de subsolo (VALONGO) 2024-12-19 2024-12-31 13dias 23% 0,0088151 0,11
+Taxa de ocupação de subsolo (VALONGO) 2025-01-01 2025-01-23 231kWh 23% 0,0082146 1,90
+Taxa de ocupação de subsolo (VALONGO) 2025-01-01 2025-01-23 23dias 23% 0,0095625 0,22
+y
+A
+7
+p
+w
+ó
+W
+s b
+-P
+oa
+ro
+c
+c
+o
+e
+b
+s
+r
+s
+a
+a
+n
+d
+ç
+o
+a
+p
+o
+o r
+p r
+p
+e
+r
+s
+o
+e
+g
+n
+ra
+te
+m
+d
+a
+o
+c
+c
+e
+u
+r
+m
+tif
+e
+ic
+n
+a
+to
+d o
+s e
+n
+r
+.
+v
+º
+e
+2 0
+d
+5
+e
+7
+r
+/
+e
+A
+c
+T
+ibo face à importância recebida.
+Total ilíqu
+I
+i
+V
+d
+A
+o 8
+1
+0
+2
+,
+,
+3
+7
+1
+4
+€
+€
+Total com IVA 93,05 €
+G9, S.A. Rua Bernardim Ribeiro, 76 Tel: +351 221 456 789 geral@g9.pt V.Jun24A
+NIF/NPC 504 435 302 3000-069 COIMBRA – PORTUGAL Fax: +351 221 456 780 - Chamada para a rede fixa nacional www.g9.pt Pág. 2Referente a documento nº: FC FAE/0000001
+Data: 09-02-2025
+Devido a acertos de faturação por estimativa, o valor a pagar poderá ser inferior ao total da fatura.
+A G9 não disponibiliza tarifas com as condições de preço regulado do regime equiparado estabelecido na
+lei n.º 105/2017 de 30 de Agosto e na portaria n.º 348/2017 de 14 de Novembro.
+Para qualquer reclamação pode aceder a www.g9.pt e submeter um pedido de contacto, nós ligamos-lhe
+gratuitamente. Poderá ainda ligar para o 211 456 789 (custo de uma chamada para a rede fixa nacional),
+enviar um email para o endereço geral@g9.pt ou utilizar o livro de reclamações eletrónico em
+www.livroreclamacoes.pt. Em caso de litígios de consumo pode recorrer às entidades de resolução
+alternativa de litígios, saiba mais em www.consumidor.gov.pt.
+A tarifa social consiste na aplicação de um desconto aos consumidores que se encontram numa situação de
+carência socioeconómica. Poderá obter mais informações em www.g9.pt.
+A rotulagem de energia elétrica consiste na apresentação de informação ao consumidor sobre as origens da
+energia elétrica que consome. A origem da energia comercializada pela G9 encontra-se representada no
+gráfico anexo. Para ficar a par dos impactes ambientais causados por cada uma das fontes de energia e
+saber de que forma poderá contribuir para a redução de emissões de CO2, consulte a informação disponível
+em www.g9.pt e https://poupaenergia.pt. Poderá encontrar informação adicional sobre ofertas de energia na
+página da Entidade Reguladora em https://simulador.precos.erse.pt/ e www.erse.pt/simuladores/rotulagem/.
+O consumo de eletricidade desta fatura originou a emissão de 48,98 kg de CO2 (um valor negativo resulta
+do acerto de faturas anteriores).
+Tarifa de eletricidade em vigor:
+Potência Contratada (4,60 kVA): 0,2116 €/dia.
+Energia Ativa (Simples): 0,1404 €/kWh.
+A 09-02-2025 recebemos uma leitura de 2878 em vazio, 3506 em cheias e 1500 em ponta. A leitura anterior
+tinha sido recebida em 09-01-2025 (2767 em vazio, 3347 em cheias e 1435 em ponta). Considerando a opção
+horária simples, o consumo entre 09-01-2025 e 08-02-2025 foi de 335 kWh.
+Faturação de Eletricidade: 65,20 €
+Energia e Comercialização: 26,93 € (41,31 %)
+Potencia Contratada: 0,00 €
+Energia Ativa: 26,93 €
+Repartição dos custos de financiamento da tarifa social: 0,57 € (0,87 %)
+Tarifas de acesso às redes: 26,66 € (40,89 %)
+CIEG (Custos de Interesse Económico Geral): 16,00 €
+Utilização de Infraestruturas e Gestão Global de Sistema: 10,66 €
+Impostos e outras taxas: 11,03 € (16,92 %)
+IVA: 7,72 €
+DGEG (Taxa de Exploração da Direção-Geral de Energia e Geologia): 0,07 €
+IEC (Imposto Especial de Consumo de Eletricidade): 0,34 €
+Contribuição Audiovisual: 2,90 €
+Diferença relativamente ao mercado regulado, excluindo taxas e impostos: -9,16 €
+O consumo de gás natural desta fatura originou a emissão de 34,31 kg de CO2 (um valor negativo resulta
+do acerto de faturas anteriores).
+Tarifa de gás natural em vigor:
+Escalão-2: 0,044800 €/dia; 0,093194 €/kWh.
+O cálculo do consumo de gás natural em kWh efetua-se multiplicando o consumo medido em m3 pelo Factor de
+Correcção de Volume (FCV) e pelo Poder Calorifico Superior (PCS). Poderá encontrar mais informações em
+www.g9.pt.
+A 08-02-2025 estimamos que o seu contador marcaria 2998. O consumo estimado entre 09-01-2025 e
+08-02-2025 foi de 169 kWh: 15 [m3] x 0,96759100 [FCV] x 11,62860500 [PCS].
+Faturação de Gás Natural: 27,86 €
+Energia e Comercialização: 9,67 € (34,70 %)
+Termo fixo: 0,00 €
+Consumo de Gás: 9,67 €
+Tarifas de acesso às redes: 7,47 € (26,82 %)
+Impostos e outras taxas: 10,72 € (38,48 %)
+IVA: 5,02 €
+TOS (Taxa de ocupação de subsolo (VALONGO)): 3,22 €
+IECGNC (Imposto Especial de Consumo de Gás Natural Combustível): 2,49 €
+Diferença relativamente ao mercado regulado, excluindo taxas e impostos: 3,12 €
+G9, S.A. Rua Bernardim Ribeiro, 76 Tel: +351 221 456 789 geral@g9.pt V.Jun24A
+NIF/NPC 504 435 302 3000-069 COIMBRA – PORTUGAL Fax: +351 221 456 780 - Chamada para a rede fixa nacional www.g9.pt Pág. 3
+Powered by TCPDF (www.tcpdf.org)

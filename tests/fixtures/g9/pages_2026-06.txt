@@ -1,0 +1,215 @@
+R esumo da Factura: FC FAE/0000002
+Data:09-06-2026
+Titular: Maria Exemplo Silva
+Maria Exemplo Silva
+Nº cliente: 60000 Rua Exemplo, 1
+Nº contrato: 80000 4000-000 CIDADE
+NIF: PT299999998 PORTUGAL
+E-mail: maria@example.com
+Morada: Rua Exemplo, 1
+4000-000 CIDADE
+PORTUGAL
+Local de fornecimento
+Rua Exemplo, 1
+Resumo da Factura: FC FAE/0000002 de 09-06-2026
+Fornecimento de eletricidade 6% 1,921 32,023 33,944
+Fornecimento de eletricidade 23% 6,618 28,773 35,391
+Fornecimento de gás natural 23% 6,892 29,966 36,858
+Fornecimento de gás natural 6% 0,092 1,541 1,633
+Imposto especial consumo eletricidade 23% 0,074 0,323 0,397
+Contribuição audiovisual (2,85€ x 12 meses / 365,25 dias) 6% 0,174 2,903 3,077
+Taxa de exploração da DGEG 23% 0,016 0,070 0,086
+Imposto especial consumo gás 23% 0,905 3,935 4,840
+Taxa de ocupação de subsolo 23% 0,457 1,987 2,444
+Taxa de ocupação de subsolo 23% 0,083 0,361 0,444
+17,23 € 101,88 € 119,11 €
+Autorização de débito bancário: Multibanco:
+Valor a pagar: 119,11 €
+Débito a partir de: 15-06-2026 Entidade: 42392
+IBAN: PT50000000000000000000000 Referência: 999 999 993
+ID Credor:PT37ZZZ102958 Montante: 119,11 Euro
+Data limite de pagamento: 25-06-2026
+Mandato: 10000000000
+Contador de eletricidade nº 2100000000 Contador de gás nº 5000000
+Rua Exemplo, 1
+CPE: PT0002000000000000XX CUI: PT1601000000000000XX
+Serviço: 4,60 kVA (Simples) Serviço: Escalão-2
+(Real a 08-06-2026)
+(Estimado a 08-06-2026)
+Vazio 4 8 0 1
+m³ 3 3 7 7
+Ponta 2 7 3 4
+Cheia 6 1 7 6 *O cálculo utilizado para conversão de m3 em kWh
+encontra-se detalhado nas observações.
+Integrado em Rede Inteligente Comunique leituras entre os dias 7 e 9
+221 456 800 221 456 801
+211 456 800 211 456 801
+Chamada para a rede fixa nacional
+Data limite de pagamento
+A falta de pagamento ou o pagamento após o prazo limite, pode implicar a suspensão do serviço e a
+cobrança de custos adicionais.
+Simplifique
+Obtenha as suas faturas e comunique connosco através da sua área privada em my.g9.ptCCCCCCCC-000002
+Número: FC FAE/0000002 Cliente:
+Data: 09-06-2026 Maria Exemplo Silva
+Cliente: 60000 Morada
+Contrato: 80000 Rua Exemplo, 1
+NIF: PT299999998 4000-000 CIDADE
+PORTUGAL
+Eletricidade - energia (real) 2026-05-09 2026-06-08 207 kWh 6% 0,0940 19,46
+Eletricidade - energia (real) 2026-05-09 2026-06-08 116 kWh 23% 0,0940 10,90
+Redes SEN - energia (real) 2026-05-09 2026-06-08 207 kWh 6% 0,0607 12,56
+Redes SEN - energia (real) 2026-05-09 2026-06-08 116 kWh 23% 0,0607 7,04
+Eletricidade - potência (4,6 kVA) 2026-05-09 2026-06-08 31 dias 23% 0,1202 3,73
+Redes SEN - potência (4,6 kVA) 2026-05-09 2026-06-08 31 dias 23% 0,2291 7,10
+Repartição dos custos da tarifa social da eletricidade (real) 2026-05-09 2026-06-08 207 kWh 6% 0,0020666 0,43 0,00
+Repartição dos custos da tarifa social da eletricidade (real) 2026-05-09 2026-06-08 116 kWh 23% 0,0020666 0,24 0,00
+Imposto especial consumo eletricidade (real) 2026-05-09 2026-06-08 323 kWh 23% 0,0010 0,32
+Contribuição audiovisual (2,85€ x 12 meses / 365,25 dias) 2026-05-09 2026-06-08 31 dias 6% 0,0936345 2,90
+Taxa de exploração da DGEG 2026-05-09 2026-06-08 1 mês 23% 0,0700 0,07
+Gás natural - energia (escalão-2) (estimado) 2026-05-09 2026-06-08 258 kWh 23% 0,0682 17,60
+Redes SNG - energia (escalão-2) (estimado) 2026-05-09 2026-06-08 258 kWh 23% 0,0390200 10,07
+Gás natural - termo fixo (escalão-2) 2026-05-09 2026-06-08 31 dias 23% 0,0743 2,30
+Redes SNG - termo fixo (escalão-2) 2026-05-09 2026-06-08 31 dias 6% 0,0497 1,54
+Imposto especial consumo gás (estimado) 2026-05-09 2026-06-08 258 kWh 23% 0,0152532 3,94
+Taxa de ocupação de subsolo 2026 (Valongo) 2026-04-21 2026-05-24 218 kWh 23% 0,0091129 1,99
+Taxa de ocupação de subsolo 2026 (Valongo) 2026-04-21 2026-05-24 34 dias 23% 0,0106082 0,36
+W
+Ap
+g
+ó
+y
+s
+O
+b
+-P
+oa
+ro
+c
+c
+o
+e
+b
+s
+r
+s
+a
+a
+n
+d
+ç
+o
+a
+p
+o
+o
+p
+r
+r
+p
+e
+r
+s
+o
+e
+g
+n
+ra
+te
+m
+d
+a
+o
+c
+c
+e
+u
+r
+m
+tif
+e
+ic
+n
+a
+to
+d o
+s e
+n
+r
+.
+v
+º
+e
+2 0
+d
+5
+e
+7
+r
+/
+e
+A
+c
+T
+ibo face à importância recebida.
+101,88 €
+17,23 €
+119,11 €Referente a documento nº: FC FAE/0000002
+Data: 09-06-2026
+Devido a acertos de faturação por estimativa, o valor a pagar poderá ser inferior ao total da fatura.
+A G9 não disponibiliza tarifas com as condições de preço regulado do regime equiparado estabelecido na
+lei n.º 105/2017 de 30 de Agosto e na portaria n.º 348/2017 de 14 de Novembro.
+Para qualquer reclamação pode aceder a www.g9.pt e submeter um pedido de contacto, nós ligamos-lhe
+gratuitamente. Poderá ainda ligar para o 211 456 789 (custo de uma chamada para a rede fixa nacional),
+enviar um email para o endereço geral@g9.pt ou utilizar o livro de reclamações eletrónico em
+www.livroreclamacoes.pt. Em caso de litígios de consumo pode recorrer às entidades de resolução
+alternativa de litígios, saiba mais em www.consumidor.gov.pt.
+A tarifa social consiste na aplicação de um desconto aos consumidores que se encontram numa situação de
+carência socioeconómica. Poderá obter mais informações em www.g9.pt.
+A rotulagem de energia elétrica consiste na apresentação de informação ao consumidor sobre as origens da
+energia elétrica que consome. A origem da energia comercializada pela G9 encontra-se representada no
+gráfico anexo. Para ficar a par dos impactes ambientais causados por cada uma das fontes de energia e
+saber de que forma poderá contribuir para a redução de emissões de CO2, consulte a informação disponível
+em www.g9.pt e https://poupaenergia.pt. Poderá encontrar informação adicional sobre ofertas de energia na
+página da Entidade Reguladora em https://simulador.precos.erse.pt/ e www.erse.pt/simuladores/rotulagem/.
+O consumo de eletricidade desta fatura originou a emissão de 45,38 kg de CO2 (um valor negativo resulta
+do acerto de faturas anteriores).
+Tarifa de eletricidade em vigor:
+Potência Contratada (4,60 kVA): 0,3493 €/dia.
+Energia Ativa (Simples): 0,1547 €/kWh.
+A 09-06-2026 recebemos uma leitura de 4801 em vazio, 6176 em cheias e 2734 em ponta. A leitura anterior
+tinha sido recebida em 09-05-2026 (4697 em vazio, 6021 em cheias e 2670 em ponta). Considerando a opção
+horária simples, o consumo entre 09-05-2026 e 08-06-2026 foi de 323 kWh.
+Faturação de Eletricidade: 72,90 €
+Energia e Comercialização: 34,09 € (46,76 %)
+Potencia Contratada: 3,73 €
+Energia Ativa: 30,36 €
+Tarifas de acesso às redes: 26,71 € (36,64 %)
+CIEG (Custos de Interesse Económico Geral): 15,22 €
+Utilização de Infraestruturas e Gestão Global de Sistema: 11,48 €
+Impostos e outras taxas: 12,10 € (16,60 %)
+IVA: 8,80 €
+DGEG (Taxa de Exploração da Direção-Geral de Energia e Geologia): 0,07 €
+IEC (Imposto Especial de Consumo de Eletricidade): 0,32 €
+Contribuição Audiovisual: 2,90 €
+Diferença relativamente ao mercado regulado, excluindo taxas e impostos: -0,37 €
+O consumo de gás natural desta fatura originou a emissão de 52,38 kg de CO2 (um valor negativo resulta
+do acerto de faturas anteriores).
+Tarifa de gás natural em vigor:
+Escalão-2: 0,124000 €/dia; 0,107220 €/kWh.
+O cálculo do consumo de gás natural em kWh efetua-se multiplicando o consumo medido em m3 pelo Factor de
+Correcção de Volume (FCV) e pelo Poder Calorifico Superior (PCS). Poderá encontrar mais informações em
+www.g9.pt.
+A 08-06-2026 estimamos que o seu contador marcaria 3377. O consumo estimado entre 09-05-2026 e
+08-06-2026 foi de 258 kWh: 23 [m3] x 0,96759100 [FCV] x 11,58898500 [PCS].
+Faturação de Gás Natural: 46,22 €
+Energia e Comercialização: 19,90 € (43,05 %)
+Termo fixo: 2,30 €
+Consumo de Gás: 17,60 €
+Tarifas de acesso às redes: 11,61 € (25,11 %)
+Impostos e outras taxas: 14,71 € (31,83 %)
+IVA: 8,43 €
+TOS (Taxa de ocupação de subsolo 2026 (Valongo)): 2,35 €
+IECGNC (Imposto Especial de Consumo de Gás Natural Combustível): 3,94 €
+Diferença relativamente ao mercado regulado, excluindo taxas e impostos: 11,98 €
+Powered by TCPDF (www.tcpdf.org)
