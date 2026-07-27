@@ -6,6 +6,7 @@ from portinhola.api import (
     app_settings,
     auth,
     bills,
+    consumption,
     dashboard,
     health,
     jobs,
@@ -35,6 +36,7 @@ def create_app(config: Config | None = None) -> FastAPI:
     app.include_router(dashboard.router, prefix="/api/dashboard")
     app.include_router(jobs.router, prefix="/api/jobs")
     app.include_router(alerts.router, prefix="/api/alerts")
+    app.include_router(consumption.router, prefix="/api/consumption")
 
     if config.enable_scheduler:
         from portinhola.core.scheduler import setup_scheduler
