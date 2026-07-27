@@ -23,6 +23,13 @@
   },
   "settings": {
     "title": "Settings",
+    "supply_points": "Supply points",
+    "add_supply_point": "Add supply point",
+    "utility": "Utility",
+    "no_supply_points": "No supply points yet. They are created when importing bills, or manually here.",
+    "add_contract": "New contract",
+    "edit": "Edit",
+    "save_contract": "Save contract",
     "language": "Language",
     "language_pt": "Portuguese",
     "language_en": "English",

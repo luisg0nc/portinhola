@@ -10,6 +10,20 @@ Runs on a Raspberry Pi 5 or any small home server. AGPL-3.0.
 **Status: early development.** Design spec:
 `docs/superpowers/specs/2026-07-27-portinhola-design.md`.
 
+## Bills
+
+Upload a bill PDF and Portinhola decodes its fiscal QR (issuer NIF, ATCUD,
+VAT, total) and — when a supplier extractor exists — every line item,
+consumption figure and contract detail. The first upload guides you through
+creating the supply points and contracts it finds. Manual entry covers
+suppliers without an extractor. See `docs/CONTRIBUTING-extractors.md` to
+add yours.
+
+| Supplier | Utilities | Extractor |
+|---|---|---|
+| G9 | electricity + gas (dual-fuel bills) | `g9` |
+| Águas de Valongo (Be Water) | water | `bewater` |
+
 ## Run with Docker
 
 ```bash

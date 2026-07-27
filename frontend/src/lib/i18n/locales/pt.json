@@ -23,6 +23,13 @@
   },
   "settings": {
     "title": "Definições",
+    "supply_points": "Pontos de fornecimento",
+    "add_supply_point": "Adicionar ponto de fornecimento",
+    "utility": "Serviço",
+    "no_supply_points": "Nenhum ponto de fornecimento. São criados ao importar faturas, ou manualmente aqui.",
+    "add_contract": "Novo contrato",
+    "edit": "Editar",
+    "save_contract": "Guardar contrato",
     "language": "Idioma",
     "language_pt": "Português",
     "language_en": "Inglês",
