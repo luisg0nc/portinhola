@@ -7,7 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from portinhola.core.pdf import extract_pdf  # noqa: E402
+from portinhola.core.pdf import extract_pdf
 
 REPLACEMENTS: list[tuple[str, str]] = [
     (r"Maria Exemplo Silva", "Maria Exemplo Silva"),
