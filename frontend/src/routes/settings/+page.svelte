@@ -16,6 +16,11 @@
     gas_tier: number | null;
     start_date: string;
     end_date: string | null;
+    reading_day_start: number | null;
+    reading_day_end: number | null;
+    submit_url: string;
+    submit_phone: string;
+    submit_reference: string;
   };
   type SupplyPoint = {
     id: number;
@@ -274,6 +279,26 @@
                 <input type="number" bind:value={editingContract.gas_tier} />
               </label>
             {/if}
+            <label>
+              {$_('contract.reading_window')}
+              <span class="range">
+                <input type="number" min="1" max="31" bind:value={editingContract.reading_day_start} />
+                –
+                <input type="number" min="1" max="31" bind:value={editingContract.reading_day_end} />
+              </span>
+            </label>
+            <label>
+              {$_('contract.submit_url')}
+              <input bind:value={editingContract.submit_url} placeholder="https://…" />
+            </label>
+            <label>
+              {$_('contract.submit_phone')}
+              <input bind:value={editingContract.submit_phone} placeholder="800 …" />
+            </label>
+            <label>
+              {$_('contract.submit_reference')}
+              <input bind:value={editingContract.submit_reference} />
+            </label>
             <button type="submit">{$_('settings.save_contract')}</button>
           </form>
         {:else}
@@ -406,6 +431,14 @@
   }
   .supply {
     max-width: 34rem;
+  }
+  .range {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+  }
+  .range input {
+    width: 4.5rem;
   }
   .eredes .row {
     display: flex;

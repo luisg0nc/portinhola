@@ -139,6 +139,38 @@
     "last7": "Last 7 days",
     "view_details": "View consumption"
   },
+  "readings": {
+    "title": "Readings",
+    "new_reading": "New reading",
+    "last_reading": "Last reading",
+    "no_readings": "No readings yet.",
+    "previous": "Previous",
+    "save": "Save",
+    "decrease_warning": "The value is lower than the previous reading ({previous}). Meter replaced?",
+    "confirm_decrease": "Yes, save anyway",
+    "cancel": "Cancel",
+    "saved": "Reading saved.",
+    "submit_title": "Report to supplier",
+    "submit_hint": "Report the reading and mark it as sent.",
+    "open_portal": "Open portal",
+    "call_ivr": "Call",
+    "reference": "Reference",
+    "mark_submitted": "Mark as reported",
+    "status_not_submitted": "Not reported",
+    "status_needs_manual": "Report pending",
+    "status_submitted_manual": "Reported",
+    "status_submitted_auto": "Reported (auto)",
+    "window": "Reporting window",
+    "window_days": "Days {start}–{end}",
+    "no_window": "No window set",
+    "history": "History"
+  },
+  "contract": {
+    "reading_window": "Reading window (days of month)",
+    "submit_url": "Readings portal URL",
+    "submit_phone": "Phone (IVR)",
+    "submit_reference": "Reference / digits"
+  },
   "common": {
     "loading": "Loading…",
     "coming_soon": "Coming soon"

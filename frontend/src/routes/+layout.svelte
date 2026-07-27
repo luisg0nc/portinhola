@@ -37,6 +37,9 @@
 {#if ready && !$isLoading}
   <div class="app">
     <main>{@render children()}</main>
+    {#if showNav && page.url.pathname !== '/readings/new'}
+      <a class="fab" href="/readings/new" aria-label="Report reading">＋</a>
+    {/if}
     {#if showNav}
       <nav>
         {#each tabs as tab}
@@ -93,6 +96,28 @@
   }
   .icon {
     font-size: 1.2rem;
+  }
+  .fab {
+    position: fixed;
+    right: 1rem;
+    bottom: 4.6rem;
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 50%;
+    background: #0ea5e9;
+    color: white;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3);
+    z-index: 40;
+  }
+  @media (min-width: 768px) {
+    .fab {
+      display: none;
+    }
   }
   @media (min-width: 768px) {
     .app {

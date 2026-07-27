@@ -139,6 +139,38 @@
     "last7": "Últimos 7 dias",
     "view_details": "Ver consumo"
   },
+  "readings": {
+    "title": "Leituras",
+    "new_reading": "Nova leitura",
+    "last_reading": "Última leitura",
+    "no_readings": "Sem leituras.",
+    "previous": "Anterior",
+    "save": "Guardar",
+    "decrease_warning": "O valor é inferior à leitura anterior ({previous}). Contador substituído?",
+    "confirm_decrease": "Sim, guardar mesmo assim",
+    "cancel": "Cancelar",
+    "saved": "Leitura guardada.",
+    "submit_title": "Comunicar ao fornecedor",
+    "submit_hint": "Comunique a leitura e marque como enviada.",
+    "open_portal": "Abrir portal",
+    "call_ivr": "Ligar",
+    "reference": "Referência",
+    "mark_submitted": "Marcar como comunicada",
+    "status_not_submitted": "Por comunicar",
+    "status_needs_manual": "Comunicação pendente",
+    "status_submitted_manual": "Comunicada",
+    "status_submitted_auto": "Comunicada (auto)",
+    "window": "Janela de comunicação",
+    "window_days": "Dias {start}–{end}",
+    "no_window": "Sem janela definida",
+    "history": "Histórico"
+  },
+  "contract": {
+    "reading_window": "Janela de leitura (dias do mês)",
+    "submit_url": "URL do portal de leituras",
+    "submit_phone": "Telefone (IVR)",
+    "submit_reference": "Referência / dígitos"
+  },
   "common": {
     "loading": "A carregar…",
     "coming_soon": "Em breve"
