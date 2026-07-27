@@ -1,6 +1,6 @@
-from datetime import date
+from datetime import date, datetime
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from portinhola.db.base import Base
@@ -61,6 +61,29 @@ class Bill(Base):
     lines: Mapped[list["BillLine"]] = relationship(
         back_populates="bill", cascade="all, delete-orphan"
     )
+
+
+class Job(Base):
+    __tablename__ = "jobs"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    type: Mapped[str] = mapped_column()
+    status: Mapped[str] = mapped_column()
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+    log: Mapped[str] = mapped_column(default="")
+    error: Mapped[str | None] = mapped_column(default=None)
+
+
+class Alert(Base):
+    __tablename__ = "alerts"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    type: Mapped[str] = mapped_column()
+    message: Mapped[str] = mapped_column()
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    read: Mapped[bool] = mapped_column(default=False)
+    dedup_key: Mapped[str | None] = mapped_column(unique=True, default=None)
 
 
 class BillLine(Base):
