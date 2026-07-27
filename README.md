@@ -40,6 +40,17 @@ add yours.
 
 Charts: day (15-min curve), month, year, and period comparison.
 
+## Meter readings
+
+Fast reading entry for electricity, gas and water — big keypad, previous
+value shown, monotonic validation (with a meter-swap override). Each
+contract can have a reporting window (e.g. G9's days 7–9); a daily job
+reminds you (in-app + push) when the window opens and no reading exists.
+Submission guidance is per contract: portal link, or phone + reference
+for IVR lines (Be Water prints both on its bills). Portal automation
+modules plug into `portinhola/reporters/` —
+see `docs/CONTRIBUTING-reporters.md`.
+
 Note: the E-Redes portal has two human checkpoints — the login CAPTCHA and
 a "Validação de Segurança" gate on the consumption pages. The assisted
 login walks you through both. reCAPTCHA's reputation system may refuse
