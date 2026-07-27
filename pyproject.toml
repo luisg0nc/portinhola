@@ -44,3 +44,8 @@ testpaths = ["tests"]
 
 [tool.mypy]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# zxing-cpp ships a broken .pyi stub that mypy cannot parse
+module = "zxingcpp.*"
+follow_imports = "skip"
