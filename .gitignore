@@ -5,6 +5,7 @@ data/
 frontend/node_modules/
 frontend/build/
 frontend/.svelte-kit/
+portinhola/frontend_dist/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/

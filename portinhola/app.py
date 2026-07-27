@@ -5,6 +5,7 @@ from portinhola.api import app_settings, auth, health
 from portinhola.config import Config
 from portinhola.core.secrets import load_or_create_app_key
 from portinhola.db.base import make_engine
+from portinhola.static import mount_frontend
 
 
 def create_app(config: Config | None = None) -> FastAPI:
@@ -20,4 +21,5 @@ def create_app(config: Config | None = None) -> FastAPI:
     app.include_router(health.router, prefix="/api")
     app.include_router(auth.router, prefix="/api/auth")
     app.include_router(app_settings.router, prefix="/api/settings")
+    mount_frontend(app)
     return app
