@@ -1,0 +1,18 @@
+# Derived from the owner's real G9 bill (page 3 prints the tariff in force).
+supplier: G9
+supplier_nif: "504435302"
+name: G9 Eletricidade Simples
+utility: electricity
+valid_from: 2026-01-01
+valid_to: null
+source_url: bill:FC FAE/0000003
+retrieved: 2026-07-28
+electricity:
+  power_eur_day:
+    "3.45": 0.3105   # scaled estimate; only 4.6 confirmed by bill
+    "4.6": 0.3493
+    "5.75": 0.3990   # scaled estimate
+    "6.9": 0.4480    # scaled estimate
+  energy_eur_kwh:
+    simples:
+      total: 0.1547

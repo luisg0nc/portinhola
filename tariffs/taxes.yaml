@@ -1,0 +1,20 @@
+# Levies and VAT rules for Portuguese household energy bills.
+# Values verified against the owner's 2026 G9 bills; update when law changes.
+iec_elec_eur_kwh: 0.001
+dgeg_eur_month: 0.07
+cav_eur_month: 2.85
+iec_gas_eur_kwh: 0.0152532
+tos_gas:
+  # Taxa de ocupação de subsolo is municipal; rates from the owner's 2026
+  # Valongo bill. Add municipalities as contributors need them.
+  valongo:
+    eur_kwh: 0.0091129
+    eur_day: 0.0106082
+default_municipality: valongo
+vat:
+  reduced_rate: 6
+  standard_rate: 23
+  # Reduced-VAT electricity tranche per 30 days (observed on 2026 bills for
+  # potência <= 6.9 kVA).
+  energy_reduced_kwh_per_30d: 200
+  power_reduced_max_kva: 3.45

@@ -1,0 +1,19 @@
+# Derived from the owner's real G9 bill: energia 0.0682 + redes 0.0390200,
+# termo fixo 0.0743 + redes 0.0497 (redes share billed at 6% VAT).
+supplier: G9
+supplier_nif: "504435302"
+name: G9 Gás Natural
+utility: gas
+valid_from: 2026-01-01
+valid_to: null
+source_url: bill:FC FAE/0000003
+retrieved: 2026-07-28
+gas:
+  tiers:
+    "1":
+      fixed_eur_day: 0.1053   # scaled estimate; only escalão 2 confirmed
+      energy_eur_kwh: 0.11122
+    "2":
+      fixed_eur_day: 0.1240
+      energy_eur_kwh: 0.10722
+      fixed_reduced_share: 0.4008   # 0.0497 of 0.1240 billed at reduced VAT
