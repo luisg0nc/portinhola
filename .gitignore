@@ -10,3 +10,4 @@ portinhola/frontend_dist/
 .mypy_cache/
 .ruff_cache/
 sample-bills/
+sample-eredes/
