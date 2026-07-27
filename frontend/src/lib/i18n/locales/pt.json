@@ -79,6 +79,16 @@
     "upload_failed": "Falha ao carregar o ficheiro.",
     "saved": "Fatura guardada."
   },
+  "dashboard": {
+    "monthly_costs": "Custos mensais",
+    "latest_month": "Mês mais recente",
+    "no_data": "Ainda não há faturas — carregue a primeira para ver os custos.",
+    "upload_first": "Carregar fatura",
+    "utility_electricity": "Eletricidade",
+    "utility_gas": "Gás",
+    "utility_water": "Água",
+    "utility_unknown": "Outros"
+  },
   "common": {
     "loading": "A carregar…",
     "coming_soon": "Em breve"

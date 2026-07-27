@@ -79,6 +79,16 @@
     "upload_failed": "File upload failed.",
     "saved": "Bill saved."
   },
+  "dashboard": {
+    "monthly_costs": "Monthly costs",
+    "latest_month": "Latest month",
+    "no_data": "No bills yet — upload the first one to see costs.",
+    "upload_first": "Upload bill",
+    "utility_electricity": "Electricity",
+    "utility_gas": "Gas",
+    "utility_water": "Water",
+    "utility_unknown": "Other"
+  },
   "common": {
     "loading": "Loading…",
     "coming_soon": "Coming soon"
