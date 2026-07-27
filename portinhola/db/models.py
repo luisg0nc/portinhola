@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from sqlalchemy import DateTime, ForeignKey
+from sqlalchemy import DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from portinhola.db.base import Base
@@ -61,6 +61,18 @@ class Bill(Base):
     lines: Mapped[list["BillLine"]] = relationship(
         back_populates="bill", cascade="all, delete-orphan"
     )
+
+
+class IntervalConsumption(Base):
+    __tablename__ = "interval_consumption"
+    __table_args__ = (UniqueConstraint("supply_point_id", "ts"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    supply_point_id: Mapped[int] = mapped_column(ForeignKey("supply_points.id"))
+    ts: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    kwh: Mapped[float] = mapped_column()
+    source: Mapped[str] = mapped_column()
+    quality: Mapped[str] = mapped_column(default="real")
 
 
 class Job(Base):
