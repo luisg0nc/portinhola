@@ -40,6 +40,23 @@ add yours.
 
 Charts: day (15-min curve), month, year, and period comparison.
 
+## Switch calculator
+
+The end-game feature: instead of estimating from a monthly total (as
+ADENE's Poupa Energia must), Portinhola replays your real 15-minute
+consumption curve against every tariff's full price vector — energy per
+ERSE period, potência per day, IEC/CAV/DGEG levies and per-component VAT
+— producing the actual counterfactual bill for each plan and cycle
+option. A calibration banner shows how closely the engine reproduces
+your latest real bill (the reference implementation lands within cents).
+Extras: gas tariff ranking from billed kWh, potência right-sizing from
+your real 15-minute peak, and a live period-to-date cost estimate on the
+dashboard.
+
+Tariff prices are community-maintained YAML with mandatory source URLs
+and retrieval dates (`docs/CONTRIBUTING-tariffs.md`) — always confirm
+current prices with the supplier before switching.
+
 ## Meter readings
 
 Fast reading entry for electricity, gas and water — big keypad, previous
