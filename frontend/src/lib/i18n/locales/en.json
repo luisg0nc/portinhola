@@ -1,0 +1,35 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "bills": "Bills",
+    "readings": "Readings",
+    "calculator": "Calculator",
+    "settings": "Settings"
+  },
+  "auth": {
+    "setup_title": "Welcome to Portinhola",
+    "setup_hint": "Set the access password (minimum 8 characters).",
+    "login_title": "Sign in",
+    "password": "Password",
+    "new_password": "New password",
+    "current_password": "Current password",
+    "submit": "Sign in",
+    "save": "Save",
+    "logout": "Sign out",
+    "change_password": "Change password",
+    "error_invalid": "Incorrect password.",
+    "error_rate_limited": "Too many attempts. Try again later.",
+    "error_too_short": "Password must be at least 8 characters."
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "language_pt": "Portuguese",
+    "language_en": "English",
+    "saved": "Saved."
+  },
+  "common": {
+    "loading": "Loading…",
+    "coming_soon": "Coming soon"
+  }
+}

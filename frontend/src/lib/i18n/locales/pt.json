@@ -1,0 +1,35 @@
+{
+  "nav": {
+    "dashboard": "Painel",
+    "bills": "Faturas",
+    "readings": "Leituras",
+    "calculator": "Calculadora",
+    "settings": "Definições"
+  },
+  "auth": {
+    "setup_title": "Bem-vindo ao Portinhola",
+    "setup_hint": "Defina a palavra-passe de acesso (mínimo 8 caracteres).",
+    "login_title": "Iniciar sessão",
+    "password": "Palavra-passe",
+    "new_password": "Nova palavra-passe",
+    "current_password": "Palavra-passe atual",
+    "submit": "Entrar",
+    "save": "Guardar",
+    "logout": "Terminar sessão",
+    "change_password": "Alterar palavra-passe",
+    "error_invalid": "Palavra-passe incorreta.",
+    "error_rate_limited": "Demasiadas tentativas. Tente novamente mais tarde.",
+    "error_too_short": "A palavra-passe deve ter pelo menos 8 caracteres."
+  },
+  "settings": {
+    "title": "Definições",
+    "language": "Idioma",
+    "language_pt": "Português",
+    "language_en": "Inglês",
+    "saved": "Guardado."
+  },
+  "common": {
+    "loading": "A carregar…",
+    "coming_soon": "Em breve"
+  }
+}
