@@ -18,6 +18,9 @@
   let months = $state<MonthEntry[]>([]);
   let loaded = $state(false);
   let last7Kwh = $state<number | null>(null);
+  let estimate = $state<{ period_start: string; kwh: number; estimated_cents: number } | null>(
+    null
+  );
 
   onMount(async () => {
     const res = await api('/api/dashboard/costs?months=13');
@@ -40,6 +43,8 @@
           const rows: { kwh: number }[] = await rangeRes.json();
           if (rows.length > 0) last7Kwh = rows.reduce((sum, r) => sum + r.kwh, 0);
         }
+        const estRes = await api(`/api/dashboard/estimate?supply_point_id=${sps[0].id}`);
+        if (estRes.ok) estimate = await estRes.json();
       }
     }
   });
@@ -56,6 +61,19 @@
 </script>
 
 <h1>{$_('nav.dashboard')}</h1>
+
+{#if estimate}
+  <section class="card estimate">
+    <h3>💶 {$_('consumption.estimate_title')}</h3>
+    <div class="total">~{formatCents(estimate.estimated_cents, $locale ?? 'pt')}</div>
+    <span class="muted-line">
+      {estimate.kwh.toFixed(1)} kWh · {$_('consumption.estimate_since').replace(
+        '{date}',
+        estimate.period_start
+      )}
+    </span>
+  </section>
+{/if}
 
 {#if last7Kwh !== null}
   <a class="card consumption-card" href="/consumption">
@@ -144,6 +162,14 @@
     padding: 0.6rem 1rem;
     border-radius: 0.4rem;
     text-decoration: none;
+  }
+  .estimate .total {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .muted-line {
+    color: #94a3b8;
+    font-size: 0.85rem;
   }
   .consumption-card {
     display: block;

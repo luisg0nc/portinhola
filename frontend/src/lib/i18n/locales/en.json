@@ -137,6 +137,8 @@
     "period_a": "Period A",
     "period_b": "Period B",
     "last7": "Last 7 days",
+    "estimate_title": "This period so far",
+    "estimate_since": "since {date}",
     "view_details": "View consumption"
   },
   "readings": {

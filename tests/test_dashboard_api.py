@@ -66,3 +66,39 @@ def test_costs_grouped_by_month_and_utility(client) -> None:
 
 def test_costs_requires_auth(client) -> None:
     assert client.get("/api/dashboard/costs").status_code == 401
+
+
+def test_live_estimate(client, app) -> None:
+    from datetime import UTC, datetime, timedelta
+
+    from portinhola.db.consumption_repo import upsert_intervals
+
+    _login(client)
+    sp_id = client.post(
+        "/api/supply-points",
+        json={"utility": "electricity", "identifier": "PT000EST", "name": "Casa"},
+    ).json()["id"]
+    client.post(
+        f"/api/supply-points/{sp_id}/contracts",
+        json={
+            "supplier_name": "G9",
+            "supplier_nif": "504435302",
+            "power_kva": 4.6,
+            "cycle": "simples",
+            "start_date": "2026-01-01",
+        },
+    )
+    start = datetime.now(UTC) - timedelta(days=10)
+    rows = [
+        (start + timedelta(minutes=15 * i), 0.1, "file_import", "real")
+        for i in range(10 * 96)
+    ]
+    with app.state.sessionmaker() as db:
+        upsert_intervals(db, sp_id, rows)
+
+    res = client.get(f"/api/dashboard/estimate?supply_point_id={sp_id}")
+    assert res.status_code == 200
+    body = res.json()
+    assert body["kwh"] > 0
+    assert body["estimated_cents"] > 0
+    assert body["period_start"]
