@@ -1,0 +1,165 @@
+from datetime import UTC, datetime, timedelta
+
+
+def _login(client) -> None:
+    client.post("/api/auth/setup", json={"password": "hunter2hunter2"})
+
+
+def _make_elec_sp(client, app) -> int:
+    sp_id = client.post(
+        "/api/supply-points",
+        json={"utility": "electricity", "identifier": "PT000CALC", "name": "Casa"},
+    ).json()["id"]
+    client.post(
+        f"/api/supply-points/{sp_id}/contracts",
+        json={
+            "supplier_name": "G9",
+            "supplier_nif": "504435302",
+            "power_kva": 4.6,
+            "cycle": "simples",
+            "start_date": "2026-01-01",
+        },
+    )
+    return sp_id
+
+
+def _seed_consumption(
+    app, sp_id: int, days: int = 60, kwh_per_day: float = 10.0, start: datetime | None = None
+) -> None:
+    from portinhola.db.consumption_repo import upsert_intervals
+
+    start = start or datetime(2026, 5, 1, tzinfo=UTC)
+    rows = []
+    per_slot = kwh_per_day / 96
+    for i in range(days * 96):
+        rows.append((start + timedelta(minutes=15 * i), per_slot, "file_import", "real"))
+    with app.state.sessionmaker() as db:
+        upsert_intervals(db, sp_id, rows)
+
+
+def test_electricity_ranking(client, app) -> None:
+    _login(client)
+    sp_id = _make_elec_sp(client, app)
+    _seed_consumption(app, sp_id)
+    res = client.get(f"/api/calculator/electricity?supply_point_id={sp_id}&months=2")
+    assert res.status_code == 200
+    body = res.json()
+    assert body["window"]["kwh"] > 0
+    totals = [r["total_cents"] for r in body["results"]]
+    assert totals == sorted(totals)
+    ids = [r["tariff_id"] for r in body["results"]]
+    assert "g9-simples" in ids
+    assert body["current"] is not None
+    assert body["current"]["tariff_id"] == "g9-simples"
+    first = body["results"][0]
+    assert first["delta_cents"] <= 0
+    assert "breakdown" in first
+
+
+def test_potencia_recommendation(client, app) -> None:
+    _login(client)
+    sp_id = _make_elec_sp(client, app)
+    _seed_consumption(app, sp_id, days=30, kwh_per_day=5.0)  # peak ~0.21 kW
+    res = client.get(f"/api/calculator/potencia?supply_point_id={sp_id}")
+    assert res.status_code == 200
+    body = res.json()
+    assert body["contracted_kva"] == 4.6
+    assert body["peak_kw"] < 1.0
+    assert body["recommended_kva"] < 4.6
+    assert body["saving_cents_year"] is not None
+    assert body["saving_cents_year"] > 0
+
+
+def test_gas_ranking_from_bill_lines(client, app) -> None:
+    _login(client)
+    res = client.post(
+        "/api/bills/confirm",
+        json={
+            "upload_token": None,
+            "bill": {
+                "issuer_nif": "504435302",
+                "doc_number": "GAS/1",
+                "issue_date": "2026-07-09",
+                "period_start": "2026-06-09",
+                "period_end": "2026-07-08",
+                "total_cents": 5000,
+                "parse_status": "manual",
+            },
+            "lines": [
+                {
+                    "description": "Gás natural - energia",
+                    "category": "energy",
+                    "utility": "gas",
+                    "quantity": 300.0,
+                    "unit": "kWh",
+                    "period_start": "2026-06-09",
+                    "period_end": "2026-07-08",
+                    "amount_cents": 3200,
+                    "contract_id": -1,
+                }
+            ],
+            "new_supply_points": [
+                {
+                    "utility": "gas",
+                    "identifier": "PT160GAS",
+                    "name": "Casa G",
+                    "contract": {
+                        "supplier_name": "G9",
+                        "supplier_nif": "504435302",
+                        "gas_tier": 2,
+                        "start_date": "2026-01-01",
+                    },
+                }
+            ],
+        },
+    )
+    assert res.status_code == 201
+    sp_res = client.get("/api/supply-points").json()
+    sp_id = next(sp["id"] for sp in sp_res if sp["utility"] == "gas")
+    res = client.get(f"/api/calculator/gas?supply_point_id={sp_id}&months=12")
+    assert res.status_code == 200
+    body = res.json()
+    assert body["window"]["kwh"] == 300.0
+    totals = [r["total_cents"] for r in body["results"]]
+    assert totals == sorted(totals)
+    assert any(r["tariff_id"] == "g9-gas" for r in body["results"])
+
+
+def test_calibration(client, app) -> None:
+    _login(client)
+    sp_id = _make_elec_sp(client, app)
+    _seed_consumption(
+        app, sp_id, days=61, kwh_per_day=295 / 30, start=datetime(2026, 5, 15, tzinfo=UTC)
+    )
+    res = client.post(
+        "/api/bills/confirm",
+        json={
+            "upload_token": None,
+            "bill": {
+                "issuer_nif": "504435302",
+                "doc_number": "CAL/1",
+                "issue_date": "2026-07-09",
+                "period_start": "2026-06-09",
+                "period_end": "2026-07-08",
+                "total_cents": 6719,
+                "parse_status": "manual",
+            },
+            "lines": [
+                {
+                    "description": "eletricidade total s/IVA",
+                    "category": "energy",
+                    "utility": "electricity",
+                    "amount_cents": 5929,
+                    "contract_id": 1,
+                }
+            ],
+            "new_supply_points": [],
+        },
+    )
+    bill_id = res.json()["id"]
+    res = client.get(
+        f"/api/calculator/calibration?supply_point_id={sp_id}&bill_id={bill_id}"
+    )
+    assert res.status_code == 200
+    body = res.json()
+    assert abs(body["delta_cents"]) <= 10
