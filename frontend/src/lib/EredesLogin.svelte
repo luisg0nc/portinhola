@@ -44,6 +44,43 @@
     const x = Math.round(((event.clientX - rect.left) / rect.width) * pageW);
     const y = Math.round(((event.clientY - rect.top) / rect.height) * pageH);
     send({ type: 'click', x, y });
+    stage?.focus();
+  }
+
+  let stage: HTMLDivElement | undefined = $state();
+
+  const SPECIAL_KEYS = new Set([
+    'Enter',
+    'Backspace',
+    'Delete',
+    'Tab',
+    'Escape',
+    'ArrowUp',
+    'ArrowDown',
+    'ArrowLeft',
+    'ArrowRight',
+    'Home',
+    'End'
+  ]);
+
+  function onKeydown(event: KeyboardEvent) {
+    if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
+      event.preventDefault();
+      send({ type: 'type', text: event.key });
+    } else if (SPECIAL_KEYS.has(event.key)) {
+      event.preventDefault();
+      send({ type: 'key', key: event.key });
+    } else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'v') {
+      event.preventDefault();
+      navigator.clipboard?.readText?.().then((clip) => {
+        if (clip) send({ type: 'type', text: clip });
+      });
+    }
+  }
+
+  function onWheel(event: WheelEvent) {
+    event.preventDefault();
+    send({ type: 'scroll', dy: Math.round(event.deltaY) });
   }
 
   function sendText(event: SubmitEvent) {
@@ -64,8 +101,18 @@
     <p class="hint">{$_('eredes.login_hint')}</p>
     {#if error}<p class="error">{$_('eredes.login_error')}: {error}</p>{/if}
     {#if frameSrc}
-      <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_noninteractive_element_interactions -->
-      <img bind:this={img} src={frameSrc} alt="E-Redes" onclick={onImageClick} />
+      <!-- svelte-ignore a11y_no_noninteractive_element_interactions a11y_no_noninteractive_tabindex -->
+      <div
+        class="stage"
+        bind:this={stage}
+        tabindex="0"
+        role="application"
+        onkeydown={onKeydown}
+        onwheel={onWheel}
+      >
+        <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_noninteractive_element_interactions -->
+        <img bind:this={img} src={frameSrc} alt="E-Redes" onclick={onImageClick} />
+      </div>
     {:else}
       <p>{$_('common.loading')}</p>
     {/if}
@@ -118,8 +165,16 @@
     color: #64748b;
     font-size: 0.85rem;
   }
+  .stage {
+    outline: none;
+  }
+  .stage:focus {
+    box-shadow: 0 0 0 2px #0ea5e9;
+    border-radius: 0.4rem;
+  }
   img {
     width: 100%;
+    display: block;
     border: 1px solid #e2e8f0;
     border-radius: 0.4rem;
     cursor: crosshair;

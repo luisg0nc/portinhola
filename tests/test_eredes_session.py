@@ -34,11 +34,20 @@ def test_assisted_login_ws_flow(client, monkeypatch) -> None:
         "onclick=\"document.title='DONE'\">enter</button></body></html>"
     )
     monkeypatch.setattr(eredes_login, "LOGIN_URL", "data:text/html," + page_html)
+    monkeypatch.setattr(
+        eredes_login,
+        "HISTORY_URL",
+        "data:text/html,<html><head><title>hist</title></head><body>history ok</body></html>",
+    )
 
     async def title_is_done(page) -> bool:
-        return await page.title() == "DONE"
+        return await page.title() in ("DONE", "hist")
+
+    async def validated(page) -> bool:
+        return await page.title() == "hist"
 
     monkeypatch.setattr(eredes_login, "is_logged_in", title_is_done)
+    monkeypatch.setattr(eredes_login, "is_fully_validated", validated)
 
     client.post("/api/auth/setup", json={"password": "hunter2hunter2"})
     with client.websocket_connect("/api/eredes/login") as ws:

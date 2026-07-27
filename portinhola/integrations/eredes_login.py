@@ -1,6 +1,10 @@
 """Assisted E-Redes login: an in-process Playwright page streamed to the
 user's browser over WebSocket so they can solve the CAPTCHA themselves.
 
+Frames come from Chromium's native screencast (CDP Page.startScreencast):
+the browser pushes pre-encoded JPEG frames whenever content changes, which
+is far faster and smoother than polling page.screenshot().
+
 Protocol (JSON text messages):
   server → client: {"type":"frame","data":<b64 jpeg>,"w":int,"h":int}
                    {"type":"success"} | {"type":"error","message":str}
@@ -11,7 +15,6 @@ Protocol (JSON text messages):
 """
 
 import asyncio
-import base64
 import contextlib
 import json
 from collections.abc import Awaitable, Callable
@@ -19,15 +22,27 @@ from collections.abc import Awaitable, Callable
 from fastapi import WebSocket
 
 LOGIN_URL = "https://balcaodigital.e-redes.pt/login"
-VIEWPORT_W = 1024
-VIEWPORT_H = 768
-FRAME_INTERVAL = 0.7
+HISTORY_URL = "https://balcaodigital.e-redes.pt/consumptions/history"
+VALIDATION_MARKER = "Validação de Segurança"
+VIEWPORT_W = 1280
+VIEWPORT_H = 800
+JPEG_QUALITY = 60
+SCREENCAST_MAX_W = 1920
+SCREENCAST_MAX_H = 1200
 
 
 async def is_logged_in(page) -> bool:
-    """Logged-in detection: navigated away from any login-ish URL."""
+    """Phase 1: navigated away from any login-ish URL."""
     url = page.url.lower()
     return url.startswith("http") and "login" not in url and "signin" not in url
+
+
+async def is_fully_validated(page) -> bool:
+    """Phase 2: on the consumption-history page past the security gate."""
+    if "consumptions/history" not in page.url.lower():
+        return False
+    body = await page.inner_text("body")
+    return VALIDATION_MARKER not in body and len(body) > 200
 
 
 async def run_login_session(
@@ -36,38 +51,73 @@ async def run_login_session(
 ) -> None:
     from playwright.async_api import async_playwright
 
+    from portinhola.config import Config
+
+    profile_dir = Config().data_dir / "eredes-profile"
+    profile_dir.mkdir(parents=True, exist_ok=True)
+
     async with async_playwright() as pw:
-        browser = await pw.chromium.launch(headless=True)
-        context = await browser.new_context(
-            viewport={"width": VIEWPORT_W, "height": VIEWPORT_H}
+        # Persistent profile: the E-Redes session is bound to the browser
+        # fingerprint + localStorage, so the sync job must reuse the exact
+        # same profile the user logged in with. Full-chromium new-headless +
+        # fingerprint cleanup keeps reCAPTCHA solvable.
+        context = await pw.chromium.launch_persistent_context(
+            str(profile_dir),
+            headless=True,
+            channel="chromium",
+            args=["--disable-blink-features=AutomationControlled"],
+            viewport={"width": VIEWPORT_W, "height": VIEWPORT_H},
+            device_scale_factor=2,
+            locale="pt-PT",
+            timezone_id="Europe/Lisbon",
         )
-        page = await context.new_page()
+        await context.add_init_script(
+            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
+        )
+        page = context.pages[0] if context.pages else await context.new_page()
         try:
             await page.goto(LOGIN_URL)
 
             done = asyncio.Event()
+            frame_queue: asyncio.Queue[str] = asyncio.Queue(maxsize=4)
 
-            async def frames() -> None:
-                previous: bytes | None = None
-                while not done.is_set():
-                    with contextlib.suppress(Exception):
-                        shot = await page.screenshot(type="jpeg", quality=55)
-                        if shot != previous:
-                            previous = shot
-                            await ws.send_text(
-                                json.dumps(
-                                    {
-                                        "type": "frame",
-                                        "data": base64.b64encode(shot).decode(),
-                                        "w": VIEWPORT_W,
-                                        "h": VIEWPORT_H,
-                                    }
-                                )
-                            )
-                    await asyncio.sleep(FRAME_INTERVAL)
+            cdp = await context.new_cdp_session(page)
+
+            def on_screencast_frame(params: dict) -> None:
+                with contextlib.suppress(asyncio.QueueFull):
+                    frame_queue.put_nowait(params["data"])
+                asyncio.get_running_loop().create_task(
+                    cdp.send(
+                        "Page.screencastFrameAck", {"sessionId": params["sessionId"]}
+                    )
+                )
+
+            cdp.on("Page.screencastFrame", on_screencast_frame)
+            await cdp.send(
+                "Page.startScreencast",
+                {
+                    "format": "jpeg",
+                    "quality": JPEG_QUALITY,
+                    "maxWidth": SCREENCAST_MAX_W,
+                    "maxHeight": SCREENCAST_MAX_H,
+                    "everyNthFrame": 1,
+                },
+            )
+
+            phase = {"at_history": False}
 
             async def check_success() -> bool:
-                if await is_logged_in(page):
+                # Two human checkpoints: the login CAPTCHA, then the
+                # "Validação de Segurança" gate on the history page. Only a
+                # session past BOTH is worth saving for the sync job.
+                if not await is_logged_in(page):
+                    return False
+                if not phase["at_history"]:
+                    phase["at_history"] = True
+                    with contextlib.suppress(Exception):
+                        await page.goto(HISTORY_URL)
+                    return False
+                if await is_fully_validated(page):
                     cookies = await context.cookies()
                     await on_success([dict(c) for c in cookies])
                     await ws.send_text(json.dumps({"type": "success"}))
@@ -75,13 +125,34 @@ async def run_login_session(
                     return True
                 return False
 
-            frame_task = asyncio.create_task(frames())
+            async def sender() -> None:
+                while not done.is_set():
+                    with contextlib.suppress(TimeoutError):
+                        data = await asyncio.wait_for(frame_queue.get(), timeout=0.5)
+                        await ws.send_text(
+                            json.dumps(
+                                {
+                                    "type": "frame",
+                                    "data": data,
+                                    "w": VIEWPORT_W,
+                                    "h": VIEWPORT_H,
+                                }
+                            )
+                        )
+
+            async def success_watcher() -> None:
+                while not done.is_set():
+                    await asyncio.sleep(1.0)
+                    with contextlib.suppress(Exception):
+                        await check_success()
+
+            sender_task = asyncio.create_task(sender())
+            watcher_task = asyncio.create_task(success_watcher())
             try:
                 while not done.is_set():
                     try:
-                        raw = await asyncio.wait_for(ws.receive_text(), timeout=1.0)
+                        raw = await asyncio.wait_for(ws.receive_text(), timeout=0.5)
                     except TimeoutError:
-                        await check_success()
                         continue
                     event = json.loads(raw)
                     if event["type"] == "click":
@@ -92,13 +163,13 @@ async def run_login_session(
                         await page.keyboard.press(event["key"])
                     elif event["type"] == "scroll":
                         await page.mouse.wheel(0, event["dy"])
-                    await asyncio.sleep(0.3)
-                    await check_success()
             finally:
                 done.set()
-                frame_task.cancel()
-                with contextlib.suppress(asyncio.CancelledError):
-                    await frame_task
+                with contextlib.suppress(Exception):
+                    await cdp.send("Page.stopScreencast")
+                for task in (sender_task, watcher_task):
+                    task.cancel()
+                    with contextlib.suppress(asyncio.CancelledError):
+                        await task
         finally:
             await context.close()
-            await browser.close()

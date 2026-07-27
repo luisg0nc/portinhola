@@ -34,7 +34,7 @@ def test_sync_happy_path_upserts(app, monkeypatch, tmp_path) -> None:
     ]
     monkeypatch.setattr(
         "portinhola.jobs.eredes_sync.fetch_consumption",
-        lambda cookies, cpe, date_from, date_to: rows,
+        lambda profile_dir, cookies, cpe, date_from, date_to: rows,
     )
     with app.state.sessionmaker() as db:
         _setup_sp(db)
@@ -50,7 +50,7 @@ def test_sync_happy_path_upserts(app, monkeypatch, tmp_path) -> None:
 def test_sync_expired_session_alerts_once(app, monkeypatch, tmp_path) -> None:
     monkeypatch.setenv("PORTINHOLA_DATA_DIR", str(tmp_path))
 
-    def boom(cookies, cpe, date_from, date_to):
+    def boom(profile_dir, cookies, cpe, date_from, date_to):
         raise SessionExpiredError()
 
     monkeypatch.setattr("portinhola.jobs.eredes_sync.fetch_consumption", boom)

@@ -40,6 +40,14 @@ add yours.
 
 Charts: day (15-min curve), month, year, and period comparison.
 
+Note: the E-Redes portal has two human checkpoints — the login CAPTCHA and
+a "Validação de Segurança" gate on the consumption pages. The assisted
+login walks you through both. reCAPTCHA's reputation system may refuse
+repeated attempts from the same address in a short window; wait a while
+and retry if you hit an endless "try again" loop. The automated sync's
+export-download selectors are best-effort until verified against a live
+session (tracked as a known follow-up).
+
 ## Run with Docker
 
 ```bash

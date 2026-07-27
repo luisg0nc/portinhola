@@ -12,6 +12,7 @@ error contract are stable.
 """
 
 import tempfile
+import time
 from datetime import UTC, date, datetime
 from pathlib import Path
 
@@ -31,20 +32,44 @@ SEL_EXPORT_XLSX = "text=Exportar excel"
 PAGE_TIMEOUT_MS = 60_000
 
 
+COOKIE_FIELDS = ("name", "value", "domain", "path", "expires", "httpOnly", "secure", "sameSite")
+
+
+def _extend_session_cookies(cookies: list[dict]) -> list[dict]:
+    """Session cookies die with the login browser; give them 30 days so the
+    replayed context still authenticates."""
+    prepared = []
+    for cookie in cookies:
+        item = {k: v for k, v in cookie.items() if k in COOKIE_FIELDS}
+        if item.get("expires", -1) in (-1, None) or item.get("expires", 0) < time.time():
+            item["expires"] = time.time() + 30 * 86400
+        prepared.append(item)
+    return prepared
+
+
 def fetch_consumption(
-    cookies: list[dict], cpe: str, date_from: date, date_to: date
+    profile_dir: Path, cookies: list[dict], cpe: str, date_from: date, date_to: date
 ) -> list[IntervalRow]:
     from playwright.sync_api import sync_playwright
 
     with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=True)
-        context = browser.new_context()
-        context.add_cookies(cookies)  # type: ignore[arg-type]
-        page = context.new_page()
+        context = pw.chromium.launch_persistent_context(
+            str(profile_dir),
+            headless=True,
+            channel="chromium",
+            args=["--disable-blink-features=AutomationControlled"],
+            locale="pt-PT",
+            timezone_id="Europe/Lisbon",
+        )
+        context.add_cookies(_extend_session_cookies(cookies))  # type: ignore[arg-type]
+        page = context.pages[0] if context.pages else context.new_page()
         try:
             page.goto(CONSUMPTION_URL, timeout=PAGE_TIMEOUT_MS)
             page.wait_for_load_state("networkidle", timeout=PAGE_TIMEOUT_MS)
             if LOGIN_URL_MARKER in page.url.lower():
+                raise SessionExpiredError()
+            body = page.inner_text("body")
+            if "Validação de Segurança" in body:
                 raise SessionExpiredError()
 
             page.fill(SEL_DATE_FROM, date_from.strftime("%Y-%m-%d"))
@@ -59,7 +84,6 @@ def fetch_consumption(
             return export.rows
         finally:
             context.close()
-            browser.close()
 
 
 def utc_today() -> date:

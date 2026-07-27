@@ -46,8 +46,11 @@ def eredes_sync(db: Session) -> str:
     )
     date_to = utc_today()
 
+    profile_dir = Config().data_dir / "eredes-profile"
     try:
-        rows = fetch_consumption(cookies, supply_point.identifier, date_from, date_to)
+        rows = fetch_consumption(
+            profile_dir, cookies, supply_point.identifier, date_from, date_to
+        )
     except SessionExpiredError:
         raise_alert(
             db,
