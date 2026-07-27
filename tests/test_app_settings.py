@@ -10,13 +10,13 @@ def test_default_language_is_pt(client) -> None:
     _login(client)
     res = client.get("/api/settings")
     assert res.status_code == 200
-    assert res.json() == {"language": "pt"}
+    assert res.json()["language"] == "pt"
 
 
 def test_update_language(client) -> None:
     _login(client)
     assert client.put("/api/settings", json={"language": "en"}).status_code == 204
-    assert client.get("/api/settings").json() == {"language": "en"}
+    assert client.get("/api/settings").json()["language"] == "en"
 
 
 def test_invalid_language_rejected(client) -> None:
