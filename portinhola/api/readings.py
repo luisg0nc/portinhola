@@ -36,6 +36,10 @@ class ReadingPatch(BaseModel):
     submission_status: str | None = None
 
 
+class SubmitIn(BaseModel):
+    supply_point_id: int
+
+
 @router.post("", status_code=201)
 def create_readings(body: ReadingIn, db: Session = Depends(get_db)) -> list[ReadingOut]:
     sp = db.get(SupplyPoint, body.supply_point_id)
@@ -93,6 +97,44 @@ def latest(supply_point_id: int, db: Session = Depends(get_db)) -> dict[str, Rea
     return {
         register: ReadingOut.model_validate(reading)
         for register, reading in latest_readings(db, supply_point_id).items()
+    }
+
+
+@router.post("/submit")
+def submit_readings(body: SubmitIn, db: Session = Depends(get_db)) -> dict:
+    from portinhola.db.models import Contract
+    from portinhola.reporters.base import get_reporter
+
+    sp = db.get(SupplyPoint, body.supply_point_id)
+    if sp is None:
+        raise HTTPException(status_code=404, detail="supply_point_not_found")
+    contract = db.scalar(
+        select(Contract).where(
+            Contract.supply_point_id == sp.id, Contract.end_date.is_(None)
+        )
+    )
+    if contract is None:
+        raise HTTPException(status_code=422, detail="no_open_contract")
+
+    latest = latest_readings(db, sp.id)
+    if not latest:
+        raise HTTPException(status_code=422, detail="no_readings")
+
+    reporter = get_reporter(contract.supplier_nif)
+    if reporter is not None and reporter.supports(contract):
+        # Automation modules are a future addition; when one exists this
+        # spawns its submission job. For now none are registered.
+        pass
+
+    for reading in latest.values():
+        if reading.submission_status == "not_submitted":
+            reading.submission_status = "needs_manual"
+    db.commit()
+    return {
+        "mode": "manual",
+        "submit_url": contract.submit_url,
+        "submit_phone": contract.submit_phone,
+        "submit_reference": contract.submit_reference,
     }
 
 
