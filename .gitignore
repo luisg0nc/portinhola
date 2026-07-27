@@ -9,3 +9,4 @@ portinhola/frontend_dist/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+sample-bills/
