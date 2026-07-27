@@ -1,1 +1,1 @@
-from portinhola.extractors import g9  # noqa: F401
+from portinhola.extractors import bewater, g9  # noqa: F401
