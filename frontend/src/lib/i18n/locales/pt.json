@@ -96,6 +96,49 @@
     "utility_water": "Água",
     "utility_unknown": "Outros"
   },
+  "eredes": {
+    "title": "E-Redes",
+    "connected": "Ligado",
+    "not_connected": "Não ligado",
+    "connect": "Ligar à E-Redes",
+    "disconnect": "Desligar",
+    "sync_now": "Sincronizar agora",
+    "sync_started": "Sincronização iniciada.",
+    "sync_time": "Hora da sincronização diária",
+    "last_sync": "Última sincronização",
+    "login_title": "Iniciar sessão na E-Redes",
+    "login_hint": "Escreva as credenciais e resolva o CAPTCHA diretamente na janela abaixo. Nada é guardado além da sessão.",
+    "type_placeholder": "Escrever texto no campo selecionado…",
+    "send_text": "Escrever",
+    "press_enter": "Enter",
+    "login_success": "Sessão E-Redes guardada.",
+    "login_error": "Falha na ligação"
+  },
+  "notifications": {
+    "title": "Notificações",
+    "apprise_urls": "URLs Apprise (uma por linha)",
+    "apprise_hint": "Ex.: ntfy://topico, tgram://token/chat_id — ver documentação Apprise.",
+    "test": "Enviar teste",
+    "test_sent": "Notificação enviada.",
+    "test_failed": "Nenhum serviço configurado ou envio falhou."
+  },
+  "consumption": {
+    "title": "Consumo",
+    "day": "Dia",
+    "month": "Mês",
+    "year": "Ano",
+    "compare": "Comparar",
+    "import_file": "Importar ficheiro E-Redes",
+    "import_ok": "Importado: {inserted} novos, {updated} atualizados.",
+    "import_failed": "Falha na importação.",
+    "cpe_mismatch": "O CPE do ficheiro não corresponde ao ponto de fornecimento.",
+    "no_data": "Sem dados de consumo. Importe um ficheiro E-Redes ou ligue a conta.",
+    "kwh_total": "Total",
+    "period_a": "Período A",
+    "period_b": "Período B",
+    "last7": "Últimos 7 dias",
+    "view_details": "Ver consumo"
+  },
   "common": {
     "loading": "A carregar…",
     "coming_soon": "Em breve"

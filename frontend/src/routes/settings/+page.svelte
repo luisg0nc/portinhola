@@ -4,6 +4,7 @@
   import { api } from '$lib/api';
   import { setLocale, type Locale } from '$lib/i18n';
   import { onMount } from 'svelte';
+  import EredesLogin from '$lib/EredesLogin.svelte';
 
   type Contract = {
     id: number;
@@ -41,13 +42,64 @@
     if (res.ok) supplyPoints = await res.json();
   }
 
+  let appriseUrls = $state('');
+  let syncTime = $state('07:00');
+  let notifyMessage = $state('');
+  let eredesConnected = $state(false);
+  let eredesLastSync = $state<string | null>(null);
+  let showLogin = $state(false);
+  let eredesMessage = $state('');
+
+  async function loadEredes() {
+    const res = await api('/api/eredes/status');
+    if (res.ok) {
+      const data = await res.json();
+      eredesConnected = data.connected;
+      eredesLastSync = data.last_sync;
+    }
+  }
+
   onMount(async () => {
     const res = await api('/api/settings');
     if (res.ok) {
-      language = (await res.json()).language;
+      const data = await res.json();
+      language = data.language;
+      appriseUrls = data.apprise_urls ?? '';
+      syncTime = data.eredes_sync_time ?? '07:00';
     }
     await loadSupplyPoints();
+    await loadEredes();
   });
+
+  async function saveExtras() {
+    await api('/api/settings', {
+      method: 'PUT',
+      body: JSON.stringify({ language, apprise_urls: appriseUrls, eredes_sync_time: syncTime })
+    });
+  }
+
+  async function testNotification() {
+    await saveExtras();
+    const res = await api('/api/settings/test-notification', { method: 'POST' });
+    const sent = res.ok && (await res.json()).sent;
+    notifyMessage = sent ? $_('notifications.test_sent') : $_('notifications.test_failed');
+  }
+
+  async function syncNow() {
+    const res = await api('/api/jobs/eredes_sync/run', { method: 'POST' });
+    eredesMessage = res.status === 202 ? $_('eredes.sync_started') : '';
+  }
+
+  async function disconnectEredes() {
+    await api('/api/eredes/disconnect', { method: 'POST' });
+    await loadEredes();
+  }
+
+  function onLoginClose(success: boolean) {
+    showLogin = false;
+    eredesMessage = success ? $_('eredes.login_success') : '';
+    loadEredes();
+  }
 
   async function addSupplyPoint(event: SubmitEvent) {
     event.preventDefault();
@@ -141,6 +193,44 @@
   </form>
   {#if passwordMessage}<p>{passwordMessage}</p>{/if}
 </section>
+
+<section class="eredes">
+  <h2>{$_('eredes.title')}</h2>
+  <p>
+    <strong>{eredesConnected ? $_('eredes.connected') : $_('eredes.not_connected')}</strong>
+    {#if eredesLastSync}
+      <span class="muted">· {$_('eredes.last_sync')}: {eredesLastSync.slice(0, 16)}</span>
+    {/if}
+  </p>
+  <div class="row">
+    {#if eredesConnected}
+      <button onclick={syncNow}>{$_('eredes.sync_now')}</button>
+      <button class="secondary" onclick={disconnectEredes}>{$_('eredes.disconnect')}</button>
+    {:else}
+      <button onclick={() => (showLogin = true)}>{$_('eredes.connect')}</button>
+    {/if}
+  </div>
+  <label>
+    {$_('eredes.sync_time')}
+    <input type="time" bind:value={syncTime} onchange={saveExtras} />
+  </label>
+  {#if eredesMessage}<p>{eredesMessage}</p>{/if}
+</section>
+
+<section class="notify">
+  <h2>{$_('notifications.title')}</h2>
+  <label>
+    {$_('notifications.apprise_urls')}
+    <textarea rows="3" bind:value={appriseUrls} onchange={saveExtras}></textarea>
+  </label>
+  <p class="muted">{$_('notifications.apprise_hint')}</p>
+  <button onclick={testNotification}>{$_('notifications.test')}</button>
+  {#if notifyMessage}<p>{notifyMessage}</p>{/if}
+</section>
+
+{#if showLogin}
+  <EredesLogin onclose={onLoginClose} />
+{/if}
 
 <section class="supply">
   <h2>{$_('settings.supply_points')}</h2>
@@ -316,5 +406,20 @@
   }
   .supply {
     max-width: 34rem;
+  }
+  .eredes .row {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+  }
+  .secondary {
+    background: #475569;
+  }
+  textarea {
+    padding: 0.5rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.35rem;
+    font-family: monospace;
+    font-size: 0.85rem;
   }
 </style>

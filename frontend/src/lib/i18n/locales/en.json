@@ -96,6 +96,49 @@
     "utility_water": "Water",
     "utility_unknown": "Other"
   },
+  "eredes": {
+    "title": "E-Redes",
+    "connected": "Connected",
+    "not_connected": "Not connected",
+    "connect": "Connect to E-Redes",
+    "disconnect": "Disconnect",
+    "sync_now": "Sync now",
+    "sync_started": "Sync started.",
+    "sync_time": "Daily sync time",
+    "last_sync": "Last sync",
+    "login_title": "Sign in to E-Redes",
+    "login_hint": "Type your credentials and solve the CAPTCHA directly in the window below. Nothing is stored beyond the session.",
+    "type_placeholder": "Type text into the selected field…",
+    "send_text": "Type",
+    "press_enter": "Enter",
+    "login_success": "E-Redes session saved.",
+    "login_error": "Connection failed"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "apprise_urls": "Apprise URLs (one per line)",
+    "apprise_hint": "E.g. ntfy://topic, tgram://token/chat_id — see Apprise docs.",
+    "test": "Send test",
+    "test_sent": "Notification sent.",
+    "test_failed": "No service configured or delivery failed."
+  },
+  "consumption": {
+    "title": "Consumption",
+    "day": "Day",
+    "month": "Month",
+    "year": "Year",
+    "compare": "Compare",
+    "import_file": "Import E-Redes file",
+    "import_ok": "Imported: {inserted} new, {updated} updated.",
+    "import_failed": "Import failed.",
+    "cpe_mismatch": "The file's CPE does not match the supply point.",
+    "no_data": "No consumption data. Import an E-Redes file or connect the account.",
+    "kwh_total": "Total",
+    "period_a": "Period A",
+    "period_b": "Period B",
+    "last7": "Last 7 days",
+    "view_details": "View consumption"
+  },
   "common": {
     "loading": "Loading…",
     "coming_soon": "Coming soon"
