@@ -17,11 +17,31 @@
 
   let months = $state<MonthEntry[]>([]);
   let loaded = $state(false);
+  let last7Kwh = $state<number | null>(null);
 
   onMount(async () => {
     const res = await api('/api/dashboard/costs?months=13');
     if (res.ok) months = (await res.json()).months;
     loaded = true;
+
+    const spRes = await api('/api/supply-points');
+    if (spRes.ok) {
+      const sps = (await spRes.json()).filter(
+        (sp: { utility: string }) => sp.utility === 'electricity'
+      );
+      if (sps.length > 0) {
+        const end = new Date();
+        const start = new Date(end.getTime() - 7 * 86400000);
+        const rangeRes = await api(
+          `/api/consumption/range?supply_point_id=${sps[0].id}` +
+            `&start=${start.toISOString()}&end=${end.toISOString()}`
+        );
+        if (rangeRes.ok) {
+          const rows: { kwh: number }[] = await rangeRes.json();
+          if (rows.length > 0) last7Kwh = rows.reduce((sum, r) => sum + r.kwh, 0);
+        }
+      }
+    }
   });
 
   let latest = $derived(months.at(-1) ?? null);
@@ -36,6 +56,14 @@
 </script>
 
 <h1>{$_('nav.dashboard')}</h1>
+
+{#if last7Kwh !== null}
+  <a class="card consumption-card" href="/consumption">
+    <h3>⚡ {$_('consumption.last7')}</h3>
+    <div class="total">{last7Kwh.toFixed(1)} kWh</div>
+    <span class="link-hint">{$_('consumption.view_details')} →</span>
+  </a>
+{/if}
 
 {#if loaded && months.length === 0}
   <p>{$_('dashboard.no_data')}</p>
@@ -116,5 +144,18 @@
     padding: 0.6rem 1rem;
     border-radius: 0.4rem;
     text-decoration: none;
+  }
+  .consumption-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  .consumption-card .total {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .link-hint {
+    color: #0ea5e9;
+    font-size: 0.85rem;
   }
 </style>

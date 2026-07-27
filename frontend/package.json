@@ -17,6 +17,7 @@
     "vitest": "^3.0.0"
   },
   "dependencies": {
-    "svelte-i18n": "^4.0.1"
+    "svelte-i18n": "^4.0.1",
+    "uplot": "^1.6.32"
   }
 }
