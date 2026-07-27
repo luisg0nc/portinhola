@@ -19,6 +19,8 @@ dependencies = [
   "apscheduler>=3.10",
   "apprise>=1.9",
   "openpyxl>=3.1",
+  "cryptography>=44",
+  "playwright>=1.50",
 ]
 
 [project.optional-dependencies]
