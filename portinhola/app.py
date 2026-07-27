@@ -1,7 +1,16 @@
 from fastapi import FastAPI
 from sqlalchemy.orm import sessionmaker
 
-from portinhola.api import app_settings, auth, bills, dashboard, health, supply_points
+from portinhola.api import (
+    alerts,
+    app_settings,
+    auth,
+    bills,
+    dashboard,
+    health,
+    jobs,
+    supply_points,
+)
 from portinhola.config import Config
 from portinhola.core.secrets import load_or_create_app_key
 from portinhola.db.base import make_engine
@@ -24,6 +33,8 @@ def create_app(config: Config | None = None) -> FastAPI:
     app.include_router(supply_points.router, prefix="/api/supply-points")
     app.include_router(bills.router, prefix="/api/bills")
     app.include_router(dashboard.router, prefix="/api/dashboard")
+    app.include_router(jobs.router, prefix="/api/jobs")
+    app.include_router(alerts.router, prefix="/api/alerts")
 
     if config.enable_scheduler:
         from portinhola.core.scheduler import setup_scheduler
