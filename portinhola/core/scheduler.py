@@ -62,5 +62,13 @@ def setup_scheduler(app: FastAPI) -> None:
         minute=int(minute or 0),
         id="eredes_sync",
     )
+    scheduler.add_job(
+        spawn_job,
+        "cron",
+        args=["reading_reminders"],
+        hour=9,
+        minute=0,
+        id="reading_reminders",
+    )
     scheduler.start()
     app.state.scheduler = scheduler
