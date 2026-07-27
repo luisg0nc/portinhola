@@ -1,0 +1,10 @@
+__pycache__/
+*.egg-info/
+.venv/
+data/
+frontend/node_modules/
+frontend/build/
+frontend/.svelte-kit/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
