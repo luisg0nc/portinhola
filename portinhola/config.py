@@ -8,6 +8,7 @@ class Config(BaseSettings):
 
     data_dir: Path = Path("./data")
     cookie_secure: bool = False
+    enable_scheduler: bool = True
 
     @property
     def database_url(self) -> str:

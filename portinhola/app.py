@@ -24,5 +24,10 @@ def create_app(config: Config | None = None) -> FastAPI:
     app.include_router(supply_points.router, prefix="/api/supply-points")
     app.include_router(bills.router, prefix="/api/bills")
     app.include_router(dashboard.router, prefix="/api/dashboard")
+
+    if config.enable_scheduler:
+        from portinhola.core.scheduler import setup_scheduler
+
+        setup_scheduler(app)
     mount_frontend(app)
     return app

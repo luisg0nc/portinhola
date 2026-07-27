@@ -8,7 +8,7 @@ from portinhola.db.base import Base
 
 @pytest.fixture
 def app(tmp_path):
-    application = create_app(Config(data_dir=tmp_path))
+    application = create_app(Config(data_dir=tmp_path, enable_scheduler=False))
     Base.metadata.create_all(application.state.engine)
 
     from portinhola.api import auth as auth_api

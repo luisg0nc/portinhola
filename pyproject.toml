@@ -16,6 +16,7 @@ dependencies = [
   "pypdfium2>=4.30",
   "zxing-cpp>=2.2",
   "python-multipart>=0.0.18",
+  "apscheduler>=3.10",
 ]
 
 [project.optional-dependencies]

@@ -12,7 +12,7 @@ def test_spa_fallback_and_assets(tmp_path, monkeypatch) -> None:
     (dist / "favicon.png").write_bytes(b"png-bytes")
     monkeypatch.setattr(portinhola.static, "FRONTEND_DIR", dist)
 
-    client = TestClient(create_app(Config(data_dir=tmp_path / "data")))
+    client = TestClient(create_app(Config(data_dir=tmp_path / "data", enable_scheduler=False)))
 
     assert "portinhola-shell" in client.get("/").text
     assert "portinhola-shell" in client.get("/bills").text  # SPA fallback
@@ -22,5 +22,5 @@ def test_spa_fallback_and_assets(tmp_path, monkeypatch) -> None:
 
 def test_missing_frontend_dir_is_tolerated(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(portinhola.static, "FRONTEND_DIR", tmp_path / "nope")
-    client = TestClient(create_app(Config(data_dir=tmp_path / "data")))
+    client = TestClient(create_app(Config(data_dir=tmp_path / "data", enable_scheduler=False)))
     assert client.get("/api/health").status_code == 200
