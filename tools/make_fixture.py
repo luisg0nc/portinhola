@@ -1,5 +1,11 @@
 """Dump a bill PDF's text pages with personal data replaced, for use as a
-public test fixture. Review the output manually before committing."""
+public test fixture. Review the output manually before committing.
+
+The regex replacement rules live in `tools/fixture_replacements_local.py`
+(gitignored, because the patterns themselves contain your real personal
+data). Copy `fixture_replacements_example.py` to that name and fill in
+your own bill's values.
+"""
 
 import re
 import sys
@@ -9,19 +15,13 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from portinhola.core.pdf import extract_pdf
 
-REPLACEMENTS: list[tuple[str, str]] = [
-    (r"Maria Exemplo Silva", "Maria Exemplo Silva"),
-    (r"MARIA EXEMPLO SILVA", "MARIA EXEMPLO SILVA"),
-    (r"299999998", "299999998"),
-    (r"maria@example.com", "maria@example.com"),
-    (r"A ?venida Exemplo[^\n]*", "Rua Exemplo, 1"),
-    (r"AVEN[^\n]*PR[I]?MAVERA[^\n]*", "RUA EXEMPLO 1"),
-    (r"4000-000 CIDADE", "4000-000 CIDADE"),
-    (r"CIDADE", "CIDADE"),
-    (r"PT50[\d*]{18,}", "PT50000000000000000000000"),
-    (r"Mandato: \d+", "Mandato: 10000000000"),
-    (r"Mandato\n\d+", "Mandato\n10000000000"),
-]
+try:
+    from tools.fixture_replacements_local import REPLACEMENTS
+except ImportError:
+    sys.exit(
+        "tools/fixture_replacements_local.py not found — copy "
+        "tools/fixture_replacements_example.py and fill in your values."
+    )
 
 
 def main(pdf_path: str, out_path: str) -> None:
