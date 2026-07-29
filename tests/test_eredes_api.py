@@ -2,11 +2,7 @@ def _login(client) -> None:
     client.post("/api/auth/setup", json={"password": "hunter2hunter2"})
 
 
-VALID_CURL = (
-    "curl 'https://balcaodigital.e-redes.pt/api/consumptions/export"
-    "?cpe=PT1&startDate=2026-06-01&endDate=2026-07-01' "
-    "-H 'authorization: Bearer a.b.c' -b 'PHPSESSID=s'"
-)
+TOKEN = "eyJhbGciOi.someLongAatTokenValue.signaturePart"
 
 
 def test_status_disconnected(client) -> None:
@@ -16,30 +12,27 @@ def test_status_disconnected(client) -> None:
 
 def test_import_and_status(client) -> None:
     _login(client)
-    res = client.post("/api/eredes/import", json={"curl": VALID_CURL})
+    res = client.post("/api/eredes/import", json={"token": TOKEN})
     assert res.status_code == 200
-    status = client.get("/api/eredes/status").json()
-    assert status["connected"] is True
+    assert client.get("/api/eredes/status").json()["connected"] is True
 
 
-def test_import_rejects_wrong_host(client) -> None:
+def test_import_rejects_empty(client) -> None:
     _login(client)
-    bad = "curl 'https://evil.com/api/x?s=2026-06-01&e=2026-07-01'"
-    res = client.post("/api/eredes/import", json={"curl": bad})
-    assert res.status_code == 422
-    assert res.json()["detail"] == "wrong_host"
+    assert client.post("/api/eredes/import", json={"token": "   "}).status_code == 422
 
 
-def test_import_rejects_not_curl(client) -> None:
+def test_import_rejects_cookie_string(client) -> None:
+    # Users must paste the bare aat VALUE, not a "name=value" pair.
     _login(client)
-    res = client.post("/api/eredes/import", json={"curl": "hello"})
+    res = client.post("/api/eredes/import", json={"token": "aat=abc"})
     assert res.status_code == 422
-    assert res.json()["detail"] == "not_curl"
+    assert res.json()["detail"] == "invalid_token"
 
 
 def test_disconnect(client) -> None:
     _login(client)
-    client.post("/api/eredes/import", json={"curl": VALID_CURL})
+    client.post("/api/eredes/import", json={"token": TOKEN})
     assert client.post("/api/eredes/disconnect").status_code == 204
     assert client.get("/api/eredes/status").json()["connected"] is False
 

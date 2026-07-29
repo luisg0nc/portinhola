@@ -1,23 +1,7 @@
 from portinhola.core.crypto import decrypt, encrypt
-from portinhola.integrations.eredes_curl import CurlRequest
-from portinhola.integrations.eredes_session import (
-    clear,
-    load_template,
-    save_template,
-    update_cookies,
-)
+from portinhola.integrations.eredes_session import clear, load_token, save_token
 
 KEY = b"k" * 32
-
-
-def _req() -> CurlRequest:
-    return CurlRequest(
-        method="GET",
-        url="https://balcaodigital.e-redes.pt/api/x?s=2026-06-01&e=2026-07-01",
-        headers={"authorization": "Bearer t"},
-        cookies={"PHPSESSID": "old"},
-        body=None,
-    )
 
 
 def test_crypto_roundtrip() -> None:
@@ -26,23 +10,11 @@ def test_crypto_roundtrip() -> None:
     assert decrypt(KEY, token) == b"secret"
 
 
-def test_template_roundtrip(app) -> None:
+def test_token_roundtrip(app) -> None:
     with app.state.sessionmaker() as db:
-        assert load_template(db, KEY) is None
-        save_template(db, KEY, _req())
+        assert load_token(db, KEY) is None
+        save_token(db, KEY, "  aat-value-123  ")
     with app.state.sessionmaker() as db:
-        loaded = load_template(db, KEY)
-        assert loaded is not None
-        assert loaded.cookies == {"PHPSESSID": "old"}
+        assert load_token(db, KEY) == "aat-value-123"  # trimmed
         clear(db)
-        assert load_template(db, KEY) is None
-
-
-def test_update_cookies_merges(app) -> None:
-    with app.state.sessionmaker() as db:
-        save_template(db, KEY, _req())
-        update_cookies(db, KEY, {"PHPSESSID": "new99", "extra": "1"})
-    with app.state.sessionmaker() as db:
-        loaded = load_template(db, KEY)
-        assert loaded is not None
-        assert loaded.cookies == {"PHPSESSID": "new99", "extra": "1"}
+        assert load_token(db, KEY) is None

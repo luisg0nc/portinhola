@@ -5,18 +5,7 @@ from sqlalchemy import select
 from portinhola.db.models import Alert, IntervalConsumption, SupplyPoint
 from portinhola.integrations import eredes_session
 from portinhola.integrations.eredes_api import SessionExpiredError
-from portinhola.integrations.eredes_curl import CurlRequest
 from portinhola.jobs.eredes_sync import eredes_sync
-
-
-def _template() -> CurlRequest:
-    return CurlRequest(
-        method="GET",
-        url="https://balcaodigital.e-redes.pt/api/x?startDate=2026-06-01&endDate=2026-07-01",
-        headers={},
-        cookies={"PHPSESSID": "s"},
-        body=None,
-    )
 
 
 def _setup_sp(db) -> int:
@@ -50,7 +39,7 @@ def test_sync_happy_path_upserts(app, monkeypatch, tmp_path) -> None:
         from portinhola.core.secrets import load_or_create_app_key
 
         app_key = load_or_create_app_key(tmp_path)
-        eredes_session.save_template(db, app_key, _template())
+        eredes_session.save_token(db, app_key, "tok123")
         log = eredes_sync(db)
         assert "2 intervals" in log
         assert db.query(IntervalConsumption).count() == 2
@@ -73,7 +62,7 @@ def test_sync_expired_session_alerts_once(app, monkeypatch, tmp_path) -> None:
         from portinhola.core.secrets import load_or_create_app_key
 
         app_key = load_or_create_app_key(tmp_path)
-        eredes_session.save_template(db, app_key, _template())
+        eredes_session.save_token(db, app_key, "tok123")
         for _ in range(2):
             try:
                 eredes_sync(db)

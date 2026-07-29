@@ -32,15 +32,17 @@ add yours.
   Balcão Digital and upload it on the Consumption page. Both the monthly
   and the date-range export layouts are supported; values are converted
   from average kW to kWh and stored DST-safely in UTC.
-- **Connected account (cURL import)** — the portal's login is
+- **Connected account (token import)** — the portal's login is
   reCAPTCHA-protected and can't be automated server-side, so you connect
-  by pasting a request from your own browser: log in, run the Excel export
-  with DevTools open, "Copy as cURL", and paste it in Settings → E-Redes
-  (there's a step-by-step guide there). The daily sync replays that
-  request with auto-advancing dates — no browser, no reCAPTCHA — and
-  refreshes the session on use. When the session finally expires you get a
-  notification to paste a fresh one; Settings shows the "valid until" date.
-  The pasted command contains your login session and is stored encrypted.
+  by copying one value from your own browser: log in, open DevTools
+  (F12) → Application → Cookies → balcaodigital.e-redes.pt, and copy the
+  `aat` cookie value into Settings → E-Redes (there's a step-by-step guide
+  there). The daily sync then calls the portal's internal consumption API
+  directly with that token — no browser, no reCAPTCHA — advancing the date
+  range each run and refreshing the token when the portal rotates it. When
+  it finally expires you get a notification to paste a fresh one. The token
+  is your login session and is stored encrypted. (Endpoint and request
+  shape follow the community `ha-eredes` integration.)
 
 Charts: day (15-min curve), month, year, and period comparison.
 

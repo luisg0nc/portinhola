@@ -50,18 +50,16 @@
   let syncTime = $state('07:00');
   let notifyMessage = $state('');
   let eredesConnected = $state(false);
-  let eredesValidUntil = $state<string | null>(null);
   let eredesMessage = $state('');
-  let curlText = $state('');
-  let curlError = $state('');
-  let curlSaved = $state(false);
+  let tokenText = $state('');
+  let tokenError = $state('');
+  let tokenSaved = $state(false);
   let guideSteps = $derived([
     $_('eredes.guide_step_1'),
     $_('eredes.guide_step_2'),
     $_('eredes.guide_step_3'),
     $_('eredes.guide_step_4'),
-    $_('eredes.guide_step_5'),
-    $_('eredes.guide_step_6')
+    $_('eredes.guide_step_5')
   ]);
 
   async function loadEredes() {
@@ -69,7 +67,6 @@
     if (res.ok) {
       const data = await res.json();
       eredesConnected = data.connected;
-      eredesValidUntil = data.valid_until;
     }
   }
 
@@ -109,20 +106,20 @@
     await loadEredes();
   }
 
-  async function saveCurl() {
-    curlError = '';
-    curlSaved = false;
+  async function saveToken() {
+    tokenError = '';
+    tokenSaved = false;
     const res = await api('/api/eredes/import', {
       method: 'POST',
-      body: JSON.stringify({ curl: curlText })
+      body: JSON.stringify({ token: tokenText })
     });
     if (res.ok) {
-      curlSaved = true;
-      curlText = '';
+      tokenSaved = true;
+      tokenText = '';
       await loadEredes();
     } else {
       const detail = (await res.json()).detail;
-      curlError = `eredes.err_${detail}`;
+      tokenError = `eredes.err_${detail}`;
     }
   }
 
@@ -223,21 +220,16 @@
   <h2>{$_('eredes.title')}</h2>
   <p>
     <strong>{eredesConnected ? $_('eredes.connected') : $_('eredes.not_connected')}</strong>
-    {#if eredesValidUntil}
-      <span class="muted">
-        · {$_('eredes.valid_until').replace('{date}', eredesValidUntil.slice(0, 16))}
-      </span>
-    {/if}
   </p>
 
   <label>
     {$_('eredes.import_label')}
-    <textarea bind:value={curlText} rows="4" placeholder="curl '...'"></textarea>
+    <textarea bind:value={tokenText} rows="3" placeholder="aat…"></textarea>
   </label>
-  {#if curlError}<p class="error">{$_(curlError)}</p>{/if}
-  {#if curlSaved}<p class="ok">{$_('eredes.saved')}</p>{/if}
+  {#if tokenError}<p class="error">{$_(tokenError)}</p>{/if}
+  {#if tokenSaved}<p class="ok">{$_('eredes.saved')}</p>{/if}
   <div class="row">
-    <button onclick={saveCurl}>{$_('eredes.save')}</button>
+    <button onclick={saveToken}>{$_('eredes.save')}</button>
     {#if eredesConnected}
       <button onclick={syncNow}>{$_('eredes.sync_now')}</button>
       <button class="secondary" onclick={disconnectEredes}>{$_('eredes.disconnect')}</button>
