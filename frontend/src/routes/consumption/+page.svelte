@@ -4,6 +4,11 @@
   import uPlot from 'uplot';
   import { api } from '$lib/api';
   import UPlotChart from '$lib/charts/UPlotChart.svelte';
+  import Card from '$lib/ui/Card.svelte';
+  import PageHeader from '$lib/ui/PageHeader.svelte';
+  import EmptyState from '$lib/ui/EmptyState.svelte';
+  import Button from '$lib/ui/Button.svelte';
+  import { ChevronLeft, ChevronRight, Zap } from '$lib/ui/icons';
 
   type View = 'day' | 'month' | 'year' | 'compare';
   type Sp = { id: number; identifier: string; name: string };
@@ -29,11 +34,14 @@
   let totalLabel = $state('');
   let importMessage = $state('');
 
+  const ELECTRICITY = '#d97706';
+  const COMPARE_B = '#0d9488';
+
   const lineOpts = (label: string) => ({
     scales: { x: { time: true } },
     series: [
       {},
-      { label, stroke: '#0ea5e9', width: 2, fill: 'rgba(14,165,233,0.12)' }
+      { label, stroke: ELECTRICITY, width: 2, fill: 'rgba(217,119,6,0.12)' }
     ]
   });
 
@@ -43,8 +51,8 @@
       {},
       {
         label,
-        stroke: '#0ea5e9',
-        fill: '#0ea5e9',
+        stroke: ELECTRICITY,
+        fill: ELECTRICITY,
         paths: uPlot.paths!.bars!({ size: [0.6, 100] })
       }
     ]
@@ -54,8 +62,8 @@
     scales: { x: { time: false } },
     series: [
       {},
-      { label: 'A', stroke: '#0ea5e9', width: 2 },
-      { label: 'B', stroke: '#f59e0b', width: 2 }
+      { label: 'A', stroke: ELECTRICITY, width: 2 },
+      { label: 'B', stroke: COMPARE_B, width: 2 }
     ]
   };
 
@@ -185,95 +193,108 @@
   }
 </script>
 
-<h1>{$_('consumption.title')}</h1>
+<PageHeader title={$_('consumption.title')} />
 
 {#if supplyPoints.length > 1}
-  <select bind:value={spId} onchange={() => (checkStatus(), load())}>
+  <select class="sp-select" bind:value={spId} onchange={() => (checkStatus(), load())}>
     {#each supplyPoints as sp}
       <option value={sp.id}>{sp.name || sp.identifier}</option>
     {/each}
   </select>
 {/if}
 
-<div class="tabs">
+<div class="chip-row tabs">
   {#each ['day', 'month', 'year', 'compare'] as v}
-    <button class:active={view === v} onclick={() => setView(v as View)}>
+    <button class="chip" class:active={view === v} onclick={() => setView(v as View)}>
       {$_(`consumption.${v}`)}
     </button>
   {/each}
 </div>
 
 {#if !hasData}
-  <p>{$_('consumption.no_data')}</p>
+  <Card>
+    <EmptyState icon={Zap} message={$_('consumption.no_data')}>
+      <Button variant="secondary" href="/settings">{$_('eredes.title')}</Button>
+    </EmptyState>
+  </Card>
 {:else}
   <p class="muted">{statusText} · {$_('consumption.kwh_total')}: <strong>{totalLabel}</strong></p>
 
-  {#if view === 'day'}
-    <div class="nav">
-      <button onclick={() => shiftDay(-1)}>←</button>
-      <input type="date" bind:value={dayDate} onchange={load} />
-      <button onclick={() => shiftDay(1)}>→</button>
-    </div>
-    {#if dayData}
-      <UPlotChart data={dayData} options={lineOpts('kW')} />
+  <Card>
+    {#if view === 'day'}
+      <div class="nav">
+        <button class="arrow" onclick={() => shiftDay(-1)} aria-label="←">
+          <ChevronLeft size={18} />
+        </button>
+        <input type="date" bind:value={dayDate} onchange={load} />
+        <button class="arrow" onclick={() => shiftDay(1)} aria-label="→">
+          <ChevronRight size={18} />
+        </button>
+      </div>
+      {#if dayData}
+        <UPlotChart data={dayData} options={lineOpts('kW')} />
+      {/if}
+    {:else if view === 'month'}
+      <div class="nav">
+        <button class="arrow" onclick={() => shiftMonth(-1)} aria-label="←">
+          <ChevronLeft size={18} />
+        </button>
+        <input type="month" bind:value={monthValue} onchange={load} />
+        <button class="arrow" onclick={() => shiftMonth(1)} aria-label="→">
+          <ChevronRight size={18} />
+        </button>
+      </div>
+      {#if monthData}
+        <UPlotChart data={monthData} options={barOpts('kWh')} onclickx={onMonthBarClick} />
+      {/if}
+    {:else if view === 'year'}
+      <div class="nav">
+        <button class="arrow" onclick={() => (yearValue--, load())} aria-label="←">
+          <ChevronLeft size={18} />
+        </button>
+        <span class="year">{yearValue}</span>
+        <button class="arrow" onclick={() => (yearValue++, load())} aria-label="→">
+          <ChevronRight size={18} />
+        </button>
+      </div>
+      {#if yearData}
+        <UPlotChart data={yearData} options={barOpts('kWh')} />
+      {/if}
+    {:else}
+      <div class="nav compare">
+        <label>
+          {$_('consumption.period_a')}
+          <input type="date" bind:value={compareStartA} onchange={load} />
+        </label>
+        <label>
+          {$_('consumption.period_b')}
+          <input type="date" bind:value={compareStartB} onchange={load} />
+        </label>
+        <select bind:value={compareDays} onchange={load}>
+          <option value={1}>1d</option>
+          <option value={7}>7d</option>
+          <option value={30}>30d</option>
+        </select>
+      </div>
+      {#if compareData}
+        <UPlotChart data={compareData} options={compareOpts} />
+      {/if}
     {/if}
-  {:else if view === 'month'}
-    <div class="nav">
-      <button onclick={() => shiftMonth(-1)}>←</button>
-      <input type="month" bind:value={monthValue} onchange={load} />
-      <button onclick={() => shiftMonth(1)}>→</button>
-    </div>
-    {#if monthData}
-      <UPlotChart data={monthData} options={barOpts('kWh')} onclickx={onMonthBarClick} />
-    {/if}
-  {:else if view === 'year'}
-    <div class="nav">
-      <button onclick={() => (yearValue--, load())}>←</button>
-      <span class="year">{yearValue}</span>
-      <button onclick={() => (yearValue++, load())}>→</button>
-    </div>
-    {#if yearData}
-      <UPlotChart data={yearData} options={barOpts('kWh')} />
-    {/if}
-  {:else}
-    <div class="nav compare">
-      <label>{$_('consumption.period_a')} <input type="date" bind:value={compareStartA} onchange={load} /></label>
-      <label>{$_('consumption.period_b')} <input type="date" bind:value={compareStartB} onchange={load} /></label>
-      <select bind:value={compareDays} onchange={load}>
-        <option value={1}>1d</option>
-        <option value={7}>7d</option>
-        <option value={30}>30d</option>
-      </select>
-    </div>
-    {#if compareData}
-      <UPlotChart data={compareData} options={compareOpts} />
-    {/if}
-  {/if}
+  </Card>
 {/if}
 
-<section class="import">
-  <h2>{$_('consumption.import_file')}</h2>
+<Card tinted>
+  <h3>{$_('consumption.import_file')}</h3>
   <input type="file" accept=".xlsx" onchange={onImportFile} />
-  {#if importMessage}<p>{importMessage}</p>{/if}
-</section>
+  {#if importMessage}<p class="muted">{importMessage}</p>{/if}
+</Card>
 
 <style>
+  .sp-select {
+    margin-bottom: 0.8rem;
+  }
   .tabs {
-    display: flex;
-    gap: 0.4rem;
-    margin: 0.8rem 0;
-  }
-  .tabs button {
-    border: 1px solid #cbd5e1;
-    background: white;
-    border-radius: 999px;
-    padding: 0.3rem 0.9rem;
-    cursor: pointer;
-  }
-  .tabs button.active {
-    background: #0f172a;
-    color: white;
-    border-color: #0f172a;
+    margin: 0 0 0.9rem;
   }
   .nav {
     display: flex;
@@ -282,40 +303,29 @@
     margin-bottom: 0.6rem;
     flex-wrap: wrap;
   }
-  .nav button {
-    border: 1px solid #cbd5e1;
-    background: white;
-    border-radius: 0.35rem;
-    padding: 0.3rem 0.7rem;
+  .arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-control);
+    color: var(--ink);
     cursor: pointer;
   }
-  .nav input,
-  .nav select {
-    padding: 0.35rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 0.35rem;
+  .arrow:hover {
+    background: var(--surface-sunken);
   }
   .year {
-    font-weight: 700;
+    font-weight: 800;
     padding: 0 0.5rem;
-  }
-  .muted {
-    color: #64748b;
-    font-size: 0.9rem;
-  }
-  .import {
-    margin-top: 1.5rem;
-    background: #f1f5f9;
-    border-radius: 0.5rem;
-    padding: 0.8rem;
-  }
-  .import h2 {
-    margin: 0 0 0.5rem;
-    font-size: 0.95rem;
   }
   .compare label {
     display: flex;
     flex-direction: column;
+    gap: 0.25rem;
     font-size: 0.8rem;
   }
 </style>

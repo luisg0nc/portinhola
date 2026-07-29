@@ -3,6 +3,10 @@
   import { goto } from '$app/navigation';
   import { _ } from 'svelte-i18n';
   import { api } from '$lib/api';
+  import Card from '$lib/ui/Card.svelte';
+  import Button from '$lib/ui/Button.svelte';
+  import PageHeader from '$lib/ui/PageHeader.svelte';
+  import { X } from '$lib/ui/icons';
 
   type ContractOption = { id: number; label: string };
 
@@ -96,62 +100,73 @@
   }
 </script>
 
-<h1>{$_('bills.manual_entry')}</h1>
+<PageHeader title={$_('bills.manual_entry')} />
 
 <form onsubmit={submit}>
-  <div class="grid">
-    <label>
-      {$_('bills.issuer_nif')}
-      <input bind:value={issuerNif} required />
-    </label>
-    <label>
-      {$_('bills.doc_number')}
-      <input bind:value={docNumber} required />
-    </label>
-    <label>
-      {$_('bills.date')}
-      <input type="date" bind:value={issueDate} required />
-    </label>
-    <label>
-      {$_('bills.total')} (€)
-      <input inputmode="decimal" bind:value={totalEuros} required />
-    </label>
-    <label>
-      {$_('bills.period')} —
-      <input type="date" bind:value={periodStart} />
-    </label>
-    <label>
-      &nbsp;
-      <input type="date" bind:value={periodEnd} />
-    </label>
-  </div>
-
-  <h2>{$_('bills.lines')}</h2>
-  {#each lines as line, index}
-    <div class="line">
-      <input class="desc" placeholder={$_('bills.description')} bind:value={line.description} />
-      <select bind:value={line.category}>
-        {#each categories as category}
-          <option value={category}>{$_(`bills.category_${category}`)}</option>
-        {/each}
-      </select>
-      <input class="num" inputmode="decimal" placeholder="€" bind:value={line.amount_euros} />
-      <input class="num" inputmode="numeric" placeholder="%" bind:value={line.vat_rate} />
-      <select bind:value={line.contract_id}>
-        <option value={null}>{$_('bills.unassigned')}</option>
-        {#each contractOptions as option}
-          <option value={option.id}>{option.label}</option>
-        {/each}
-      </select>
-      <button type="button" class="remove" onclick={() => removeLine(index)}>✕</button>
+  <Card>
+    <div class="grid">
+      <label>
+        {$_('bills.issuer_nif')}
+        <input bind:value={issuerNif} required />
+      </label>
+      <label>
+        {$_('bills.doc_number')}
+        <input bind:value={docNumber} required />
+      </label>
+      <label>
+        {$_('bills.date')}
+        <input type="date" bind:value={issueDate} required />
+      </label>
+      <label>
+        {$_('bills.total')} (€)
+        <input inputmode="decimal" bind:value={totalEuros} required />
+      </label>
+      <label>
+        {$_('bills.period')}
+        <input type="date" bind:value={periodStart} />
+      </label>
+      <label>
+        &nbsp;
+        <input type="date" bind:value={periodEnd} />
+      </label>
     </div>
-  {/each}
-  <button type="button" class="secondary" onclick={addLine}>{$_('bills.add_line')}</button>
+  </Card>
+
+  <Card>
+    <h3>{$_('bills.lines')}</h3>
+    {#each lines as line, index}
+      <div class="line">
+        <input class="desc" placeholder={$_('bills.description')} bind:value={line.description} />
+        <select bind:value={line.category}>
+          {#each categories as category}
+            <option value={category}>{$_(`bills.category_${category}`)}</option>
+          {/each}
+        </select>
+        <input class="num" inputmode="decimal" placeholder="€" bind:value={line.amount_euros} />
+        <input class="num" inputmode="numeric" placeholder="%" bind:value={line.vat_rate} />
+        <select bind:value={line.contract_id}>
+          <option value={null}>{$_('bills.unassigned')}</option>
+          {#each contractOptions as option}
+            <option value={option.id}>{option.label}</option>
+          {/each}
+        </select>
+        <button
+          type="button"
+          class="remove"
+          onclick={() => removeLine(index)}
+          aria-label={$_('bills.cancel')}
+        >
+          <X size={16} />
+        </button>
+      </div>
+    {/each}
+    <Button variant="secondary" size="sm" onclick={addLine}>{$_('bills.add_line')}</Button>
+  </Card>
 
   {#if error}<p class="error">{error}</p>{/if}
   <div class="buttons">
-    <button type="submit">{$_('bills.confirm')}</button>
-    <a href="/bills">{$_('bills.cancel')}</a>
+    <Button type="submit">{$_('bills.confirm')}</Button>
+    <Button variant="secondary" href="/bills">{$_('bills.cancel')}</Button>
   </div>
 </form>
 
@@ -160,66 +175,40 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
     gap: 0.7rem;
-    max-width: 40rem;
   }
   label {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-    font-size: 0.9rem;
-  }
-  input,
-  select {
-    padding: 0.45rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 0.35rem;
-    font-size: 0.9rem;
-    background: white;
+    gap: 0.25rem;
+    font-size: 0.85rem;
   }
   .line {
     display: flex;
     gap: 0.4rem;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
     flex-wrap: wrap;
+    align-items: center;
   }
   .line .desc {
     flex: 2 1 10rem;
   }
   .line .num {
-    width: 5rem;
+    width: 5.5rem;
   }
   .remove {
     background: none;
     border: none;
-    color: #dc2626;
+    color: var(--danger);
     cursor: pointer;
-    font-size: 1rem;
-  }
-  .secondary {
-    background: #475569;
-    color: white;
-    border: none;
-    border-radius: 0.4rem;
-    padding: 0.5rem 0.9rem;
-    cursor: pointer;
-    margin-top: 0.4rem;
+    display: flex;
+    padding: 0.4rem;
   }
   .buttons {
-    margin-top: 1.2rem;
     display: flex;
-    gap: 1rem;
+    gap: 0.6rem;
     align-items: center;
   }
-  .buttons button {
-    padding: 0.7rem 1.2rem;
-    border: none;
-    border-radius: 0.4rem;
-    background: #0f172a;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-  }
   .error {
-    color: #dc2626;
+    color: var(--danger);
   }
 </style>

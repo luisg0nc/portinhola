@@ -84,7 +84,10 @@
     "gas_tier": "Escalão",
     "start_date": "Início do contrato",
     "upload_failed": "Falha ao carregar o ficheiro.",
-    "saved": "Fatura guardada."
+    "saved": "Fatura guardada.",
+    "drop_hint": "Arraste o PDF da fatura para aqui, ou toque para escolher o ficheiro",
+    "step_pick": "Escolher ficheiro",
+    "step_review": "Rever e confirmar"
   },
   "dashboard": {
     "monthly_costs": "Custos mensais",
@@ -211,7 +214,8 @@
     "line_fixed_standard": "Termo fixo (23%)",
     "line_fixed_reduced": "Termo fixo (6%)",
     "line_tos": "Ocupação subsolo",
-    "line_vat": "IVA"
+    "line_vat": "IVA",
+    "best_deal": "Melhor opção"
   },
   "common": {
     "loading": "A carregar…",

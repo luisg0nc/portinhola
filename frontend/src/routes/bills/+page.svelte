@@ -2,7 +2,12 @@
   import { onMount } from 'svelte';
   import { _, locale } from 'svelte-i18n';
   import { api } from '$lib/api';
+  import Card from '$lib/ui/Card.svelte';
+  import Button from '$lib/ui/Button.svelte';
+  import PageHeader from '$lib/ui/PageHeader.svelte';
+  import EmptyState from '$lib/ui/EmptyState.svelte';
   import { formatCents } from '$lib/money';
+  import { Upload, Pencil, ReceiptText } from '$lib/ui/icons';
 
   type BillItem = {
     id: number;
@@ -21,6 +26,11 @@
   let loaded = $state(false);
 
   const utilityIcons: Record<string, string> = { electricity: '⚡', gas: '🔥', water: '💧' };
+  const statusKind: Record<string, string> = {
+    parsed: 'success',
+    partial: 'warning',
+    manual: 'neutral'
+  };
 
   async function load() {
     const url = filter ? `/api/bills?utility=${filter}` : '/api/bills';
@@ -37,128 +47,81 @@
   }
 </script>
 
-<header>
-  <h1>{$_('nav.bills')}</h1>
-  <div class="actions">
-    <a class="button" href="/bills/upload">{$_('bills.upload')}</a>
-    <a class="button secondary" href="/bills/new">{$_('bills.manual_entry')}</a>
-  </div>
-</header>
+<PageHeader title={$_('nav.bills')}>
+  {#snippet action()}
+    <Button href="/bills/upload">
+      <Upload size={16} />
+      {$_('bills.upload')}
+    </Button>
+    <Button variant="secondary" href="/bills/new">
+      <Pencil size={16} />
+      {$_('bills.manual_entry')}
+    </Button>
+  {/snippet}
+</PageHeader>
 
-<div class="filters">
+<div class="chip-row filters">
   {#each ['', 'electricity', 'gas', 'water'] as value}
-    <button class:active={filter === value} onclick={() => setFilter(value)}>
-      {value ? utilityIcons[value] : $_('bills.all')}
+    <button class="chip" class:active={filter === value} onclick={() => setFilter(value)}>
+      {value ? `${utilityIcons[value]} ${$_(`dashboard.utility_${value}`)}` : $_('bills.all')}
     </button>
   {/each}
 </div>
 
 {#if loaded && bills.length === 0}
-  <p>{$_('bills.no_bills')}</p>
+  <Card>
+    <EmptyState icon={ReceiptText} message={$_('bills.no_bills')}>
+      <Button href="/bills/upload">{$_('bills.upload')}</Button>
+    </EmptyState>
+  </Card>
 {:else}
   <ul class="bill-list">
     {#each bills as bill}
       <li>
-        <a href={`/bills/${bill.id}`}>
+        <Card href={`/bills/${bill.id}`}>
           <div class="row1">
             <span class="supplier">{bill.supplier_name ?? bill.doc_number}</span>
-            <span class="total">{formatCents(bill.total_cents, $locale ?? 'pt')}</span>
+            <span class="total money">{formatCents(bill.total_cents, $locale ?? 'pt')}</span>
           </div>
           <div class="row2">
-            <span>{bill.utilities.map((u) => utilityIcons[u] ?? '').join(' ')} {bill.issue_date}</span>
-            <span class={`badge ${bill.parse_status}`}>{$_(`bills.status_${bill.parse_status}`)}</span>
+            <span class="muted">
+              {bill.utilities.map((u) => utilityIcons[u] ?? '').join(' ')}
+              {bill.issue_date}
+            </span>
+            <span class={`badge ${statusKind[bill.parse_status] ?? 'neutral'}`}>
+              {$_(`bills.status_${bill.parse_status}`)}
+            </span>
           </div>
-        </a>
+        </Card>
       </li>
     {/each}
   </ul>
 {/if}
 
 <style>
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  .actions {
-    display: flex;
-    gap: 0.5rem;
-  }
-  .button {
-    background: #0f172a;
-    color: white;
-    padding: 0.5rem 0.9rem;
-    border-radius: 0.4rem;
-    text-decoration: none;
-    font-size: 0.9rem;
-  }
-  .button.secondary {
-    background: #475569;
-  }
   .filters {
-    display: flex;
-    gap: 0.4rem;
-    margin: 1rem 0;
-  }
-  .filters button {
-    border: 1px solid #cbd5e1;
-    background: white;
-    border-radius: 999px;
-    padding: 0.3rem 0.8rem;
-    cursor: pointer;
-  }
-  .filters button.active {
-    background: #0f172a;
-    color: white;
-    border-color: #0f172a;
+    margin: 0 0 1rem;
   }
   .bill-list {
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
   }
-  .bill-list a {
-    display: block;
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.5rem;
-    padding: 0.7rem 0.9rem;
-    text-decoration: none;
-    color: inherit;
+  .bill-list :global(.card) {
+    margin-bottom: 0.6rem;
+    padding: 0.8rem 1rem;
   }
   .row1 {
     display: flex;
     justify-content: space-between;
-    font-weight: 600;
+    gap: 0.5rem;
+    font-weight: 700;
   }
   .row2 {
     display: flex;
     justify-content: space-between;
-    color: #64748b;
-    font-size: 0.85rem;
-    margin-top: 0.2rem;
-  }
-  .badge {
-    border-radius: 999px;
-    padding: 0 0.5rem;
-    font-size: 0.75rem;
-    align-self: center;
-  }
-  .badge.parsed {
-    background: #dcfce7;
-    color: #166534;
-  }
-  .badge.partial {
-    background: #fef9c3;
-    color: #854d0e;
-  }
-  .badge.manual {
-    background: #e2e8f0;
-    color: #334155;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
   }
 </style>

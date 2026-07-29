@@ -3,6 +3,10 @@
   import { _, locale } from 'svelte-i18n';
   import { api } from '$lib/api';
   import { formatCents } from '$lib/money';
+  import Card from '$lib/ui/Card.svelte';
+  import PageHeader from '$lib/ui/PageHeader.svelte';
+  import StatusBanner from '$lib/ui/StatusBanner.svelte';
+  import { ChevronDown, Trophy } from '$lib/ui/icons';
 
   type Line = { label: string; amount_cents: number; vat_rate: number };
   type Breakdown = {
@@ -43,8 +47,6 @@
     recommended_kva: number;
     saving_cents_year: number | null;
   } | null>(null);
-
-  const icons = { electricity: '⚡', gas: '🔥' };
 
   function sp(): Sp | undefined {
     return supplyPoints.find((s) => s.utility === utility);
@@ -101,52 +103,74 @@
     const translated = $_(key);
     return translated === key ? label : translated;
   }
+
+  // The cheapest plan that is not the current one, for the "best deal" crown.
+  let bestKey = $derived.by(() => {
+    if (!data || data.results.length === 0) return null;
+    const best = data.results.find((r) => data!.current?.tariff_id !== r.tariff_id);
+    return best ? best.tariff_id + best.option : null;
+  });
 </script>
 
-<h1>{$_('calculator.title')}</h1>
+<PageHeader title={$_('calculator.title')} />
 
 <div class="controls">
-  <div class="tabs">
+  <div class="chip-row">
     {#each ['electricity', 'gas'] as u}
       <button
+        class="chip"
         class:active={utility === u}
         onclick={() => {
           utility = u as 'electricity' | 'gas';
           load();
         }}
       >
-        {icons[u as 'electricity' | 'gas']}
+        {u === 'electricity' ? '⚡' : '🔥'}
+        {$_(`dashboard.utility_${u}`)}
       </button>
     {/each}
   </div>
   {#if utility === 'electricity'}
-    <select bind:value={months} onchange={load}>
-      <option value={3}>{$_('calculator.months_3')}</option>
-      <option value={6}>{$_('calculator.months_6')}</option>
-      <option value={12}>{$_('calculator.months_12')}</option>
-    </select>
+    <div class="chip-row">
+      {#each [3, 6, 12] as m}
+        <button
+          class="chip"
+          class:active={months === m}
+          onclick={() => {
+            months = m;
+            load();
+          }}
+        >
+          {$_(`calculator.months_${m}`)}
+        </button>
+      {/each}
+    </div>
   {/if}
 </div>
 
 {#if errorKey}
-  <p>{$_(errorKey)}</p>
+  <Card><p class="muted center">{$_(errorKey)}</p></Card>
 {:else if data}
   {#if calibration}
     {@const delta = Math.abs(calibration.delta_cents)}
-    <p class={`calibration ${delta <= 50 ? 'ok' : 'warn'}`}>
-      {$_(delta <= 50 ? 'calculator.calibration_ok' : 'calculator.calibration_warn').replace(
-        '{delta}',
-        fmt(delta)
-      )}
-    </p>
+    <StatusBanner kind={delta <= 50 ? 'success' : 'warning'}>
+      <p>
+        {$_(delta <= 50 ? 'calculator.calibration_ok' : 'calculator.calibration_warn').replace(
+          '{delta}',
+          fmt(delta)
+        )}
+      </p>
+    </StatusBanner>
   {/if}
   {#if data.window.coverage !== undefined && data.window.coverage < 0.9}
-    <p class="warn-box">
-      {$_('calculator.coverage_warning').replace(
-        '{pct}',
-        String(Math.round(data.window.coverage * 100))
-      )}
-    </p>
+    <StatusBanner kind="warning">
+      <p>
+        {$_('calculator.coverage_warning').replace(
+          '{pct}',
+          String(Math.round(data.window.coverage * 100))
+        )}
+      </p>
+    </StatusBanner>
   {/if}
 
   <p class="muted">
@@ -157,15 +181,24 @@
     {#each data.results as row}
       {@const rowKey = row.tariff_id + row.option}
       {@const isCurrent = data.current?.tariff_id === row.tariff_id}
-      <li class:current={isCurrent}>
+      {@const isBest = bestKey === rowKey && !isCurrent}
+      <li class:current={isCurrent} class:best={isBest}>
+        {#if isBest}
+          <div class="crown">
+            <Trophy size={13} strokeWidth={2.4} />
+            {$_('calculator.best_deal')}
+          </div>
+        {/if}
         <button class="row" onclick={() => (expanded = expanded === rowKey ? null : rowKey)}>
           <span class="who">
             <strong>{row.supplier}</strong>
-            <span class="plan">{row.name} · {row.option}</span>
-            {#if isCurrent}<span class="badge">{$_('calculator.current_plan')}</span>{/if}
+            <span class="plan muted">{row.name} · {row.option}</span>
+            {#if isCurrent}
+              <span class="badge accent">{$_('calculator.current_plan')}</span>
+            {/if}
           </span>
           <span class="numbers">
-            <span class="total">{fmt(row.total_cents)}</span>
+            <span class="total money">{fmt(row.total_cents)}</span>
             {#if row.delta_cents !== null && !isCurrent}
               <span class={`delta ${row.delta_cents < 0 ? 'save' : 'more'}`}>
                 {row.delta_cents < 0
@@ -173,6 +206,9 @@
                   : $_('calculator.delta_more').replace('{amount}', fmt(row.delta_cents))}
               </span>
             {/if}
+          </span>
+          <span class="chev" class:open={expanded === rowKey}>
+            <ChevronDown size={16} />
           </span>
         </button>
         {#if expanded === rowKey}
@@ -183,13 +219,13 @@
                   {#if line.amount_cents !== 0}
                     <tr>
                       <td>{lineLabel(line.label)}</td>
-                      <td class="amount">{fmt(line.amount_cents)}</td>
+                      <td class="amount money">{fmt(line.amount_cents)}</td>
                     </tr>
                   {/if}
                 {/each}
                 <tr>
                   <td>{lineLabel('vat')}</td>
-                  <td class="amount">{fmt(row.breakdown.vat_cents)}</td>
+                  <td class="amount money">{fmt(row.breakdown.vat_cents)}</td>
                 </tr>
               </tbody>
             </table>
@@ -204,35 +240,35 @@
   </ul>
 
   {#if potencia && potencia.contracted_kva}
-    <section class="pot card">
+    <Card>
       <h2>{$_('calculator.potencia_title')}</h2>
       <div class="pot-grid">
         <div>
           <span class="muted">{$_('calculator.potencia_contracted')}</span>
-          <strong>{potencia.contracted_kva} kVA</strong>
+          <strong class="money">{potencia.contracted_kva} kVA</strong>
         </div>
         <div>
           <span class="muted">{$_('calculator.potencia_peak')}</span>
-          <strong>{potencia.peak_kw} kW</strong>
+          <strong class="money">{potencia.peak_kw} kW</strong>
         </div>
         <div>
           <span class="muted">{$_('calculator.potencia_recommended')}</span>
-          <strong>{potencia.recommended_kva} kVA</strong>
+          <strong class="money">{potencia.recommended_kva} kVA</strong>
         </div>
       </div>
       {#if potencia.saving_cents_year}
-        <p class="save">
+        <p class="save-note">
           {$_('calculator.potencia_saving').replace('{amount}', fmt(potencia.saving_cents_year))}
         </p>
       {:else}
         <p class="muted">{$_('calculator.potencia_ok')}</p>
       {/if}
-    </section>
+    </Card>
   {/if}
 
   <p class="muted note">{$_('calculator.staleness_note')}</p>
 {:else}
-  <p>{$_('common.loading')}</p>
+  <p class="muted">{$_('common.loading')}</p>
 {/if}
 
 <style>
@@ -240,47 +276,13 @@
     display: flex;
     gap: 0.6rem;
     align-items: center;
-    margin-bottom: 0.8rem;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
   }
-  .tabs {
-    display: flex;
-    gap: 0.4rem;
-  }
-  .tabs button {
-    border: 1px solid #cbd5e1;
-    background: white;
-    border-radius: 999px;
-    padding: 0.3rem 0.9rem;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-  .tabs button.active {
-    background: #0f172a;
-    border-color: #0f172a;
-  }
-  select {
-    padding: 0.35rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 0.35rem;
-  }
-  .calibration {
-    padding: 0.6rem 0.8rem;
-    border-radius: 0.4rem;
-    font-size: 0.9rem;
-  }
-  .calibration.ok {
-    background: #dcfce7;
-    color: #166534;
-  }
-  .calibration.warn {
-    background: #fef9c3;
-    color: #854d0e;
-  }
-  .warn-box {
-    background: #fef9c3;
-    padding: 0.5rem 0.8rem;
-    border-radius: 0.4rem;
-    font-size: 0.85rem;
+  .center {
+    text-align: center;
+    padding: 1rem 0;
   }
   .results {
     list-style: none;
@@ -288,16 +290,28 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.45rem;
+    gap: 0.55rem;
   }
   .results li {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.5rem;
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
     overflow: hidden;
   }
   .results li.current {
-    border-color: #0ea5e9;
+    box-shadow:
+      var(--shadow-card),
+      inset 0 0 0 2px var(--accent);
+  }
+  .crown {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: var(--success-tint);
+    color: var(--success);
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.3rem 0.9rem;
   }
   .row {
     width: 100%;
@@ -305,51 +319,59 @@
     justify-content: space-between;
     align-items: center;
     gap: 0.6rem;
-    padding: 0.7rem 0.9rem;
+    padding: 0.75rem 0.9rem;
     background: none;
     border: none;
     cursor: pointer;
     text-align: left;
     font-size: 0.95rem;
+    font-family: var(--font);
+    color: var(--ink);
   }
   .who {
     display: flex;
     flex-direction: column;
     gap: 0.15rem;
+    min-width: 0;
   }
   .plan {
-    color: #64748b;
     font-size: 0.8rem;
   }
-  .badge {
+  .who .badge {
     align-self: flex-start;
-    background: #e0f2fe;
-    color: #075985;
-    border-radius: 999px;
-    padding: 0 0.5rem;
-    font-size: 0.72rem;
   }
   .numbers {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 0.15rem;
+    margin-left: auto;
+    flex-shrink: 0;
   }
   .total {
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
+    font-weight: 800;
   }
   .delta {
     font-size: 0.8rem;
+    font-weight: 700;
   }
   .delta.save {
-    color: #16a34a;
+    color: var(--success);
   }
   .delta.more {
-    color: #dc2626;
+    color: var(--danger);
+  }
+  .chev {
+    display: flex;
+    color: var(--ink-muted);
+    transition: transform 0.15s ease;
+    flex-shrink: 0;
+  }
+  .chev.open {
+    transform: rotate(180deg);
   }
   .breakdown {
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid var(--line);
     padding: 0.6rem 0.9rem;
   }
   .breakdown table {
@@ -362,25 +384,12 @@
   }
   .breakdown .amount {
     text-align: right;
-    font-variant-numeric: tabular-nums;
   }
   .src {
     margin: 0.4rem 0 0;
   }
-  .muted {
-    color: #94a3b8;
-    font-size: 0.85rem;
-  }
-  .card {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.6rem;
-    padding: 0.9rem;
+  .results + :global(.card) {
     margin-top: 1rem;
-  }
-  .card h2 {
-    margin: 0 0 0.6rem;
-    font-size: 1rem;
   }
   .pot-grid {
     display: flex;
@@ -391,9 +400,14 @@
     display: flex;
     flex-direction: column;
   }
-  .save {
-    color: #16a34a;
-    font-weight: 600;
+  .pot-grid strong {
+    font-size: 1.1rem;
+    font-weight: 800;
+  }
+  .save-note {
+    color: var(--success);
+    font-weight: 700;
+    margin-bottom: 0;
   }
   .note {
     margin-top: 1rem;

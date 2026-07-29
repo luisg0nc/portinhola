@@ -2,6 +2,12 @@
   import { onMount } from 'svelte';
   import { _ } from 'svelte-i18n';
   import { api } from '$lib/api';
+  import Card from '$lib/ui/Card.svelte';
+  import Button from '$lib/ui/Button.svelte';
+  import PageHeader from '$lib/ui/PageHeader.svelte';
+  import UtilityBadge from '$lib/ui/UtilityBadge.svelte';
+  import EmptyState from '$lib/ui/EmptyState.svelte';
+  import { Phone, ExternalLink, Check, Gauge } from '$lib/ui/icons';
 
   type Contract = {
     id: number;
@@ -30,8 +36,14 @@
 
   let supplyPoints = $state<Sp[]>([]);
   let latestBySp = $state<Record<number, Record<string, ReadingOut>>>({});
+  let loaded = $state(false);
 
-  const icons: Record<string, string> = { electricity: '⚡', gas: '🔥', water: '💧' };
+  const badgeKind: Record<string, string> = {
+    not_submitted: 'warning',
+    needs_manual: 'danger',
+    submitted_manual: 'success',
+    submitted_auto: 'success'
+  };
 
   onMount(async () => {
     const res = await api('/api/supply-points');
@@ -41,6 +53,7 @@
       const latestRes = await api(`/api/readings/latest?supply_point_id=${sp.id}`);
       if (latestRes.ok) latestBySp[sp.id] = await latestRes.json();
     }
+    loaded = true;
   });
 
   function openContract(sp: Sp): Contract | undefined {
@@ -62,15 +75,21 @@
   }
 </script>
 
-<h1>{$_('readings.title')}</h1>
+<PageHeader title={$_('readings.title')} />
+
+{#if loaded && supplyPoints.length === 0}
+  <Card>
+    <EmptyState icon={Gauge} message={$_('settings.no_supply_points')} />
+  </Card>
+{/if}
 
 {#each supplyPoints as sp}
   {@const contract = openContract(sp)}
   {@const latest = latestBySp[sp.id] ?? {}}
-  <section class="card">
-    <header>
-      <strong>{icons[sp.utility]} {sp.name || sp.identifier}</strong>
-      <a class="button" href={`/readings/new?sp=${sp.id}`}>{$_('readings.new_reading')}</a>
+  <Card>
+    <header class="head">
+      <UtilityBadge utility={sp.utility} label={sp.name || sp.identifier} />
+      <Button size="sm" href={`/readings/new?sp=${sp.id}`}>{$_('readings.new_reading')}</Button>
     </header>
     {#if Object.keys(latest).length === 0}
       <p class="muted">{$_('readings.no_readings')}</p>
@@ -79,9 +98,9 @@
         {#each Object.entries(latest) as [register, reading]}
           <li>
             <span class="reg">{register}</span>
-            <span class="val">{reading.value}</span>
+            <span class="val money">{reading.value}</span>
             <span class="muted">{reading.taken_at.slice(0, 10)}</span>
-            <span class={`badge ${reading.submission_status}`}>
+            <span class={`badge ${badgeKind[reading.submission_status] ?? 'neutral'}`}>
               {$_(`readings.status_${reading.submission_status}`)}
             </span>
           </li>
@@ -92,21 +111,36 @@
           <span>{$_('readings.submit_hint')}</span>
           <div class="row">
             {#if contract.submit_url}
-              <a class="button small" href={contract.submit_url} target="_blank" rel="noreferrer">
+              <Button
+                size="sm"
+                variant="secondary"
+                href={contract.submit_url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <ExternalLink size={14} />
                 {$_('readings.open_portal')}
-              </a>
+              </Button>
             {/if}
             {#if contract.submit_phone}
-              <a class="button small" href={`tel:${contract.submit_phone.replace(/\s/g, '')}`}>
-                📞 {$_('readings.call_ivr')} {contract.submit_phone}
-              </a>
+              <Button
+                size="sm"
+                variant="secondary"
+                href={`tel:${contract.submit_phone.replace(/\s/g, '')}`}
+              >
+                <Phone size={14} />
+                {$_('readings.call_ivr')} {contract.submit_phone}
+              </Button>
             {/if}
             {#if contract.submit_reference}
-              <span class="ref">{$_('readings.reference')}: <code>{contract.submit_reference}</code></span>
+              <span class="ref muted">
+                {$_('readings.reference')}: <code>{contract.submit_reference}</code>
+              </span>
             {/if}
-            <button class="small" onclick={() => markSubmitted(sp)}>
+            <Button size="sm" onclick={() => markSubmitted(sp)}>
+              <Check size={14} />
               {$_('readings.mark_submitted')}
-            </button>
+            </Button>
           </div>
         </div>
       {/if}
@@ -121,43 +155,16 @@
         {$_('readings.no_window')}
       {/if}
     </p>
-  </section>
+  </Card>
 {/each}
 
 <style>
-  .card {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.6rem;
-    padding: 0.9rem;
-    margin-bottom: 0.9rem;
-  }
-  header {
+  .head {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
-  }
-  .button {
-    background: #0f172a;
-    color: white;
-    padding: 0.45rem 0.8rem;
-    border-radius: 0.4rem;
-    text-decoration: none;
-    font-size: 0.85rem;
-    border: none;
-    cursor: pointer;
-  }
-  .button.small,
-  button.small {
-    font-size: 0.8rem;
-    padding: 0.35rem 0.6rem;
-    background: #475569;
-    color: white;
-    border: none;
-    border-radius: 0.35rem;
-    cursor: pointer;
-    text-decoration: none;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
   }
   .registers {
     list-style: none;
@@ -165,7 +172,7 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.4rem;
   }
   .registers li {
     display: flex;
@@ -174,47 +181,26 @@
     flex-wrap: wrap;
   }
   .reg {
-    font-weight: 600;
+    font-weight: 700;
     min-width: 4rem;
+    font-size: 0.88rem;
   }
   .val {
-    font-variant-numeric: tabular-nums;
     font-size: 1.05rem;
-  }
-  .muted {
-    color: #94a3b8;
-    font-size: 0.8rem;
+    font-weight: 700;
   }
   .window {
     margin: 0.6rem 0 0;
   }
-  .badge {
-    border-radius: 999px;
-    padding: 0 0.5rem;
-    font-size: 0.72rem;
-  }
-  .badge.not_submitted {
-    background: #fef9c3;
-    color: #854d0e;
-  }
-  .badge.needs_manual {
-    background: #fee2e2;
-    color: #991b1b;
-  }
-  .badge.submitted_manual,
-  .badge.submitted_auto {
-    background: #dcfce7;
-    color: #166534;
-  }
   .submit-info {
-    margin-top: 0.6rem;
-    background: #f1f5f9;
-    border-radius: 0.4rem;
-    padding: 0.6rem;
+    margin-top: 0.7rem;
+    background: var(--surface-sunken);
+    border-radius: var(--radius-control);
+    padding: 0.7rem;
     font-size: 0.85rem;
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.5rem;
   }
   .submit-info .row {
     display: flex;
@@ -223,8 +209,8 @@
     align-items: center;
   }
   .ref code {
-    background: white;
+    background: var(--surface);
     padding: 0.1rem 0.4rem;
-    border-radius: 0.25rem;
+    border-radius: 6px;
   }
 </style>

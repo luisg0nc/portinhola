@@ -3,6 +3,11 @@
   import { _, locale } from 'svelte-i18n';
   import { api } from '$lib/api';
   import { formatCents } from '$lib/money';
+  import Card from '$lib/ui/Card.svelte';
+  import Button from '$lib/ui/Button.svelte';
+  import PageHeader from '$lib/ui/PageHeader.svelte';
+  import StatusBanner from '$lib/ui/StatusBanner.svelte';
+  import { Upload } from '$lib/ui/icons';
 
   type ParsedLine = {
     description: string;
@@ -57,23 +62,21 @@
 
   let phase = $state<'pick' | 'review'>('pick');
   let error = $state('');
+  let dragging = $state(false);
   let draft = $state<Draft | null>(null);
   let lines = $state<ParsedLine[]>([]);
-  // supplies to create: parsed supplies with no existing match, editable
   let newSupplies = $state<
     { supply: ParsedSupply; name: string; supplier_name: string; start_date: string }[]
   >([]);
-  // utility -> contract ref: existing id (>0) or negative index into newSupplies, or null
   let contractByUtility = $state<Record<string, number | null>>({});
   let existingOptions = $state<Record<string, ContractOption[]>>({});
   let submitting = $state(false);
+  let fileInput = $state<HTMLInputElement | null>(null);
 
   const categories = ['energy', 'power', 'fixed', 'tax', 'other'];
 
-  async function onFile(event: Event) {
+  async function handleFile(file: File | undefined) {
     error = '';
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
     if (!file) return;
     const form = new FormData();
     form.append('file', file);
@@ -85,6 +88,17 @@
     draft = await res.json();
     await prepareReview();
     phase = 'review';
+  }
+
+  function onFile(event: Event) {
+    const input = event.target as HTMLInputElement;
+    handleFile(input.files?.[0]);
+  }
+
+  function onDrop(event: DragEvent) {
+    event.preventDefault();
+    dragging = false;
+    handleFile(event.dataTransfer?.files?.[0]);
   }
 
   async function prepareReview() {
@@ -185,56 +199,91 @@
   }
 </script>
 
-<h1>{$_('bills.upload')}</h1>
+<PageHeader title={$_('bills.upload')} />
+
+<div class="steps" aria-hidden="true">
+  <span class="step" class:done={phase === 'review'} class:active={phase === 'pick'}>
+    1 · {$_('bills.step_pick')}
+  </span>
+  <span class="step" class:active={phase === 'review'}>2 · {$_('bills.step_review')}</span>
+</div>
 
 {#if phase === 'pick'}
-  <input type="file" accept="application/pdf,.pdf" onchange={onFile} />
+  <div
+    class="dropzone"
+    class:dragging
+    role="button"
+    tabindex="0"
+    ondragover={(e) => {
+      e.preventDefault();
+      dragging = true;
+    }}
+    ondragleave={() => (dragging = false)}
+    ondrop={onDrop}
+    onclick={() => fileInput?.click()}
+    onkeydown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') fileInput?.click();
+    }}
+  >
+    <div class="disc"><Upload size={26} strokeWidth={1.8} /></div>
+    <p>{$_('bills.drop_hint')}</p>
+    <input
+      bind:this={fileInput}
+      type="file"
+      accept="application/pdf,.pdf"
+      onchange={onFile}
+      class="hidden-input"
+    />
+  </div>
   {#if error}<p class="error">{error}</p>{/if}
 {:else if draft}
-  <h2>{$_('bills.review_title')}</h2>
-
   {#if draft.duplicate_of !== null}
-    <p class="warning">{$_('bills.duplicate_warning')}</p>
+    <StatusBanner kind="warning"><p>{$_('bills.duplicate_warning')}</p></StatusBanner>
   {/if}
   {#if !draft.parsed}
-    <p class="hint">{$_('bills.parse_failed_hint')}</p>
+    <StatusBanner kind="info"><p>{$_('bills.parse_failed_hint')}</p></StatusBanner>
   {/if}
 
   {#if draft.qr}
-    <section class="qr">
-      <div><strong>{$_('bills.issuer_nif')}:</strong> {draft.qr.issuer_nif}</div>
-      <div><strong>{$_('bills.doc_number')}:</strong> {draft.qr.doc_number}</div>
-      <div><strong>{$_('bills.atcud')}:</strong> {draft.qr.atcud ?? '—'}</div>
-      <div><strong>{$_('bills.date')}:</strong> {draft.qr.issue_date}</div>
-      <div>
-        <strong>{$_('bills.total')}:</strong>
-        {formatCents(draft.qr.total_cents, $locale ?? 'pt')}
+    <Card>
+      <div class="qr-grid">
+        <div><span class="muted">{$_('bills.issuer_nif')}</span> {draft.qr.issuer_nif}</div>
+        <div><span class="muted">{$_('bills.doc_number')}</span> {draft.qr.doc_number}</div>
+        <div><span class="muted">{$_('bills.atcud')}</span> {draft.qr.atcud ?? '—'}</div>
+        <div><span class="muted">{$_('bills.date')}</span> {draft.qr.issue_date}</div>
       </div>
-    </section>
+      <div class="qr-total money">
+        {$_('bills.total')}: {formatCents(draft.qr.total_cents, $locale ?? 'pt')}
+      </div>
+    </Card>
   {/if}
 
-  {#each newSupplies as entry, index}
-    <section class="card">
-      <h3>{$_('bills.create_supply_point')} — {entry.supply.identifier} ({entry.supply.utility})</h3>
-      <label>
-        {$_('bills.name')}
-        <input bind:value={entry.name} placeholder="Casa" />
-      </label>
-      <label>
-        {$_('bills.supplier')}
-        <input bind:value={entry.supplier_name} />
-      </label>
-      <label>
-        {$_('bills.start_date')}
-        <input type="date" bind:value={entry.start_date} />
-      </label>
+  {#each newSupplies as entry}
+    <Card tinted>
+      <h3>
+        {$_('bills.create_supply_point')} — {entry.supply.identifier} ({entry.supply.utility})
+      </h3>
+      <div class="form-grid">
+        <label>
+          {$_('bills.name')}
+          <input bind:value={entry.name} placeholder="Casa" />
+        </label>
+        <label>
+          {$_('bills.supplier')}
+          <input bind:value={entry.supplier_name} />
+        </label>
+        <label>
+          {$_('bills.start_date')}
+          <input type="date" bind:value={entry.start_date} />
+        </label>
+      </div>
       {#if entry.supply.power_kva}
-        <div>{$_('bills.power_kva')}: {entry.supply.power_kva} · {entry.supply.cycle}</div>
+        <p class="muted">{$_('bills.power_kva')}: {entry.supply.power_kva} · {entry.supply.cycle}</p>
       {/if}
       {#if entry.supply.gas_tier}
-        <div>{$_('bills.gas_tier')}: {entry.supply.gas_tier}</div>
+        <p class="muted">{$_('bills.gas_tier')}: {entry.supply.gas_tier}</p>
       {/if}
-    </section>
+    </Card>
   {/each}
 
   {#each Object.keys(contractByUtility) as utility}
@@ -247,7 +296,9 @@
           {/each}
           {#each newSupplies as entry, index}
             {#if entry.supply.utility === utility}
-              <option value={-(index + 1)}>{$_('bills.new_contract_for')} {entry.supply.identifier}</option>
+              <option value={-(index + 1)}>
+                {$_('bills.new_contract_for')} {entry.supply.identifier}
+              </option>
             {/if}
           {/each}
         </select>
@@ -256,83 +307,136 @@
   {/each}
 
   {#if lines.length > 0}
-    <h3>{$_('bills.lines')} ({lines.length})</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>{$_('bills.description')}</th>
-            <th>{$_('bills.category')}</th>
-            <th>{$_('bills.vat')}</th>
-            <th>{$_('bills.amount')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each lines as line}
+    <Card>
+      <h3>{$_('bills.lines')} ({lines.length})</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
             <tr>
-              <td><input bind:value={line.description} /></td>
-              <td>
-                <select bind:value={line.category}>
-                  {#each categories as category}
-                    <option value={category}>{$_(`bills.category_${category}`)}</option>
-                  {/each}
-                </select>
-              </td>
-              <td>{line.vat_rate !== null ? `${line.vat_rate}%` : '—'}</td>
-              <td class="amount">{formatCents(line.amount_cents, $locale ?? 'pt')}</td>
+              <th>{$_('bills.description')}</th>
+              <th>{$_('bills.category')}</th>
+              <th>{$_('bills.vat')}</th>
+              <th>{$_('bills.amount')}</th>
             </tr>
-          {/each}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {#each lines as line}
+              <tr>
+                <td><input bind:value={line.description} /></td>
+                <td>
+                  <select bind:value={line.category}>
+                    {#each categories as category}
+                      <option value={category}>{$_(`bills.category_${category}`)}</option>
+                    {/each}
+                  </select>
+                </td>
+                <td>{line.vat_rate !== null ? `${line.vat_rate}%` : '—'}</td>
+                <td class="amount money">{formatCents(line.amount_cents, $locale ?? 'pt')}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    </Card>
   {/if}
 
   {#if error}<p class="error">{error}</p>{/if}
-  <div class="buttons">
-    <button onclick={confirm} disabled={submitting || !draft.qr}>{$_('bills.confirm')}</button>
-    <a href="/bills" class="cancel">{$_('bills.cancel')}</a>
+  <div class="action-bar">
+    <Button onclick={confirm} disabled={submitting || !draft.qr}>{$_('bills.confirm')}</Button>
+    <Button variant="secondary" href="/bills">{$_('bills.cancel')}</Button>
   </div>
 {/if}
 
 <style>
-  section.qr {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.5rem;
-    padding: 0.8rem;
-    display: grid;
-    gap: 0.3rem;
-    margin-bottom: 1rem;
-  }
-  .card {
-    background: #f1f5f9;
-    border: 1px solid #cbd5e1;
-    border-radius: 0.5rem;
-    padding: 0.8rem;
-    margin-bottom: 1rem;
-    display: grid;
+  .steps {
+    display: flex;
     gap: 0.5rem;
+    margin-bottom: 1rem;
   }
-  .card h3 {
-    margin: 0;
-    font-size: 1rem;
+  .step {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-muted);
+    background: var(--surface-sunken);
+    border-radius: var(--radius-pill);
+    padding: 0.25rem 0.75rem;
   }
-  label {
+  .step.active {
+    background: var(--accent-tint);
+    color: var(--accent);
+  }
+  .step.done {
+    background: var(--success-tint);
+    color: var(--success);
+  }
+  .dropzone {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.3rem;
+    padding: 3rem 1.5rem;
+    background: var(--surface);
+    border: 2px dashed var(--line);
+    border-radius: var(--radius-card);
+    color: var(--ink-muted);
+    cursor: pointer;
+  }
+  .dropzone.dragging {
+    border-color: var(--accent);
+    background: var(--accent-tint);
+    color: var(--accent);
+  }
+  .dropzone .disc {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: var(--accent-tint);
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+  .dropzone p {
+    margin: 0;
+    max-width: 20rem;
+  }
+  .hidden-input {
+    display: none;
+  }
+  .qr-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 0.35rem;
     font-size: 0.9rem;
   }
-  input,
-  select {
-    padding: 0.45rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 0.35rem;
-    font-size: 0.9rem;
-    background: white;
+  .qr-grid .muted {
+    display: inline-block;
+    min-width: 5.5rem;
+  }
+  .qr-total {
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-top: 0.6rem;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 0.7rem;
+  }
+  .form-grid label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
   }
   .assign {
-    margin-bottom: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-bottom: 0.9rem;
+    max-width: 24rem;
   }
   .table-wrap {
     overflow-x: auto;
@@ -341,46 +445,42 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.85rem;
-    background: white;
+  }
+  th {
+    text-align: left;
+    color: var(--ink-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
   th,
   td {
-    border-bottom: 1px solid #e2e8f0;
-    padding: 0.4rem;
-    text-align: left;
+    border-bottom: 1px solid var(--line);
+    padding: 0.4rem 0.3rem;
+  }
+  td input,
+  td select {
+    min-height: 36px;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.85rem;
   }
   td.amount {
     text-align: right;
     white-space: nowrap;
   }
-  .buttons {
-    margin-top: 1rem;
+  .action-bar {
+    position: sticky;
+    bottom: max(0.7rem, env(safe-area-inset-bottom));
     display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-  button {
-    padding: 0.7rem 1.2rem;
-    border: none;
-    border-radius: 0.4rem;
-    background: #0f172a;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  button:disabled {
-    opacity: 0.5;
+    gap: 0.6rem;
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-raised);
+    padding: 0.7rem;
+    margin-top: 1rem;
+    z-index: 20;
   }
   .error {
-    color: #dc2626;
-  }
-  .warning {
-    background: #fef9c3;
-    border: 1px solid #fde047;
-    padding: 0.6rem;
-    border-radius: 0.4rem;
-  }
-  .hint {
-    color: #64748b;
+    color: var(--danger);
   }
 </style>

@@ -1,11 +1,10 @@
 <script lang="ts">
   import { _ } from 'svelte-i18n';
-  import type { Component } from 'svelte';
-  import { House, ReceiptText, Gauge, Scale, Settings } from './icons';
+  import { House, ReceiptText, Gauge, Scale, Settings, type IconComponent } from './icons';
 
   let { current }: { current: string } = $props();
 
-  const tabs: { href: string; key: string; icon: Component }[] = [
+  const tabs: { href: string; key: string; icon: IconComponent }[] = [
     { href: '/', key: 'nav.dashboard', icon: House },
     { href: '/bills', key: 'nav.bills', icon: ReceiptText },
     { href: '/readings', key: 'nav.readings', icon: Gauge },

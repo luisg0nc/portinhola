@@ -1,14 +1,13 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import type { Component } from 'svelte';
-  import { Inbox } from './icons';
+  import { Inbox, type IconComponent } from './icons';
 
   let {
     icon = Inbox,
     message,
     children
   }: {
-    icon?: Component;
+    icon?: IconComponent;
     message: string;
     children?: Snippet;
   } = $props();

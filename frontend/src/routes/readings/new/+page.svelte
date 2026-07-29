@@ -4,6 +4,10 @@
   import { goto } from '$app/navigation';
   import { _ } from 'svelte-i18n';
   import { api } from '$lib/api';
+  import Button from '$lib/ui/Button.svelte';
+  import PageHeader from '$lib/ui/PageHeader.svelte';
+  import UtilityBadge from '$lib/ui/UtilityBadge.svelte';
+  import StatusBanner from '$lib/ui/StatusBanner.svelte';
 
   type Sp = { id: number; utility: string; identifier: string; name: string };
 
@@ -20,8 +24,6 @@
   let error = $state('');
   let decreaseInfo = $state<{ register: string; previous: number } | null>(null);
 
-  const icons: Record<string, string> = { electricity: '⚡', gas: '🔥', water: '💧' };
-
   let selected = $derived(supplyPoints.find((sp) => sp.id === spId) ?? null);
   let registers = $derived(selected ? REGISTERS[selected.utility] : []);
 
@@ -36,6 +38,11 @@
       await loadPrevious();
     }
   });
+
+  async function selectSp(id: number) {
+    spId = id;
+    await loadPrevious();
+  }
 
   async function loadPrevious() {
     if (spId === null) return;
@@ -83,14 +90,22 @@
   }
 </script>
 
-<h1>{$_('readings.new_reading')}</h1>
+<PageHeader title={$_('readings.new_reading')} />
 
 {#if supplyPoints.length > 1}
-  <select bind:value={spId} onchange={loadPrevious}>
+  <div class="chip-row picker">
     {#each supplyPoints as sp}
-      <option value={sp.id}>{icons[sp.utility]} {sp.name || sp.identifier}</option>
+      <button
+        type="button"
+        class="chip"
+        class:active={spId === sp.id}
+        onclick={() => selectSp(sp.id)}
+      >
+        <UtilityBadge utility={sp.utility} size="sm" />
+        {sp.name || sp.identifier}
+      </button>
     {/each}
-  </select>
+  </div>
 {/if}
 
 {#if selected}
@@ -110,94 +125,61 @@
           bind:value={values[register]}
         />
         {#if previous[register] !== undefined}
-          <span class="prev">{$_('readings.previous')}: {previous[register]}</span>
+          <span class="prev muted">{$_('readings.previous')}: {previous[register]}</span>
         {/if}
       </label>
     {/each}
 
     {#if decreaseInfo}
-      <div class="warning">
+      <StatusBanner kind="warning">
         <p>
           {$_('readings.decrease_warning').replace('{previous}', String(decreaseInfo.previous))}
         </p>
-        <div class="row">
-          <button type="button" onclick={() => save(true)}>
+        <div class="banner-row">
+          <Button size="sm" onclick={() => save(true)}>
             {$_('readings.confirm_decrease')}
-          </button>
-          <button type="button" class="secondary" onclick={() => (decreaseInfo = null)}>
+          </Button>
+          <Button size="sm" variant="secondary" onclick={() => (decreaseInfo = null)}>
             {$_('readings.cancel')}
-          </button>
+          </Button>
         </div>
-      </div>
+      </StatusBanner>
     {/if}
     {#if error}<p class="error">{error}</p>{/if}
-    <button type="submit" class="save">{$_('readings.save')}</button>
+    <Button type="submit" size="lg">{$_('readings.save')}</Button>
   </form>
 {/if}
 
 <style>
-  select {
-    padding: 0.5rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 0.4rem;
-    font-size: 1rem;
-    margin-bottom: 1rem;
+  .picker {
+    margin-bottom: 1.1rem;
   }
   form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    max-width: 22rem;
+    max-width: 24rem;
   }
   label {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    font-weight: 600;
+    gap: 0.35rem;
+    font-weight: 700;
   }
   input {
     padding: 0.9rem;
     font-size: 1.6rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 0.5rem;
     font-variant-numeric: tabular-nums;
+    font-weight: 600;
   }
   .prev {
-    font-weight: 400;
-    color: #64748b;
-    font-size: 0.8rem;
+    font-weight: 500;
   }
-  .save {
-    padding: 1rem;
-    font-size: 1.1rem;
-    background: #0f172a;
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-  }
-  .warning {
-    background: #fef9c3;
-    border: 1px solid #fde047;
-    border-radius: 0.5rem;
-    padding: 0.7rem;
-  }
-  .warning .row {
+  .banner-row {
     display: flex;
-    gap: 0.6rem;
-  }
-  .warning button {
-    padding: 0.5rem 0.8rem;
-    border: none;
-    border-radius: 0.4rem;
-    background: #0f172a;
-    color: white;
-    cursor: pointer;
-  }
-  .warning .secondary {
-    background: #64748b;
+    gap: 0.5rem;
   }
   .error {
-    color: #dc2626;
+    color: var(--danger);
   }
 </style>

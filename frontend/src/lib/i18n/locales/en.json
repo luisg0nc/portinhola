@@ -84,7 +84,10 @@
     "gas_tier": "Tier",
     "start_date": "Contract start",
     "upload_failed": "File upload failed.",
-    "saved": "Bill saved."
+    "saved": "Bill saved.",
+    "drop_hint": "Drag the bill PDF here, or tap to choose the file",
+    "step_pick": "Choose file",
+    "step_review": "Review and confirm"
   },
   "dashboard": {
     "monthly_costs": "Monthly costs",
@@ -211,7 +214,8 @@
     "line_fixed_standard": "Fixed term (23%)",
     "line_fixed_reduced": "Fixed term (6%)",
     "line_tos": "Subsoil occupation",
-    "line_vat": "VAT"
+    "line_vat": "VAT",
+    "best_deal": "Best deal"
   },
   "common": {
     "loading": "Loading…",

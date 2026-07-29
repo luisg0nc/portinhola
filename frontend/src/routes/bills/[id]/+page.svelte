@@ -5,6 +5,11 @@
   import { _, locale } from 'svelte-i18n';
   import { api } from '$lib/api';
   import { formatCents } from '$lib/money';
+  import Card from '$lib/ui/Card.svelte';
+  import Button from '$lib/ui/Button.svelte';
+  import PageHeader from '$lib/ui/PageHeader.svelte';
+  import UtilityBadge from '$lib/ui/UtilityBadge.svelte';
+  import { ExternalLink, Trash2 } from '$lib/ui/icons';
 
   type Line = {
     id: number;
@@ -36,6 +41,11 @@
   let contractUtility = $state<Record<number, string>>({});
 
   const categories = ['energy', 'power', 'fixed', 'tax', 'other'];
+  const statusKind: Record<string, string> = {
+    parsed: 'success',
+    partial: 'warning',
+    manual: 'neutral'
+  };
 
   onMount(async () => {
     const res = await api(`/api/bills/${page.params.id}`);
@@ -72,8 +82,6 @@
     }));
   });
 
-  const icons: Record<string, string> = { electricity: '⚡', gas: '🔥', water: '💧', other: '📄' };
-
   async function remove() {
     if (!bill) return;
     if (!window.confirm($_('bills.delete_confirm'))) return;
@@ -83,44 +91,68 @@
 </script>
 
 {#if bill}
-  <header>
-    <h1>{bill.doc_number}</h1>
-    <span class={`badge ${bill.parse_status}`}>{$_(`bills.status_${bill.parse_status}`)}</span>
-  </header>
+  <PageHeader title={bill.doc_number}>
+    {#snippet action()}
+      <span class={`badge ${statusKind[bill!.parse_status] ?? 'neutral'}`}>
+        {$_(`bills.status_${bill!.parse_status}`)}
+      </span>
+    {/snippet}
+  </PageHeader>
 
-  <section class="meta">
-    <div><strong>{$_('bills.issuer_nif')}:</strong> {bill.issuer_nif}</div>
-    <div><strong>{$_('bills.atcud')}:</strong> {bill.atcud ?? '—'}</div>
-    <div><strong>{$_('bills.date')}:</strong> {bill.issue_date}</div>
-    {#if bill.period_start}
-      <div><strong>{$_('bills.period')}:</strong> {bill.period_start} → {bill.period_end}</div>
-    {/if}
-    <div class="total">
-      <strong>{$_('bills.total')}:</strong>
-      {formatCents(bill.total_cents, $locale ?? 'pt')}
+  <Card>
+    <div class="meta">
+      <div><span class="muted">{$_('bills.issuer_nif')}</span> {bill.issuer_nif}</div>
+      <div><span class="muted">{$_('bills.atcud')}</span> {bill.atcud ?? '—'}</div>
+      <div><span class="muted">{$_('bills.date')}</span> {bill.issue_date}</div>
+      {#if bill.period_start}
+        <div>
+          <span class="muted">{$_('bills.period')}</span>
+          {bill.period_start} → {bill.period_end}
+        </div>
+      {/if}
     </div>
-  </section>
+    <div class="total money">
+      {$_('bills.total')}: {formatCents(bill.total_cents, $locale ?? 'pt')}
+    </div>
+  </Card>
 
   <div class="actions">
     {#if bill.pdf_available}
-      <a class="button" href={`/api/bills/${bill.id}/pdf`} target="_blank" rel="noreferrer">
+      <Button
+        variant="secondary"
+        href={`/api/bills/${bill.id}/pdf`}
+        target="_blank"
+        rel="noreferrer"
+      >
+        <ExternalLink size={16} />
         {$_('bills.open_pdf')}
-      </a>
+      </Button>
     {/if}
-    <button class="danger" onclick={remove}>{$_('bills.delete')}</button>
+    <Button variant="danger" onclick={remove}>
+      <Trash2 size={16} />
+      {$_('bills.delete')}
+    </Button>
   </div>
 
   {#each groups as group}
-    <section class="group">
-      <h2>{icons[group.utility]} {group.utility}</h2>
+    <Card>
+      <div class="group-head">
+        <UtilityBadge
+          utility={group.utility}
+          size="sm"
+          label={$_(`dashboard.utility_${group.utility}`) === `dashboard.utility_${group.utility}`
+            ? group.utility
+            : $_(`dashboard.utility_${group.utility}`)}
+        />
+      </div>
       <div class="table-wrap">
         <table>
           <tbody>
             {#each group.lines as line}
               <tr>
                 <td>{line.description}</td>
-                <td>{$_(`bills.category_${line.category}`)}</td>
-                <td class="amount">{formatCents(line.amount_cents, $locale ?? 'pt')}</td>
+                <td class="muted">{$_(`bills.category_${line.category}`)}</td>
+                <td class="amount money">{formatCents(line.amount_cents, $locale ?? 'pt')}</td>
               </tr>
             {/each}
           </tbody>
@@ -128,64 +160,44 @@
             {#each group.subtotals as subtotal}
               <tr class="subtotal">
                 <td colspan="2">{$_(`bills.category_${subtotal.category}`)}</td>
-                <td class="amount">{formatCents(subtotal.cents, $locale ?? 'pt')}</td>
+                <td class="amount money">{formatCents(subtotal.cents, $locale ?? 'pt')}</td>
               </tr>
             {/each}
             <tr class="grand">
               <td colspan="2">{$_('bills.total')}</td>
-              <td class="amount">{formatCents(group.total, $locale ?? 'pt')}</td>
+              <td class="amount money">{formatCents(group.total, $locale ?? 'pt')}</td>
             </tr>
           </tfoot>
         </table>
       </div>
-    </section>
+    </Card>
   {/each}
 {:else}
-  <p>{$_('common.loading')}</p>
+  <p class="muted">{$_('common.loading')}</p>
 {/if}
 
 <style>
-  header {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-  }
   .meta {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.5rem;
-    padding: 0.8rem;
     display: grid;
     gap: 0.3rem;
-    margin-bottom: 1rem;
+    font-size: 0.9rem;
   }
-  .meta .total {
-    font-size: 1.1rem;
+  .meta .muted {
+    display: inline-block;
+    min-width: 6rem;
+  }
+  .total {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-top: 0.6rem;
   }
   .actions {
     display: flex;
-    gap: 0.7rem;
-    margin-bottom: 1.2rem;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
   }
-  .button {
-    background: #0f172a;
-    color: white;
-    padding: 0.5rem 0.9rem;
-    border-radius: 0.4rem;
-    text-decoration: none;
-    font-size: 0.9rem;
-  }
-  .danger {
-    background: #dc2626;
-    color: white;
-    border: none;
-    border-radius: 0.4rem;
-    padding: 0.5rem 0.9rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-  }
-  .group h2 {
-    font-size: 1.05rem;
+  .group-head {
+    margin-bottom: 0.5rem;
   }
   .table-wrap {
     overflow-x: auto;
@@ -194,39 +206,22 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.85rem;
-    background: white;
   }
   td {
-    border-bottom: 1px solid #e2e8f0;
-    padding: 0.4rem;
+    border-bottom: 1px solid var(--line);
+    padding: 0.45rem 0.3rem;
   }
   td.amount {
     text-align: right;
     white-space: nowrap;
   }
   tfoot .subtotal td {
-    color: #475569;
+    color: var(--ink-muted);
     font-weight: 600;
   }
   tfoot .grand td {
-    font-weight: 700;
-    border-top: 2px solid #0f172a;
-  }
-  .badge {
-    border-radius: 999px;
-    padding: 0.1rem 0.6rem;
-    font-size: 0.75rem;
-  }
-  .badge.parsed {
-    background: #dcfce7;
-    color: #166534;
-  }
-  .badge.partial {
-    background: #fef9c3;
-    color: #854d0e;
-  }
-  .badge.manual {
-    background: #e2e8f0;
-    color: #334155;
+    font-weight: 800;
+    border-top: 2px solid var(--ink);
+    border-bottom: none;
   }
 </style>
