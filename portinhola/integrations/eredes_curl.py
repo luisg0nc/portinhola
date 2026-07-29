@@ -1,6 +1,38 @@
+import re
 import shlex
 
 from pydantic import BaseModel
+
+_ANSI_C_ESCAPES = {"t": "\t", "n": "\n", "r": "\r", "\\": "\\", "'": "'", '"': '"'}
+
+
+def _decode_ansi_c(inner: str) -> str:
+    out: list[str] = []
+    i = 0
+    while i < len(inner):
+        ch = inner[i]
+        if ch == "\\" and i + 1 < len(inner):
+            nxt = inner[i + 1]
+            if nxt == "x" and i + 3 < len(inner):
+                out.append(chr(int(inner[i + 2 : i + 4], 16)))
+                i += 4
+                continue
+            out.append(_ANSI_C_ESCAPES.get(nxt, nxt))
+            i += 2
+            continue
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
+def _expand_ansi_c_quotes(text: str) -> str:
+    # Chrome "Copy as cURL" uses $'...' (ANSI-C quoting) for args with
+    # special bytes. shlex doesn't interpret it, so decode each span and
+    # re-quote it as a plain shell string shlex.split can read back.
+    def _repl(match: "re.Match[str]") -> str:
+        return shlex.quote(_decode_ansi_c(match.group(1)))
+
+    return re.sub(r"\$'((?:\\.|[^'\\])*)'", _repl, text)
 
 
 class CurlRequest(BaseModel):
@@ -32,6 +64,7 @@ def parse_curl(text: str) -> CurlRequest:
     if not cleaned.startswith("curl"):
         raise CurlValidationError("not_curl")
     cleaned = cleaned.replace("\\\n", " ")
+    cleaned = _expand_ansi_c_quotes(cleaned)
     try:
         tokens = shlex.split(cleaned)
     except ValueError as exc:
