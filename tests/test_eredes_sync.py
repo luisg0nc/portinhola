@@ -5,9 +5,18 @@ from sqlalchemy import select
 from portinhola.db.models import Alert, IntervalConsumption, SupplyPoint
 from portinhola.integrations import eredes_session
 from portinhola.integrations.eredes_api import SessionExpiredError
+from portinhola.integrations.eredes_curl import CurlRequest
 from portinhola.jobs.eredes_sync import eredes_sync
 
-KEY_COOKIES = [{"name": "s", "value": "v"}]
+
+def _template() -> CurlRequest:
+    return CurlRequest(
+        method="GET",
+        url="https://balcaodigital.e-redes.pt/api/x?startDate=2026-06-01&endDate=2026-07-01",
+        headers={},
+        cookies={"PHPSESSID": "s"},
+        body=None,
+    )
 
 
 def _setup_sp(db) -> int:
@@ -17,7 +26,7 @@ def _setup_sp(db) -> int:
     return sp.id
 
 
-def test_sync_without_cookies_raises_alert(app) -> None:
+def test_sync_without_session_raises_alert(app) -> None:
     with app.state.sessionmaker() as db:
         _setup_sp(db)
         log = eredes_sync(db)
@@ -34,14 +43,14 @@ def test_sync_happy_path_upserts(app, monkeypatch, tmp_path) -> None:
     ]
     monkeypatch.setattr(
         "portinhola.jobs.eredes_sync.fetch_consumption",
-        lambda profile_dir, cookies, cpe, date_from, date_to: rows,
+        lambda db, app_key, cpe, date_from, date_to: rows,
     )
     with app.state.sessionmaker() as db:
         _setup_sp(db)
         from portinhola.core.secrets import load_or_create_app_key
 
         app_key = load_or_create_app_key(tmp_path)
-        eredes_session.save_cookies(db, app_key, KEY_COOKIES)
+        eredes_session.save_template(db, app_key, _template())
         log = eredes_sync(db)
         assert "2 intervals" in log
         assert db.query(IntervalConsumption).count() == 2
@@ -50,7 +59,7 @@ def test_sync_happy_path_upserts(app, monkeypatch, tmp_path) -> None:
 def test_sync_expired_session_alerts_once(app, monkeypatch, tmp_path) -> None:
     monkeypatch.setenv("PORTINHOLA_DATA_DIR", str(tmp_path))
 
-    def boom(profile_dir, cookies, cpe, date_from, date_to):
+    def boom(db, app_key, cpe, date_from, date_to):
         raise SessionExpiredError()
 
     monkeypatch.setattr("portinhola.jobs.eredes_sync.fetch_consumption", boom)
@@ -64,7 +73,7 @@ def test_sync_expired_session_alerts_once(app, monkeypatch, tmp_path) -> None:
         from portinhola.core.secrets import load_or_create_app_key
 
         app_key = load_or_create_app_key(tmp_path)
-        eredes_session.save_cookies(db, app_key, KEY_COOKIES)
+        eredes_session.save_template(db, app_key, _template())
         for _ in range(2):
             try:
                 eredes_sync(db)

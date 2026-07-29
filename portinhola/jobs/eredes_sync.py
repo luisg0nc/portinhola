@@ -15,7 +15,7 @@ from portinhola.integrations.eredes_api import (
     fetch_consumption,
     utc_today,
 )
-from portinhola.integrations.eredes_session import load_cookies
+from portinhola.integrations.eredes_session import load_template
 from portinhola.jobs.registry import job
 
 HISTORY_BACKFILL_DAYS = 365
@@ -24,12 +24,11 @@ HISTORY_BACKFILL_DAYS = 365
 @job("eredes_sync")
 def eredes_sync(db: Session) -> str:
     app_key = load_or_create_app_key(Config().data_dir)
-    cookies = load_cookies(db, app_key)
-    if not cookies:
+    if load_template(db, app_key) is None:
         raise_alert(
             db,
             "eredes_not_connected",
-            "E-Redes is not connected — open Settings to connect.",
+            "E-Redes is not connected — import a session in Settings.",
             dedup_key="eredes_not_connected",
         )
         return "not connected; skipped"
@@ -46,11 +45,8 @@ def eredes_sync(db: Session) -> str:
     )
     date_to = utc_today()
 
-    profile_dir = Config().data_dir / "eredes-profile"
     try:
-        rows = fetch_consumption(
-            profile_dir, cookies, supply_point.identifier, date_from, date_to
-        )
+        rows = fetch_consumption(db, app_key, supply_point.identifier, date_from, date_to)
     except SessionExpiredError:
         raise_alert(
             db,
