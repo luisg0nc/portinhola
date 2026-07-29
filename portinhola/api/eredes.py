@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from portinhola.api.deps import get_db, require_auth
+from portinhola.core.scheduler import spawn_job
 from portinhola.db.settings_repo import get_setting
 from portinhola.integrations import eredes_session
 
@@ -28,7 +29,10 @@ def import_token(body: ImportBody, request: Request, db: Session = Depends(get_d
     if not token or "=" in token or len(token) < 8:
         raise HTTPException(status_code=422, detail="invalid_token")
     eredes_session.save_token(db, request.app.state.app_key, token)
-    return {"connected": True}
+    # The token is short-lived (~91 min) and cannot be renewed server-side,
+    # so sync straight away while it is certainly valid.
+    spawn_job("eredes_sync")
+    return {"connected": True, "sync_started": True}
 
 
 @router.post("/disconnect", status_code=204)

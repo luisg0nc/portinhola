@@ -48,20 +48,13 @@ def _mark_timed_out(job_type: str) -> None:
 def setup_scheduler(app: FastAPI) -> None:
     from apscheduler.schedulers.background import BackgroundScheduler
 
-    from portinhola.db.settings_repo import get_setting
-
     scheduler = BackgroundScheduler()
-    with app.state.sessionmaker() as db:
-        sync_time = get_setting(db, "eredes_sync_time") or "07:00"
-    hour, _, minute = sync_time.partition(":")
-    scheduler.add_job(
-        spawn_job,
-        "cron",
-        args=["eredes_sync"],
-        hour=int(hour),
-        minute=int(minute or 0),
-        id="eredes_sync",
-    )
+    # NOTE: no scheduled eredes_sync. The portal's `aat` session token lives
+    # only ~91 minutes and cannot be renewed server-side (minting a new one
+    # is gated by invisible reCAPTCHA), so a daily cron would almost always
+    # find it expired and do nothing but raise alerts. E-Redes syncs run on
+    # demand instead: immediately when a token is imported, and via the
+    # "Sync now" button.
     scheduler.add_job(
         spawn_job,
         "cron",

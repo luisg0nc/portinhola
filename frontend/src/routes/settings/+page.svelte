@@ -47,7 +47,6 @@
   }
 
   let appriseUrls = $state('');
-  let syncTime = $state('07:00');
   let notifyMessage = $state('');
   let eredesConnected = $state(false);
   let eredesMessage = $state('');
@@ -76,7 +75,6 @@
       const data = await res.json();
       language = data.language;
       appriseUrls = data.apprise_urls ?? '';
-      syncTime = data.eredes_sync_time ?? '07:00';
     }
     await loadSupplyPoints();
     await loadEredes();
@@ -85,7 +83,7 @@
   async function saveExtras() {
     await api('/api/settings', {
       method: 'PUT',
-      body: JSON.stringify({ language, apprise_urls: appriseUrls, eredes_sync_time: syncTime })
+      body: JSON.stringify({ language, apprise_urls: appriseUrls })
     });
   }
 
@@ -236,11 +234,7 @@
     {/if}
   </div>
   {#if eredesMessage}<p>{eredesMessage}</p>{/if}
-
-  <label>
-    {$_('eredes.sync_time')}
-    <input type="time" bind:value={syncTime} onchange={saveExtras} />
-  </label>
+  <p class="muted">{$_('eredes.token_note')}</p>
 
   <details class="guide">
     <summary>{$_('eredes.guide_toggle')}</summary>

@@ -39,3 +39,17 @@ def test_disconnect(client) -> None:
 
 def test_status_requires_auth(client) -> None:
     assert client.get("/api/eredes/status").status_code == 401
+
+
+def test_import_triggers_immediate_sync(client, monkeypatch) -> None:
+    """The aat lives ~91 min and can't be renewed server-side, so importing
+    must sync right away rather than waiting for a schedule."""
+    spawned: list[str] = []
+    monkeypatch.setattr(
+        "portinhola.api.eredes.spawn_job", lambda job_type: spawned.append(job_type)
+    )
+    _login(client)
+    res = client.post("/api/eredes/import", json={"token": TOKEN})
+    assert res.status_code == 200
+    assert res.json()["sync_started"] is True
+    assert spawned == ["eredes_sync"]

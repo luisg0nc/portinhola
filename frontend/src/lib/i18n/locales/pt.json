@@ -105,7 +105,6 @@
     "saved": "Sessão importada.",
     "sync_now": "Sincronizar agora",
     "sync_started": "Sincronização iniciada.",
-    "sync_time": "Hora da sincronização diária",
     "disconnect": "Desligar",
     "err_invalid_token": "Cole apenas o valor do cookie 'aat' (não 'aat=...').",
     "guide_toggle": "Como obter o token 'aat'",
@@ -114,7 +113,9 @@
     "guide_step_2": "Abra as Ferramentas de Programador (F12) → separador 'Application' (ou 'Armazenamento').",
     "guide_step_3": "Em 'Cookies' escolha https://balcaodigital.e-redes.pt.",
     "guide_step_4": "Copie o valor do cookie chamado 'aat'.",
-    "guide_step_5": "Cole aqui e clique em Guardar."
+    "guide_step_5": "Cole aqui e clique em Guardar.",
+    "token_note": "O token da E-Redes dura ~90 minutos e não pode ser renovado pelo servidor (a E-Redes protege a criação de sessões com reCAPTCHA). Ao guardar, os dados são sincronizados imediatamente.",
+    "sync_on_import": "A sincronizar os seus consumos…"
   },
   "notifications": {
     "title": "Notificações",

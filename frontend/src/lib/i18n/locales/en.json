@@ -105,7 +105,6 @@
     "saved": "Session imported.",
     "sync_now": "Sync now",
     "sync_started": "Sync started.",
-    "sync_time": "Daily sync time",
     "disconnect": "Disconnect",
     "err_invalid_token": "Paste only the 'aat' cookie value (not 'aat=...').",
     "guide_toggle": "How to get the 'aat' token",
@@ -114,7 +113,9 @@
     "guide_step_2": "Open DevTools (F12) → 'Application' tab (or 'Storage').",
     "guide_step_3": "Under 'Cookies' choose https://balcaodigital.e-redes.pt.",
     "guide_step_4": "Copy the value of the cookie named 'aat'.",
-    "guide_step_5": "Paste it here and click Save."
+    "guide_step_5": "Paste it here and click Save.",
+    "token_note": "The E-Redes token lasts ~90 minutes and cannot be renewed by the server (E-Redes protects session creation with reCAPTCHA). Saving syncs your consumption immediately.",
+    "sync_on_import": "Syncing your consumption…"
   },
   "notifications": {
     "title": "Notifications",

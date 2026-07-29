@@ -1,15 +1,16 @@
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 
 import httpx
 import pytest
 
 import portinhola.integrations.eredes_api as mod
 from portinhola.integrations.eredes_api import (
+    EredesFetchError,
     SessionExpiredError,
     fetch_consumption,
     parse_response,
 )
-from portinhola.integrations.eredes_session import load_token, save_token
+from portinhola.integrations.eredes_session import save_token
 
 KEY = b"k" * 32
 
@@ -25,12 +26,12 @@ SAMPLE = {
                             "register": "A+",
                             "loadCurves": [
                                 {
-                                    "loadCurveTimestamp": "2026-01-05T00:15:00Z",
+                                    "loadCurveTimestamp": "2026-01-05T00:00:00Z",
                                     "meterLoadCurve": 0.052,
                                     "meterLoadCurveUnitMeasurement": "kwh",
                                 },
                                 {
-                                    "loadCurveTimestamp": "2026-01-05T00:30:00Z",
+                                    "loadCurveTimestamp": "2026-01-05T00:15:00Z",
                                     "meterLoadCurve": 0.06,
                                     "meterLoadCurveUnitMeasurement": "kwh",
                                 },
@@ -40,7 +41,7 @@ SAMPLE = {
                             "register": "A-",
                             "loadCurves": [
                                 {
-                                    "loadCurveTimestamp": "2026-01-05T00:15:00Z",
+                                    "loadCurveTimestamp": "2026-01-05T00:00:00Z",
                                     "meterLoadCurve": 99.0,
                                     "meterLoadCurveUnitMeasurement": "kwh",
                                 }
@@ -57,9 +58,39 @@ SAMPLE = {
 def test_parse_response_active_energy_only() -> None:
     rows = parse_response(SAMPLE)
     assert len(rows) == 2  # A- ignored
-    # first slot: end 00:15 UTC -> start 00:00 UTC
-    assert rows[0] == (datetime(2026, 1, 5, 0, 0, tzinfo=UTC), 0.052, "real")
-    assert rows[1][0] == datetime(2026, 1, 5, 0, 15, tzinfo=UTC)
+    # END in Lisbon local (Jan == UTC), minus 15 min -> START.
+    # 00:00 end -> 2026-01-04 23:45 UTC start; 00:15 end -> 00:00 UTC start.
+    assert rows[0] == (datetime(2026, 1, 4, 23, 45, tzinfo=UTC), 0.052, "real")
+    assert rows[1][0] == datetime(2026, 1, 5, 0, 0, tzinfo=UTC)
+
+
+def test_parse_response_summer_local_to_utc() -> None:
+    # July: Lisbon UTC+1. End 00:00 local -> 2026-06-30 23:00 UTC end
+    # -> 2026-06-30 22:45 UTC start.
+    summer = {
+        "Body": {
+            "Result": {
+                "utilitiesDevices": [
+                    {
+                        "meterLoadCurves": [
+                            {
+                                "register": "A+",
+                                "loadCurves": [
+                                    {
+                                        "loadCurveTimestamp": "2026-07-01T00:00:00Z",
+                                        "meterLoadCurve": 0.077,
+                                        "meterLoadCurveUnitMeasurement": "kwh",
+                                    }
+                                ],
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+    rows = parse_response(summer)
+    assert rows[0][0] == datetime(2026, 6, 30, 22, 45, tzinfo=UTC)
 
 
 def test_parse_empty_result() -> None:
@@ -109,14 +140,48 @@ def test_fetch_401_raises_expired(app, monkeypatch) -> None:
             fetch_consumption(db, KEY, "PT1", date(2026, 1, 5), date(2026, 1, 6))
 
 
-def test_fetch_refreshes_token_from_cookie(app, monkeypatch) -> None:
+def test_parse_response_tolerates_null_result() -> None:
+    # A rejected window really does come back as Success:false / Result:null.
+    assert parse_response({"Body": {"Success": False, "Result": None}}) == []
+    assert parse_response({}) == []
+
+
+def test_fetch_chunks_wide_ranges(app, monkeypatch) -> None:
+    """A year in one request returns Result:null from the portal, so the
+    client must split it into <=31-day windows."""
+    windows: list[tuple[str, str]] = []
+
     def handler(request: httpx.Request) -> httpx.Response:
-        return httpx.Response(
-            200, json=SAMPLE, headers={"set-cookie": "aat=refreshed99; Path=/"}
-        )
+        import json
+
+        b = json.loads(request.content)
+        windows.append((b["start_date"][:10], b["end_date"][:10]))
+        return httpx.Response(200, json=SAMPLE)
 
     monkeypatch.setattr(mod, "_transport_for_tests", httpx.MockTransport(handler))
     with app.state.sessionmaker() as db:
-        save_token(db, KEY, "old")
-        fetch_consumption(db, KEY, "PT1", date(2026, 1, 5), date(2026, 1, 6))
-        assert load_token(db, KEY) == "refreshed99"
+        save_token(db, KEY, "tok")
+        fetch_consumption(db, KEY, "PT1", date(2026, 1, 1), date(2026, 3, 31))
+
+    assert len(windows) == 3  # 90 days -> 31 + 31 + 28
+    assert windows[0] == ("2026-01-01", "2026-01-31")
+    assert windows[-1][1] == "2026-03-31"
+    # windows are contiguous and never exceed the cap
+    for (_, prev_end), (next_start, _) in zip(windows, windows[1:], strict=False):
+        assert date.fromisoformat(next_start) == date.fromisoformat(prev_end) + timedelta(
+            days=1
+        )
+
+
+def test_fetch_raises_when_every_window_empty(app, monkeypatch) -> None:
+    monkeypatch.setattr(
+        mod,
+        "_transport_for_tests",
+        httpx.MockTransport(
+            lambda req: httpx.Response(200, json={"Body": {"Success": False, "Result": None}})
+        ),
+    )
+    with app.state.sessionmaker() as db:
+        save_token(db, KEY, "tok")
+        with pytest.raises(EredesFetchError):
+            fetch_consumption(db, KEY, "PT1", date(2026, 1, 1), date(2026, 1, 5))
