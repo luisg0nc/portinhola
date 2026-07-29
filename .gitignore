@@ -11,3 +11,6 @@ portinhola/frontend_dist/
 .ruff_cache/
 sample-bills/
 sample-eredes/
+
+# brainstorming visual companion sessions
+.superpowers/
