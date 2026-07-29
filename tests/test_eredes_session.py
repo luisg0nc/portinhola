@@ -1,64 +1,48 @@
-import json
-
 from portinhola.core.crypto import decrypt, encrypt
-from portinhola.integrations.eredes_session import clear, load_cookies, save_cookies
+from portinhola.integrations.eredes_curl import CurlRequest
+from portinhola.integrations.eredes_session import (
+    clear,
+    load_template,
+    save_template,
+    update_cookies,
+)
 
 KEY = b"k" * 32
 
 
+def _req() -> CurlRequest:
+    return CurlRequest(
+        method="GET",
+        url="https://balcaodigital.e-redes.pt/api/x?s=2026-06-01&e=2026-07-01",
+        headers={"authorization": "Bearer t"},
+        cookies={"PHPSESSID": "old"},
+        body=None,
+    )
+
+
 def test_crypto_roundtrip() -> None:
-    data = b"secret payload"
-    token = encrypt(KEY, data)
-    assert token != data
-    assert decrypt(KEY, token) == data
+    token = encrypt(KEY, b"secret")
+    assert token != b"secret"
+    assert decrypt(KEY, token) == b"secret"
 
 
-def test_cookie_store_roundtrip(app) -> None:
-    cookies = [{"name": "session", "value": "abc", "domain": ".e-redes.pt"}]
+def test_template_roundtrip(app) -> None:
     with app.state.sessionmaker() as db:
-        assert load_cookies(db, KEY) is None
-        save_cookies(db, KEY, cookies)
+        assert load_template(db, KEY) is None
+        save_template(db, KEY, _req())
     with app.state.sessionmaker() as db:
-        loaded = load_cookies(db, KEY)
-        assert loaded == cookies
+        loaded = load_template(db, KEY)
+        assert loaded is not None
+        assert loaded.cookies == {"PHPSESSID": "old"}
         clear(db)
-        assert load_cookies(db, KEY) is None
+        assert load_template(db, KEY) is None
 
 
-def test_assisted_login_ws_flow(client, monkeypatch) -> None:
-    from portinhola.integrations import eredes_login
-
-    page_html = (
-        "<html><head><title>login</title></head><body>"
-        "<button style='width:200px;height:100px' "
-        "onclick=\"document.title='DONE'\">enter</button></body></html>"
-    )
-    monkeypatch.setattr(eredes_login, "LOGIN_URL", "data:text/html," + page_html)
-    monkeypatch.setattr(
-        eredes_login,
-        "HISTORY_URL",
-        "data:text/html,<html><head><title>hist</title></head><body>history ok</body></html>",
-    )
-
-    async def title_is_done(page) -> bool:
-        return await page.title() in ("DONE", "hist")
-
-    async def validated(page) -> bool:
-        return await page.title() == "hist"
-
-    monkeypatch.setattr(eredes_login, "is_logged_in", title_is_done)
-    monkeypatch.setattr(eredes_login, "is_fully_validated", validated)
-
-    client.post("/api/auth/setup", json={"password": "hunter2hunter2"})
-    with client.websocket_connect("/api/eredes/login") as ws:
-        first = json.loads(ws.receive_text())
-        assert first["type"] == "frame"
-        assert first["w"] > 0
-        ws.send_text(json.dumps({"type": "click", "x": 100, "y": 50}))
-        message = None
-        for _ in range(50):
-            message = json.loads(ws.receive_text())
-            if message["type"] != "frame":
-                break
-        assert message is not None
-        assert message["type"] == "success"
+def test_update_cookies_merges(app) -> None:
+    with app.state.sessionmaker() as db:
+        save_template(db, KEY, _req())
+        update_cookies(db, KEY, {"PHPSESSID": "new99", "extra": "1"})
+    with app.state.sessionmaker() as db:
+        loaded = load_template(db, KEY)
+        assert loaded is not None
+        assert loaded.cookies == {"PHPSESSID": "new99", "extra": "1"}
