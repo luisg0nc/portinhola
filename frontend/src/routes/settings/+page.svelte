@@ -4,7 +4,6 @@
   import { api } from '$lib/api';
   import { setLocale, type Locale } from '$lib/i18n';
   import { onMount } from 'svelte';
-  import EredesLogin from '$lib/EredesLogin.svelte';
 
   type Contract = {
     id: number;
@@ -51,16 +50,26 @@
   let syncTime = $state('07:00');
   let notifyMessage = $state('');
   let eredesConnected = $state(false);
-  let eredesLastSync = $state<string | null>(null);
-  let showLogin = $state(false);
+  let eredesValidUntil = $state<string | null>(null);
   let eredesMessage = $state('');
+  let curlText = $state('');
+  let curlError = $state('');
+  let curlSaved = $state(false);
+  let guideSteps = $derived([
+    $_('eredes.guide_step_1'),
+    $_('eredes.guide_step_2'),
+    $_('eredes.guide_step_3'),
+    $_('eredes.guide_step_4'),
+    $_('eredes.guide_step_5'),
+    $_('eredes.guide_step_6')
+  ]);
 
   async function loadEredes() {
     const res = await api('/api/eredes/status');
     if (res.ok) {
       const data = await res.json();
       eredesConnected = data.connected;
-      eredesLastSync = data.last_sync;
+      eredesValidUntil = data.valid_until;
     }
   }
 
@@ -100,10 +109,21 @@
     await loadEredes();
   }
 
-  function onLoginClose(success: boolean) {
-    showLogin = false;
-    eredesMessage = success ? $_('eredes.login_success') : '';
-    loadEredes();
+  async function saveCurl() {
+    curlError = '';
+    curlSaved = false;
+    const res = await api('/api/eredes/import', {
+      method: 'POST',
+      body: JSON.stringify({ curl: curlText })
+    });
+    if (res.ok) {
+      curlSaved = true;
+      curlText = '';
+      await loadEredes();
+    } else {
+      const detail = (await res.json()).detail;
+      curlError = `eredes.err_${detail}`;
+    }
   }
 
   async function addSupplyPoint(event: SubmitEvent) {
@@ -203,23 +223,40 @@
   <h2>{$_('eredes.title')}</h2>
   <p>
     <strong>{eredesConnected ? $_('eredes.connected') : $_('eredes.not_connected')}</strong>
-    {#if eredesLastSync}
-      <span class="muted">· {$_('eredes.last_sync')}: {eredesLastSync.slice(0, 16)}</span>
+    {#if eredesValidUntil}
+      <span class="muted">
+        · {$_('eredes.valid_until').replace('{date}', eredesValidUntil.slice(0, 16))}
+      </span>
     {/if}
   </p>
+
+  <label>
+    {$_('eredes.import_label')}
+    <textarea bind:value={curlText} rows="4" placeholder="curl '...'"></textarea>
+  </label>
+  {#if curlError}<p class="error">{$_(curlError)}</p>{/if}
+  {#if curlSaved}<p class="ok">{$_('eredes.saved')}</p>{/if}
   <div class="row">
+    <button onclick={saveCurl}>{$_('eredes.save')}</button>
     {#if eredesConnected}
       <button onclick={syncNow}>{$_('eredes.sync_now')}</button>
       <button class="secondary" onclick={disconnectEredes}>{$_('eredes.disconnect')}</button>
-    {:else}
-      <button onclick={() => (showLogin = true)}>{$_('eredes.connect')}</button>
     {/if}
   </div>
+  {#if eredesMessage}<p>{eredesMessage}</p>{/if}
+
   <label>
     {$_('eredes.sync_time')}
     <input type="time" bind:value={syncTime} onchange={saveExtras} />
   </label>
-  {#if eredesMessage}<p>{eredesMessage}</p>{/if}
+
+  <details class="guide">
+    <summary>{$_('eredes.guide_toggle')}</summary>
+    <ol>
+      {#each guideSteps as step}<li>{step}</li>{/each}
+    </ol>
+    <p class="muted">{$_('eredes.guide_security')}</p>
+  </details>
 </section>
 
 <section class="notify">
@@ -232,10 +269,6 @@
   <button onclick={testNotification}>{$_('notifications.test')}</button>
   {#if notifyMessage}<p>{notifyMessage}</p>{/if}
 </section>
-
-{#if showLogin}
-  <EredesLogin onclose={onLoginClose} />
-{/if}
 
 <section class="supply">
   <h2>{$_('settings.supply_points')}</h2>

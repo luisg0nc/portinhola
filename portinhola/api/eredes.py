@@ -1,52 +1,50 @@
-import json
-
-from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, HTTPException, Request
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from portinhola.api.deps import SESSION_COOKIE, get_db, require_auth
-from portinhola.core.security import session_age
+from portinhola.api.deps import get_db, require_auth
 from portinhola.db.settings_repo import get_setting
-from portinhola.integrations import eredes_login, eredes_session
+from portinhola.integrations import eredes_session
+from portinhola.integrations.eredes_curl import (
+    CurlValidationError,
+    parse_curl,
+    read_expiry,
+    validate,
+)
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_auth)])
 
 
-@router.get("/status", dependencies=[Depends(require_auth)])
-def status(db: Session = Depends(get_db)) -> dict:
-    connected = bool(get_setting(db, eredes_session.COOKIES_KEY))
-    return {"connected": connected, "last_sync": get_setting(db, "eredes_last_sync")}
+class ImportBody(BaseModel):
+    curl: str
 
 
-@router.post("/disconnect", status_code=204, dependencies=[Depends(require_auth)])
+@router.get("/status")
+def status(request: Request, db: Session = Depends(get_db)) -> dict:
+    template = eredes_session.load_template(db, request.app.state.app_key)
+    valid_until = None
+    if template is not None:
+        expiry = read_expiry(template)
+        valid_until = expiry.isoformat() if expiry else None
+    return {
+        "connected": template is not None,
+        "last_sync": get_setting(db, "eredes_last_sync"),
+        "valid_until": valid_until,
+    }
+
+
+@router.post("/import")
+def import_curl(body: ImportBody, request: Request, db: Session = Depends(get_db)) -> dict:
+    try:
+        req = parse_curl(body.curl)
+        validate(req)
+    except CurlValidationError as exc:
+        raise HTTPException(status_code=422, detail=exc.reason) from exc
+    eredes_session.save_template(db, request.app.state.app_key, req)
+    expiry = read_expiry(req)
+    return {"valid_until": expiry.isoformat() if expiry else None}
+
+
+@router.post("/disconnect", status_code=204)
 def disconnect(db: Session = Depends(get_db)) -> None:
     eredes_session.clear(db)
-
-
-@router.websocket("/login")
-async def login_ws(websocket: WebSocket) -> None:
-    app = websocket.app
-    token = websocket.cookies.get(SESSION_COOKIE)
-    age = session_age(app.state.app_key, token) if token else None
-    if age is None:
-        await websocket.close(code=4401)
-        return
-    await websocket.accept()
-
-    async def on_success(cookies: list[dict]) -> None:
-        with app.state.sessionmaker() as db:
-            eredes_session.save_cookies(db, app.state.app_key, cookies)
-
-    try:
-        await eredes_login.run_login_session(websocket, on_success)
-    except WebSocketDisconnect:
-        pass
-    except Exception as exc:  # noqa: BLE001 - surface any browser crash to the client
-        try:
-            await websocket.send_text(json.dumps({"type": "error", "message": str(exc)}))
-        except Exception:  # noqa: BLE001, S110 - socket may already be gone
-            pass
-    finally:
-        try:
-            await websocket.close()
-        except Exception:  # noqa: BLE001, S110 - already closed is fine
-            pass
