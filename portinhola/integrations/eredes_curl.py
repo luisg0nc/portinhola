@@ -1,7 +1,14 @@
+import base64
+import json
 import re
 import shlex
+from datetime import UTC, date, datetime
+from urllib.parse import urlparse
 
 from pydantic import BaseModel
+
+ALLOWED_HOST = "balcaodigital.e-redes.pt"
+_ISO_DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 
 _ANSI_C_ESCAPES = {"t": "\t", "n": "\n", "r": "\r", "\\": "\\", "'": "'", '"': '"'}
 
@@ -108,3 +115,48 @@ def parse_curl(text: str) -> CurlRequest:
     if method is None:
         method = "POST" if body is not None else "GET"
     return CurlRequest(method=method, url=url, headers=headers, cookies=cookies, body=body)
+
+
+def validate(req: CurlRequest) -> None:
+    host = urlparse(req.url).hostname or ""
+    if host != ALLOWED_HOST:
+        raise CurlValidationError("wrong_host")
+    haystack = req.url + (req.body or "")
+    if len(_ISO_DATE.findall(haystack)) < 2:
+        raise CurlValidationError("no_date_range")
+
+
+def read_expiry(req: CurlRequest) -> datetime | None:
+    auth = next((v for k, v in req.headers.items() if k.lower() == "authorization"), "")
+    if not auth.lower().startswith("bearer "):
+        return None
+    token = auth.split(" ", 1)[1]
+    parts = token.split(".")
+    if len(parts) < 2:
+        return None
+    try:
+        padded = parts[1] + "=" * (-len(parts[1]) % 4)
+        claims = json.loads(base64.urlsafe_b64decode(padded))
+        exp = claims.get("exp")
+        if exp is None:
+            return None
+        return datetime.fromtimestamp(int(exp), tz=UTC)
+    except (ValueError, json.JSONDecodeError):
+        return None
+
+
+def substitute_dates(req: CurlRequest, date_from: date, date_to: date) -> CurlRequest:
+    # One shared counter across url THEN body: the first ISO date found
+    # becomes date_from; every later date becomes date_to. Correct whether
+    # dates live in the query string, the body, or split across both.
+    replacements = [date_from.isoformat(), date_to.isoformat()]
+    state = {"n": 0}
+
+    def _repl(_m: "re.Match[str]") -> str:
+        idx = 0 if state["n"] == 0 else 1
+        state["n"] += 1
+        return replacements[idx]
+
+    new_url = _ISO_DATE.sub(_repl, req.url)
+    new_body = _ISO_DATE.sub(_repl, req.body) if req.body else None
+    return req.model_copy(update={"url": new_url, "body": new_body})
