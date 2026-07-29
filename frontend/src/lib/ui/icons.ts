@@ -1,0 +1,25 @@
+// Single import point for Lucide icons (build-time, inline SVG — no runtime fetch).
+export {
+  House,
+  ReceiptText,
+  Gauge,
+  Scale,
+  Settings,
+  Plus,
+  Upload,
+  FileText,
+  Zap,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Trash2,
+  ExternalLink,
+  Phone,
+  Check,
+  X,
+  Inbox,
+  LogOut,
+  Pencil,
+  CircleAlert,
+  Trophy
+} from 'lucide-svelte';

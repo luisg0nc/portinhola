@@ -4,6 +4,10 @@
   import { goto } from '$app/navigation';
   import { _, isLoading } from 'svelte-i18n';
   import { setupI18n } from '$lib/i18n';
+  import '$lib/ui/app.css';
+  import TabBar from '$lib/ui/TabBar.svelte';
+  import Fab from '$lib/ui/Fab.svelte';
+  import { House, ReceiptText, Gauge, Scale, Settings, Plus } from '$lib/ui/icons';
 
   let { children } = $props();
   let ready = $state(false);
@@ -23,134 +27,142 @@
     ready = true;
   });
 
-  const tabs = [
-    { href: '/', key: 'nav.dashboard', icon: '📊' },
-    { href: '/bills', key: 'nav.bills', icon: '🧾' },
-    { href: '/readings', key: 'nav.readings', icon: '🔢' },
-    { href: '/calculator', key: 'nav.calculator', icon: '🧮' },
-    { href: '/settings', key: 'nav.settings', icon: '⚙️' }
+  const sideTabs = [
+    { href: '/', key: 'nav.dashboard', icon: House },
+    { href: '/bills', key: 'nav.bills', icon: ReceiptText },
+    { href: '/readings', key: 'nav.readings', icon: Gauge },
+    { href: '/calculator', key: 'nav.calculator', icon: Scale },
+    { href: '/settings', key: 'nav.settings', icon: Settings }
   ];
+
+  function isActive(href: string): boolean {
+    return href === '/' ? page.url.pathname === '/' : page.url.pathname.startsWith(href);
+  }
 
   let showNav = $derived(!publicPaths.includes(page.url.pathname));
 </script>
 
 {#if ready && !$isLoading}
   <div class="app">
-    <main>{@render children()}</main>
+    {#if showNav}
+      <aside>
+        <a class="wordmark" href="/">Portinhola</a>
+        <a class="report" href="/readings/new">
+          <Plus size={18} strokeWidth={2.6} />
+          {$_('readings.new_reading')}
+        </a>
+        <nav aria-label="Main">
+          {#each sideTabs as tab}
+            {@const Icon = tab.icon}
+            {@const active = isActive(tab.href)}
+            <a href={tab.href} class:active aria-current={active ? 'page' : undefined}>
+              <Icon size={18} strokeWidth={active ? 2.4 : 2} />
+              {$_(tab.key)}
+            </a>
+          {/each}
+        </nav>
+      </aside>
+    {/if}
+    <main>
+      <div class="content">{@render children()}</div>
+    </main>
     {#if showNav && page.url.pathname !== '/readings/new'}
-      <a class="fab" href="/readings/new" aria-label="Report reading">＋</a>
+      <div class="mobile-only"><Fab /></div>
     {/if}
     {#if showNav}
-      <nav>
-        {#each tabs as tab}
-          <a href={tab.href} class:active={page.url.pathname === tab.href}>
-            <span class="icon">{tab.icon}</span>
-            <span class="label">{$_(tab.key)}</span>
-          </a>
-        {/each}
-      </nav>
+      <div class="mobile-only"><TabBar current={page.url.pathname} /></div>
     {/if}
   </div>
 {/if}
 
 <style>
-  :global(body) {
-    margin: 0;
-    font-family: system-ui, sans-serif;
-    background: #f8fafc;
-    color: #0f172a;
-  }
   .app {
     display: flex;
-    flex-direction: column;
     min-height: 100dvh;
+  }
+  aside {
+    display: none;
   }
   main {
     flex: 1;
+    min-width: 0;
     padding: 1rem;
-    padding-bottom: 4.5rem;
+    padding-bottom: 6.5rem;
   }
-  nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-around;
-    background: #ffffff;
-    border-top: 1px solid #e2e8f0;
-    padding: 0.4rem 0 max(0.4rem, env(safe-area-inset-bottom));
+  .content {
+    max-width: 60rem;
+    margin: 0 auto;
   }
-  nav a {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.1rem;
-    text-decoration: none;
-    color: #64748b;
-    font-size: 0.7rem;
-  }
-  nav a.active {
-    color: #0f172a;
-    font-weight: 600;
-  }
-  .icon {
-    font-size: 1.2rem;
-  }
-  .fab {
-    position: fixed;
-    right: 1rem;
-    bottom: 4.6rem;
-    width: 3.2rem;
-    height: 3.2rem;
-    border-radius: 50%;
-    background: #0ea5e9;
-    color: white;
-    font-size: 1.8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3);
-    z-index: 40;
-  }
+
   @media (min-width: 768px) {
-    .fab {
+    .mobile-only {
       display: none;
     }
-  }
-  @media (min-width: 768px) {
-    .app {
-      flex-direction: row;
-    }
     main {
-      order: 2;
-      padding-bottom: 1rem;
+      padding: 1.5rem 2rem;
     }
-    nav {
+    aside {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
       position: sticky;
       top: 0;
-      order: 1;
-      flex-direction: column;
-      justify-content: flex-start;
-      gap: 0.5rem;
-      width: 12rem;
+      width: 13.5rem;
       height: 100dvh;
-      border-top: none;
-      border-right: 1px solid #e2e8f0;
-      padding: 1rem 0.5rem;
-    }
-    nav a {
-      flex-direction: row;
-      gap: 0.6rem;
-      font-size: 0.9rem;
-      padding: 0.5rem 0.75rem;
-      border-radius: 0.5rem;
-      width: 100%;
       box-sizing: border-box;
+      padding: 1.25rem 0.9rem;
+      background: var(--surface);
+      box-shadow: var(--shadow-card);
     }
-    nav a.active {
-      background: #f1f5f9;
+    .wordmark {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 0.25rem 0.75rem 1rem;
+    }
+    .report {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      background: var(--accent);
+      color: white;
+      border-radius: var(--radius-control);
+      padding: 0.6rem 0.75rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      margin-bottom: 0.9rem;
+      transition: background 0.15s ease;
+    }
+    .report:hover {
+      background: var(--accent-strong);
+    }
+    aside nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    aside nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--ink-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.55rem 0.75rem;
+      border-radius: var(--radius-control);
+    }
+    aside nav a:hover {
+      background: var(--surface-sunken);
+      color: var(--ink);
+    }
+    aside nav a.active {
+      background: var(--accent-tint);
+      color: var(--accent);
     }
   }
 </style>
