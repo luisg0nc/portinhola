@@ -4,6 +4,12 @@
   import { api } from '$lib/api';
   import { formatCents } from '$lib/money';
   import CostBars from '$lib/CostBars.svelte';
+  import Card from '$lib/ui/Card.svelte';
+  import PageHeader from '$lib/ui/PageHeader.svelte';
+  import EmptyState from '$lib/ui/EmptyState.svelte';
+  import UtilityBadge from '$lib/ui/UtilityBadge.svelte';
+  import Button from '$lib/ui/Button.svelte';
+  import { Zap, ChevronRight, FileText } from '$lib/ui/icons';
 
   type UtilityCosts = {
     energy: number;
@@ -52,136 +58,166 @@
   let latest = $derived(months.at(-1) ?? null);
 
   const categoryKeys = ['energy', 'power', 'fixed', 'tax', 'other'] as const;
-  const icons: Record<string, string> = {
-    electricity: '⚡',
-    gas: '🔥',
-    water: '💧',
-    unknown: '📄'
-  };
 </script>
 
-<h1>{$_('nav.dashboard')}</h1>
+<PageHeader title={$_('nav.dashboard')} />
 
 {#if estimate}
-  <section class="card estimate">
-    <h3>💶 {$_('consumption.estimate_title')}</h3>
-    <div class="total">~{formatCents(estimate.estimated_cents, $locale ?? 'pt')}</div>
-    <span class="muted-line">
+  <Card>
+    <span class="kicker">{$_('consumption.estimate_title')}</span>
+    <div class="hero money">~{formatCents(estimate.estimated_cents, $locale ?? 'pt')}</div>
+    <span class="muted">
       {estimate.kwh.toFixed(1)} kWh · {$_('consumption.estimate_since').replace(
         '{date}',
         estimate.period_start
       )}
     </span>
-  </section>
+  </Card>
 {/if}
 
 {#if last7Kwh !== null}
-  <a class="card consumption-card" href="/consumption">
-    <h3>⚡ {$_('consumption.last7')}</h3>
-    <div class="total">{last7Kwh.toFixed(1)} kWh</div>
-    <span class="link-hint">{$_('consumption.view_details')} →</span>
-  </a>
+  <Card href="/consumption">
+    <div class="stat-row">
+      <span class="stat-icon"><Zap size={20} strokeWidth={2.2} /></span>
+      <div class="stat-body">
+        <span class="kicker">{$_('consumption.last7')}</span>
+        <div class="stat-value money">{last7Kwh.toFixed(1)} kWh</div>
+      </div>
+      <span class="chevron"><ChevronRight size={20} /></span>
+    </div>
+  </Card>
 {/if}
 
 {#if loaded && months.length === 0}
-  <p>{$_('dashboard.no_data')}</p>
-  <a class="button" href="/bills/upload">{$_('dashboard.upload_first')}</a>
+  <Card>
+    <EmptyState icon={FileText} message={$_('dashboard.no_data')}>
+      <Button href="/bills/upload">{$_('dashboard.upload_first')}</Button>
+    </EmptyState>
+  </Card>
 {:else if months.length > 0}
-  <section class="card">
-    <h2>{$_('dashboard.monthly_costs')}</h2>
-    <CostBars {months} />
-  </section>
-
   {#if latest}
-    <h2 class="latest">{$_('dashboard.latest_month')} — {latest.month}</h2>
+    <h2 class="section-title">{$_('dashboard.latest_month')} — {latest.month}</h2>
     <div class="cards">
       {#each Object.entries(latest.by_utility) as [utility, costs]}
-        <section class="card utility">
-          <h3>{icons[utility]} {$_(`dashboard.utility_${utility}`)}</h3>
-          <div class="total">{formatCents(costs.total, $locale ?? 'pt')}</div>
+        <div class={`utility-card ${utility}`}>
+          <UtilityBadge {utility} size="sm" label={$_(`dashboard.utility_${utility}`)} />
+          <div class="total money">{formatCents(costs.total, $locale ?? 'pt')}</div>
           <ul>
             {#each categoryKeys as key}
               {#if costs[key] !== 0}
                 <li>
                   <span>{$_(`bills.category_${key}`)}</span>
-                  <span>{formatCents(costs[key], $locale ?? 'pt')}</span>
+                  <span class="money">{formatCents(costs[key], $locale ?? 'pt')}</span>
                 </li>
               {/if}
             {/each}
           </ul>
-        </section>
+        </div>
       {/each}
     </div>
   {/if}
+
+  <Card>
+    <h2>{$_('dashboard.monthly_costs')}</h2>
+    <CostBars {months} />
+  </Card>
 {/if}
 
 <style>
-  .card {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.6rem;
-    padding: 1rem;
-    margin-bottom: 1rem;
+  .kicker {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    margin-bottom: 0.2rem;
   }
-  .card h2,
-  .card h3 {
-    margin: 0 0 0.5rem;
-    font-size: 1rem;
+  .hero {
+    font-size: 1.9rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
   }
-  .latest {
-    font-size: 1.05rem;
+  .stat-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    background: var(--electricity-tint);
+    color: var(--electricity);
+    flex-shrink: 0;
+  }
+  .stat-body {
+    flex: 1;
+  }
+  .stat-value {
+    font-size: 1.3rem;
+    font-weight: 800;
+  }
+  .chevron {
+    color: var(--ink-muted);
+    display: flex;
+  }
+  .section-title {
+    margin: 1.2rem 0 0.7rem;
   }
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
     gap: 0.8rem;
+    margin-bottom: 0.9rem;
   }
-  .utility .total {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+  .utility-card {
+    border-radius: var(--radius-card);
+    padding: 0.9rem 1rem;
   }
-  .utility ul {
+  .utility-card.electricity {
+    background: var(--electricity-tint);
+  }
+  .utility-card.gas {
+    background: var(--gas-tint);
+  }
+  .utility-card.water {
+    background: var(--water-tint);
+  }
+  .utility-card:not(.electricity):not(.gas):not(.water) {
+    background: var(--surface-sunken);
+  }
+  .utility-card .total {
+    font-size: 1.45rem;
+    font-weight: 800;
+    margin: 0.4rem 0 0.5rem;
+  }
+  .electricity .total {
+    color: var(--electricity);
+  }
+  .gas .total {
+    color: var(--gas);
+  }
+  .water .total {
+    color: var(--water);
+  }
+  .utility-card ul {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    font-size: 0.85rem;
-    color: #475569;
+    font-size: 0.83rem;
+    color: var(--ink);
+    opacity: 0.85;
   }
-  .utility li {
+  .utility-card li {
     display: flex;
     justify-content: space-between;
-  }
-  .button {
-    display: inline-block;
-    background: #0f172a;
-    color: white;
-    padding: 0.6rem 1rem;
-    border-radius: 0.4rem;
-    text-decoration: none;
-  }
-  .estimate .total {
-    font-size: 1.5rem;
-    font-weight: 700;
-  }
-  .muted-line {
-    color: #94a3b8;
-    font-size: 0.85rem;
-  }
-  .consumption-card {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-  }
-  .consumption-card .total {
-    font-size: 1.5rem;
-    font-weight: 700;
-  }
-  .link-hint {
-    color: #0ea5e9;
-    font-size: 0.85rem;
   }
 </style>

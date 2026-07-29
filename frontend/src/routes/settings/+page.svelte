@@ -4,6 +4,10 @@
   import { api } from '$lib/api';
   import { setLocale, type Locale } from '$lib/i18n';
   import { onMount } from 'svelte';
+  import Card from '$lib/ui/Card.svelte';
+  import Button from '$lib/ui/Button.svelte';
+  import PageHeader from '$lib/ui/PageHeader.svelte';
+  import UtilityBadge from '$lib/ui/UtilityBadge.svelte';
 
   type Contract = {
     id: number;
@@ -38,8 +42,6 @@
   let newSp = $state({ utility: 'electricity', identifier: '', name: '' });
   let spMessage = $state('');
   let editingContract = $state<Contract | null>(null);
-
-  const utilityIcons: Record<string, string> = { electricity: '⚡', gas: '🔥', water: '💧' };
 
   async function loadSupplyPoints() {
     const res = await api('/api/supply-points');
@@ -185,234 +187,242 @@
   }
 </script>
 
-<h1>{$_('settings.title')}</h1>
+<PageHeader title={$_('settings.title')} />
 
-<section>
-  <label>
-    {$_('settings.language')}
-    <select value={language} onchange={changeLanguage}>
-      <option value="pt">{$_('settings.language_pt')}</option>
-      <option value="en">{$_('settings.language_en')}</option>
-    </select>
-  </label>
-  {#if languageMessage}<p>{languageMessage}</p>{/if}
-</section>
-
-<section>
-  <h2>{$_('auth.change_password')}</h2>
-  <form onsubmit={changePassword}>
-    <label>
-      {$_('auth.current_password')}
-      <input type="password" bind:value={currentPassword} autocomplete="current-password" required />
-    </label>
-    <label>
-      {$_('auth.new_password')}
-      <input type="password" bind:value={newPassword} autocomplete="new-password" required />
-    </label>
-    <button type="submit">{$_('auth.save')}</button>
-  </form>
-  {#if passwordMessage}<p>{passwordMessage}</p>{/if}
-</section>
-
-<section class="eredes">
-  <h2>{$_('eredes.title')}</h2>
-  <p>
-    <strong>{eredesConnected ? $_('eredes.connected') : $_('eredes.not_connected')}</strong>
-  </p>
-
-  <label>
-    {$_('eredes.import_label')}
-    <textarea bind:value={tokenText} rows="3" placeholder="aat…"></textarea>
-  </label>
-  {#if tokenError}<p class="error">{$_(tokenError)}</p>{/if}
-  {#if tokenSaved}<p class="ok">{$_('eredes.saved')}</p>{/if}
-  <div class="row">
-    <button onclick={saveToken}>{$_('eredes.save')}</button>
-    {#if eredesConnected}
-      <button onclick={syncNow}>{$_('eredes.sync_now')}</button>
-      <button class="secondary" onclick={disconnectEredes}>{$_('eredes.disconnect')}</button>
-    {/if}
-  </div>
-  {#if eredesMessage}<p>{eredesMessage}</p>{/if}
-  <p class="muted">{$_('eredes.token_note')}</p>
-
-  <details class="guide">
-    <summary>{$_('eredes.guide_toggle')}</summary>
-    <ol>
-      {#each guideSteps as step}<li>{step}</li>{/each}
-    </ol>
-    <p class="muted">{$_('eredes.guide_security')}</p>
-  </details>
-</section>
-
-<section class="notify">
-  <h2>{$_('notifications.title')}</h2>
-  <label>
-    {$_('notifications.apprise_urls')}
-    <textarea rows="3" bind:value={appriseUrls} onchange={saveExtras}></textarea>
-  </label>
-  <p class="muted">{$_('notifications.apprise_hint')}</p>
-  <button onclick={testNotification}>{$_('notifications.test')}</button>
-  {#if notifyMessage}<p>{notifyMessage}</p>{/if}
-</section>
-
-<section class="supply">
-  <h2>{$_('settings.supply_points')}</h2>
-  {#if supplyPoints.length === 0}
-    <p>{$_('settings.no_supply_points')}</p>
-  {/if}
-  {#each supplyPoints as sp}
-    <div class="sp-card">
-      <div class="sp-head">
-        <strong>{utilityIcons[sp.utility]} {sp.name || sp.identifier}</strong>
-        <span class="muted">{sp.identifier}</span>
-      </div>
-      {#each sp.contracts as contract}
-        {#if editingContract && editingContract.id === contract.id}
-          <form class="contract-edit" onsubmit={saveContract}>
-            <label>
-              {$_('bills.supplier')}
-              <input bind:value={editingContract.supplier_name} />
-            </label>
-            <label>
-              {$_('bills.category_energy')}
-              <input bind:value={editingContract.tariff_name} placeholder="Tarifa" />
-            </label>
-            {#if sp.utility === 'electricity'}
-              <label>
-                {$_('bills.power_kva')}
-                <input type="number" step="0.05" bind:value={editingContract.power_kva} />
-              </label>
-              <label>
-                {$_('bills.cycle')}
-                <select bind:value={editingContract.cycle}>
-                  <option value="simples">simples</option>
-                  <option value="bi-horario">bi-horário</option>
-                  <option value="tri-horario">tri-horário</option>
-                </select>
-              </label>
-            {/if}
-            {#if sp.utility === 'gas'}
-              <label>
-                {$_('bills.gas_tier')}
-                <input type="number" bind:value={editingContract.gas_tier} />
-              </label>
-            {/if}
-            <label>
-              {$_('contract.reading_window')}
-              <span class="range">
-                <input type="number" min="1" max="31" bind:value={editingContract.reading_day_start} />
-                –
-                <input type="number" min="1" max="31" bind:value={editingContract.reading_day_end} />
-              </span>
-            </label>
-            <label>
-              {$_('contract.submit_url')}
-              <input bind:value={editingContract.submit_url} placeholder="https://…" />
-            </label>
-            <label>
-              {$_('contract.submit_phone')}
-              <input bind:value={editingContract.submit_phone} placeholder="800 …" />
-            </label>
-            <label>
-              {$_('contract.submit_reference')}
-              <input bind:value={editingContract.submit_reference} />
-            </label>
-            <button type="submit">{$_('settings.save_contract')}</button>
-          </form>
-        {:else}
-          <div class="contract-row">
-            <span>
-              {contract.supplier_name}
-              {#if contract.tariff_name}· {contract.tariff_name}{/if}
-              {#if contract.power_kva}· {contract.power_kva} kVA ({contract.cycle}){/if}
-              {#if contract.gas_tier}· {$_('bills.gas_tier')} {contract.gas_tier}{/if}
-              <span class="muted">
-                {contract.start_date} → {contract.end_date ?? '…'}
-              </span>
-            </span>
-            <button class="link" onclick={() => (editingContract = { ...contract })}>
-              {$_('settings.edit')}
-            </button>
-          </div>
-        {/if}
-      {/each}
-    </div>
-  {/each}
-
-  <form class="sp-add" onsubmit={addSupplyPoint}>
-    <h3>{$_('settings.add_supply_point')}</h3>
-    <label>
-      {$_('settings.utility')}
-      <select bind:value={newSp.utility}>
-        <option value="electricity">⚡ {$_('dashboard.utility_electricity')}</option>
-        <option value="gas">🔥 {$_('dashboard.utility_gas')}</option>
-        <option value="water">💧 {$_('dashboard.utility_water')}</option>
+<div class="sections">
+  <Card>
+    <h2>{$_('settings.language')}</h2>
+    <label class="stack">
+      <select value={language} onchange={changeLanguage}>
+        <option value="pt">{$_('settings.language_pt')}</option>
+        <option value="en">{$_('settings.language_en')}</option>
       </select>
     </label>
-    <label>
-      {$_('bills.identifier')}
-      <input bind:value={newSp.identifier} required placeholder="CPE / CUI / nº contador" />
-    </label>
-    <label>
-      {$_('bills.name')}
-      <input bind:value={newSp.name} placeholder="Casa" />
-    </label>
-    {#if spMessage}<p class="error">{spMessage}</p>{/if}
-    <button type="submit">{$_('auth.save')}</button>
-  </form>
-</section>
+    {#if languageMessage}<p class="ok">{languageMessage}</p>{/if}
+  </Card>
 
-<section>
-  <button class="logout" onclick={logout}>{$_('auth.logout')}</button>
-</section>
+  <Card>
+    <h2>{$_('eredes.title')}</h2>
+    <p class="status">
+      <span class={`badge ${eredesConnected ? 'success' : 'neutral'}`}>
+        {eredesConnected ? $_('eredes.connected') : $_('eredes.not_connected')}
+      </span>
+    </p>
+
+    <label class="stack">
+      {$_('eredes.import_label')}
+      <textarea bind:value={tokenText} rows="3" placeholder="aat…"></textarea>
+    </label>
+    {#if tokenError}<p class="error">{$_(tokenError)}</p>{/if}
+    {#if tokenSaved}<p class="ok">{$_('eredes.saved')}</p>{/if}
+    <div class="row">
+      <Button onclick={saveToken}>{$_('eredes.save')}</Button>
+      {#if eredesConnected}
+        <Button variant="secondary" onclick={syncNow}>{$_('eredes.sync_now')}</Button>
+        <Button variant="danger" onclick={disconnectEredes}>{$_('eredes.disconnect')}</Button>
+      {/if}
+    </div>
+    {#if eredesMessage}<p class="ok">{eredesMessage}</p>{/if}
+    <p class="muted">{$_('eredes.token_note')}</p>
+
+    <details class="guide">
+      <summary>{$_('eredes.guide_toggle')}</summary>
+      <ol>
+        {#each guideSteps as step}<li>{step}</li>{/each}
+      </ol>
+      <p class="muted">{$_('eredes.guide_security')}</p>
+    </details>
+  </Card>
+
+  <Card>
+    <h2>{$_('settings.supply_points')}</h2>
+    {#if supplyPoints.length === 0}
+      <p class="muted">{$_('settings.no_supply_points')}</p>
+    {/if}
+    {#each supplyPoints as sp}
+      <div class="sp-card">
+        <div class="sp-head">
+          <UtilityBadge utility={sp.utility} size="sm" label={sp.name || sp.identifier} />
+          <span class="muted">{sp.identifier}</span>
+        </div>
+        {#each sp.contracts as contract}
+          {#if editingContract && editingContract.id === contract.id}
+            <form class="contract-edit" onsubmit={saveContract}>
+              <label class="stack">
+                {$_('bills.supplier')}
+                <input bind:value={editingContract.supplier_name} />
+              </label>
+              <label class="stack">
+                {$_('bills.category_energy')}
+                <input bind:value={editingContract.tariff_name} placeholder="Tarifa" />
+              </label>
+              {#if sp.utility === 'electricity'}
+                <label class="stack">
+                  {$_('bills.power_kva')}
+                  <input type="number" step="0.05" bind:value={editingContract.power_kva} />
+                </label>
+                <label class="stack">
+                  {$_('bills.cycle')}
+                  <select bind:value={editingContract.cycle}>
+                    <option value="simples">simples</option>
+                    <option value="bi-horario">bi-horário</option>
+                    <option value="tri-horario">tri-horário</option>
+                  </select>
+                </label>
+              {/if}
+              {#if sp.utility === 'gas'}
+                <label class="stack">
+                  {$_('bills.gas_tier')}
+                  <input type="number" bind:value={editingContract.gas_tier} />
+                </label>
+              {/if}
+              <label class="stack">
+                {$_('contract.reading_window')}
+                <span class="range">
+                  <input
+                    type="number"
+                    min="1"
+                    max="31"
+                    bind:value={editingContract.reading_day_start}
+                  />
+                  –
+                  <input
+                    type="number"
+                    min="1"
+                    max="31"
+                    bind:value={editingContract.reading_day_end}
+                  />
+                </span>
+              </label>
+              <label class="stack">
+                {$_('contract.submit_url')}
+                <input bind:value={editingContract.submit_url} placeholder="https://…" />
+              </label>
+              <label class="stack">
+                {$_('contract.submit_phone')}
+                <input bind:value={editingContract.submit_phone} placeholder="800 …" />
+              </label>
+              <label class="stack">
+                {$_('contract.submit_reference')}
+                <input bind:value={editingContract.submit_reference} />
+              </label>
+              <Button type="submit">{$_('settings.save_contract')}</Button>
+            </form>
+          {:else}
+            <div class="contract-row">
+              <span>
+                {contract.supplier_name}
+                {#if contract.tariff_name}· {contract.tariff_name}{/if}
+                {#if contract.power_kva}· {contract.power_kva} kVA ({contract.cycle}){/if}
+                {#if contract.gas_tier}· {$_('bills.gas_tier')} {contract.gas_tier}{/if}
+                <span class="muted">
+                  {contract.start_date} → {contract.end_date ?? '…'}
+                </span>
+              </span>
+              <button class="link" onclick={() => (editingContract = { ...contract })}>
+                {$_('settings.edit')}
+              </button>
+            </div>
+          {/if}
+        {/each}
+      </div>
+    {/each}
+
+    <form class="sp-add" onsubmit={addSupplyPoint}>
+      <h3>{$_('settings.add_supply_point')}</h3>
+      <label class="stack">
+        {$_('settings.utility')}
+        <select bind:value={newSp.utility}>
+          <option value="electricity">⚡ {$_('dashboard.utility_electricity')}</option>
+          <option value="gas">🔥 {$_('dashboard.utility_gas')}</option>
+          <option value="water">💧 {$_('dashboard.utility_water')}</option>
+        </select>
+      </label>
+      <label class="stack">
+        {$_('bills.identifier')}
+        <input bind:value={newSp.identifier} required placeholder="CPE / CUI / nº contador" />
+      </label>
+      <label class="stack">
+        {$_('bills.name')}
+        <input bind:value={newSp.name} placeholder="Casa" />
+      </label>
+      {#if spMessage}<p class="error">{spMessage}</p>{/if}
+      <Button type="submit">{$_('auth.save')}</Button>
+    </form>
+  </Card>
+
+  <Card>
+    <h2>{$_('auth.change_password')}</h2>
+    <form onsubmit={changePassword}>
+      <label class="stack">
+        {$_('auth.current_password')}
+        <input
+          type="password"
+          bind:value={currentPassword}
+          autocomplete="current-password"
+          required
+        />
+      </label>
+      <label class="stack">
+        {$_('auth.new_password')}
+        <input type="password" bind:value={newPassword} autocomplete="new-password" required />
+      </label>
+      <Button type="submit">{$_('auth.save')}</Button>
+    </form>
+    {#if passwordMessage}<p class="ok">{passwordMessage}</p>{/if}
+  </Card>
+
+  <Card>
+    <h2>{$_('notifications.title')}</h2>
+    <label class="stack">
+      {$_('notifications.apprise_urls')}
+      <textarea rows="3" bind:value={appriseUrls} onchange={saveExtras}></textarea>
+    </label>
+    <p class="muted">{$_('notifications.apprise_hint')}</p>
+    <Button variant="secondary" onclick={testNotification}>{$_('notifications.test')}</Button>
+    {#if notifyMessage}<p class="ok">{notifyMessage}</p>{/if}
+  </Card>
+
+  <Card>
+    <Button variant="danger" onclick={logout}>{$_('auth.logout')}</Button>
+  </Card>
+</div>
 
 <style>
-  section {
-    margin-bottom: 2rem;
-    max-width: 24rem;
+  .sections {
+    max-width: 34rem;
   }
-  form,
-  label {
+  form {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.75rem;
+    align-items: flex-start;
   }
-  input,
-  select {
-    padding: 0.6rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 0.4rem;
-    font-size: 1rem;
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    align-self: stretch;
   }
-  button {
-    padding: 0.7rem;
-    border: none;
-    border-radius: 0.4rem;
-    background: #0f172a;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-    align-self: flex-start;
+  .status {
+    margin: 0 0 0.75rem;
   }
-  .logout {
-    background: #dc2626;
+  .row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 0.75rem 0;
   }
   .sp-card {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.5rem;
-    padding: 0.7rem;
-    margin-bottom: 0.7rem;
+    border-top: 1px solid var(--line);
+    padding: 0.7rem 0;
   }
   .sp-head {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
     margin-bottom: 0.4rem;
-  }
-  .muted {
-    color: #94a3b8;
-    font-size: 0.8rem;
   }
   .contract-row {
     display: flex;
@@ -420,36 +430,36 @@
     align-items: center;
     font-size: 0.85rem;
     padding: 0.3rem 0;
-    border-top: 1px solid #f1f5f9;
     gap: 0.5rem;
   }
   .contract-edit {
-    border-top: 1px solid #f1f5f9;
     padding-top: 0.5rem;
   }
   .link {
     background: none;
     border: none;
-    color: #2563eb;
+    color: var(--accent);
     cursor: pointer;
     padding: 0;
     font-size: 0.85rem;
+    font-family: var(--font);
+    font-weight: 600;
   }
   .sp-add {
     margin-top: 1rem;
-    background: #f1f5f9;
-    border-radius: 0.5rem;
-    padding: 0.8rem;
+    background: var(--surface-sunken);
+    border-radius: var(--radius-control);
+    padding: 0.9rem;
   }
   .sp-add h3 {
-    margin: 0 0 0.5rem;
-    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
   }
   .error {
-    color: #dc2626;
+    color: var(--danger);
   }
-  .supply {
-    max-width: 34rem;
+  .ok {
+    color: var(--success);
+    font-size: 0.85rem;
   }
   .range {
     display: flex;
@@ -457,20 +467,18 @@
     align-items: center;
   }
   .range input {
-    width: 4.5rem;
+    width: 5rem;
   }
-  .eredes .row {
-    display: flex;
-    gap: 0.6rem;
-    margin-bottom: 0.6rem;
+  .guide summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.88rem;
   }
-  .secondary {
-    background: #475569;
+  .guide ol {
+    padding-left: 1.2rem;
+    font-size: 0.88rem;
   }
   textarea {
-    padding: 0.5rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 0.35rem;
     font-family: monospace;
     font-size: 0.85rem;
   }

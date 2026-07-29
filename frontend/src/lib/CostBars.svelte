@@ -8,10 +8,10 @@
   let { months }: { months: MonthEntry[] } = $props();
 
   const colors: Record<string, string> = {
-    electricity: '#f59e0b',
-    gas: '#ef4444',
-    water: '#0ea5e9',
-    unknown: '#94a3b8'
+    electricity: 'var(--chart-electricity)',
+    gas: 'var(--chart-gas)',
+    water: 'var(--chart-water)',
+    unknown: 'var(--chart-neutral)'
   };
 
   let maxTotal = $derived(
@@ -76,25 +76,25 @@
   }
   .segment {
     width: 100%;
-    border-radius: 2px 2px 0 0;
+    border-radius: 3px 3px 0 0;
   }
   .label {
     font-size: 0.65rem;
-    color: #64748b;
+    color: var(--ink-muted);
     margin-top: 0.2rem;
   }
   .legend {
     display: flex;
     gap: 0.9rem;
     font-size: 0.75rem;
-    color: #475569;
+    color: var(--ink-muted);
     flex-wrap: wrap;
   }
   .legend i {
     display: inline-block;
     width: 0.7rem;
     height: 0.7rem;
-    border-radius: 2px;
+    border-radius: 3px;
     margin-right: 0.3rem;
   }
 </style>

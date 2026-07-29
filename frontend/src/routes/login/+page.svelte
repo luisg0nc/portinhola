@@ -2,6 +2,8 @@
   import { goto } from '$app/navigation';
   import { _ } from 'svelte-i18n';
   import { api } from '$lib/api';
+  import Card from '$lib/ui/Card.svelte';
+  import Button from '$lib/ui/Button.svelte';
 
   let password = $state('');
   let error = $state('');
@@ -23,25 +25,37 @@
   }
 </script>
 
-<div class="card">
-  <h1>{$_('auth.login_title')}</h1>
-  <form onsubmit={submit}>
-    <label>
-      {$_('auth.password')}
-      <input type="password" bind:value={password} autocomplete="current-password" required />
-    </label>
-    {#if error}<p class="error">{error}</p>{/if}
-    <button type="submit">{$_('auth.submit')}</button>
-  </form>
+<div class="wrap">
+  <span class="wordmark">Portinhola</span>
+  <Card>
+    <h1>{$_('auth.login_title')}</h1>
+    <form onsubmit={submit}>
+      <label>
+        {$_('auth.password')}
+        <input type="password" bind:value={password} autocomplete="current-password" required />
+      </label>
+      {#if error}<p class="error">{error}</p>{/if}
+      <Button type="submit" size="lg">{$_('auth.submit')}</Button>
+    </form>
+  </Card>
 </div>
 
 <style>
-  .card {
-    max-width: 20rem;
-    margin: 15vh auto 0;
+  .wrap {
+    max-width: 22rem;
+    margin: 14vh auto 0;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+  .wordmark {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  h1 {
+    margin-bottom: 1rem;
   }
   form {
     display: flex;
@@ -51,25 +65,10 @@
   label {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-  }
-  input {
-    padding: 0.6rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 0.4rem;
-    font-size: 1rem;
-  }
-  button {
-    padding: 0.7rem;
-    border: none;
-    border-radius: 0.4rem;
-    background: #0f172a;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
+    gap: 0.35rem;
   }
   .error {
-    color: #dc2626;
+    color: var(--danger);
     margin: 0;
   }
 </style>
