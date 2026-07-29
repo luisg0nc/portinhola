@@ -3,12 +3,19 @@ import json
 import re
 import shlex
 from datetime import UTC, date, datetime
+from http.cookies import SimpleCookie
 from urllib.parse import urlparse
 
+import httpx
 from pydantic import BaseModel
 
 ALLOWED_HOST = "balcaodigital.e-redes.pt"
 _ISO_DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+# Test seam: tests set this to an httpx.MockTransport; production is None.
+_transport_for_tests: httpx.MockTransport | None = None
+
+EREDES_LOGIN_MARKERS = ("Validação de Segurança", "/login")
 
 _ANSI_C_ESCAPES = {"t": "\t", "n": "\n", "r": "\r", "\\": "\\", "'": "'", '"': '"'}
 
@@ -160,3 +167,48 @@ def substitute_dates(req: CurlRequest, date_from: date, date_to: date) -> CurlRe
     new_url = _ISO_DATE.sub(_repl, req.url)
     new_body = _ISO_DATE.sub(_repl, req.body) if req.body else None
     return req.model_copy(update={"url": new_url, "body": new_body})
+
+
+class ReplayResult(BaseModel):
+    status: int
+    content: bytes
+    content_type: str
+    set_cookies: dict[str, str]
+
+
+def replay(req: CurlRequest) -> ReplayResult:
+    with httpx.Client(
+        follow_redirects=False,
+        timeout=60.0,
+        transport=_transport_for_tests,
+    ) as client:
+        response = client.request(
+            req.method,
+            req.url,
+            headers=req.headers,
+            cookies=req.cookies,
+            content=req.body.encode() if req.body else None,
+        )
+    set_cookies: dict[str, str] = {}
+    for raw in response.headers.get_list("set-cookie"):
+        jar: SimpleCookie = SimpleCookie()
+        jar.load(raw)
+        for key, morsel in jar.items():
+            set_cookies[key] = morsel.value
+    return ReplayResult(
+        status=response.status_code,
+        content=response.content,
+        content_type=response.headers.get("content-type", ""),
+        set_cookies=set_cookies,
+    )
+
+
+def is_expired(result: ReplayResult) -> bool:
+    if result.status == 401:
+        return True
+    if result.status in (301, 302, 303, 307, 308):
+        return True
+    if "html" in result.content_type.lower():
+        text = result.content.decode("utf-8", errors="ignore")
+        return any(marker in text for marker in EREDES_LOGIN_MARKERS)
+    return False

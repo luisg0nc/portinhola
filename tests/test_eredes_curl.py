@@ -1,12 +1,16 @@
 from datetime import date
 
+import httpx
 import pytest
 
 from portinhola.integrations.eredes_curl import (
     CurlRequest,
     CurlValidationError,
+    ReplayResult,
+    is_expired,
     parse_curl,
     read_expiry,
+    replay,
     substitute_dates,
     validate,
 )
@@ -111,3 +115,50 @@ def test_read_expiry_from_jwt() -> None:
 
 def test_read_expiry_none_without_jwt() -> None:
     assert read_expiry(_req("https://balcaodigital.e-redes.pt/api/x?s=2026-06-01&e=2026-07-01")) is None
+
+
+def test_replay_sends_and_captures(monkeypatch) -> None:
+    captured = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        captured["url"] = str(request.url)
+        captured["auth"] = request.headers.get("authorization")
+        captured["cookie"] = request.headers.get("cookie")
+        return httpx.Response(
+            200,
+            content=b"XLSXBYTES",
+            headers={
+                "content-type": "application/vnd.ms-excel",
+                "set-cookie": "PHPSESSID=new99; Path=/",
+            },
+        )
+
+    import portinhola.integrations.eredes_curl as mod
+
+    monkeypatch.setattr(mod, "_transport_for_tests", httpx.MockTransport(handler))
+    req = CurlRequest(
+        method="GET",
+        url="https://balcaodigital.e-redes.pt/api/x?s=2026-06-01&e=2026-07-01",
+        headers={"authorization": "Bearer t"},
+        cookies={"PHPSESSID": "old"},
+        body=None,
+    )
+    result = replay(req)
+    assert isinstance(result, ReplayResult)
+    assert result.status == 200
+    assert result.content == b"XLSXBYTES"
+    assert result.set_cookies["PHPSESSID"] == "new99"
+    assert captured["auth"] == "Bearer t"
+    assert "PHPSESSID=old" in (captured["cookie"] or "")
+    assert not is_expired(result)
+
+
+def test_is_expired_on_401() -> None:
+    assert is_expired(ReplayResult(status=401, content=b"", content_type="", set_cookies={}))
+
+
+def test_is_expired_on_recaptcha_html() -> None:
+    html = "<html><body>Validação de Segurança</body></html>".encode()
+    assert is_expired(
+        ReplayResult(status=200, content=html, content_type="text/html", set_cookies={})
+    )
