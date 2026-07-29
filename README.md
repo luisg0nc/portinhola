@@ -32,11 +32,15 @@ add yours.
   Balcão Digital and upload it on the Consumption page. Both the monthly
   and the date-range export layouts are supported; values are converted
   from average kW to kWh and stored DST-safely in UTC.
-- **Connected account** — Settings → E-Redes → Connect opens the real
-  E-Redes login streamed inside Portinhola; you type your credentials and
-  solve the CAPTCHA yourself. Only the session cookies are stored
-  (encrypted); a daily job then syncs new data automatically and alerts
-  you (in-app + Apprise) when the session expires.
+- **Connected account (cURL import)** — the portal's login is
+  reCAPTCHA-protected and can't be automated server-side, so you connect
+  by pasting a request from your own browser: log in, run the Excel export
+  with DevTools open, "Copy as cURL", and paste it in Settings → E-Redes
+  (there's a step-by-step guide there). The daily sync replays that
+  request with auto-advancing dates — no browser, no reCAPTCHA — and
+  refreshes the session on use. When the session finally expires you get a
+  notification to paste a fresh one; Settings shows the "valid until" date.
+  The pasted command contains your login session and is stored encrypted.
 
 Charts: day (15-min curve), month, year, and period comparison.
 
@@ -67,14 +71,6 @@ Submission guidance is per contract: portal link, or phone + reference
 for IVR lines (Be Water prints both on its bills). Portal automation
 modules plug into `portinhola/reporters/` —
 see `docs/CONTRIBUTING-reporters.md`.
-
-Note: the E-Redes portal has two human checkpoints — the login CAPTCHA and
-a "Validação de Segurança" gate on the consumption pages. The assisted
-login walks you through both. reCAPTCHA's reputation system may refuse
-repeated attempts from the same address in a short window; wait a while
-and retry if you hit an endless "try again" loop. The automated sync's
-export-download selectors are best-effort until verified against a live
-session (tracked as a known follow-up).
 
 ## Run with Docker
 
