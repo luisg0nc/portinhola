@@ -118,6 +118,10 @@ textarea {
   min-height: unset;
 }
 
+input[type='file'] {
+  width: 100%;
+}
+
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
