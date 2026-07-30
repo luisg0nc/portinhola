@@ -44,6 +44,9 @@ class Tariff(BaseModel):
     valid_to: date | None = None
     source_url: str
     retrieved: date
+    # Human-readable eligibility note shown with the result — e.g. "requires
+    # direct debit + e-invoice" or "base table; dual-bundle discounts apply".
+    conditions: str | None = None
     electricity: ElectricityPrices | None = None
     gas: GasPrices | None = None
 

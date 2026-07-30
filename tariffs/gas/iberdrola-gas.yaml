@@ -1,0 +1,19 @@
+# Iberdrola Mais Casa Gás; escalão 2 transcribed from lojaluz (page last
+# updated 2025-03 — REFRESH from the official price sheet). Escalão 1
+# estimated by scaling the regulated esc1/esc2 ratios.
+supplier: Iberdrola
+supplier_nif: "980292117"
+name: Iberdrola Mais Casa Gás
+utility: gas
+valid_from: 2025-03-01
+valid_to: null
+source_url: https://lojaluz.com/fornecedores/iberdrola/tarifas
+retrieved: 2026-07-30
+gas:
+  tiers:
+    "1":
+      fixed_eur_day: 0.1651   # estimated (esc2 x 0.691 regulated ratio)
+      energy_eur_kwh: 0.0990  # estimated (+0.004 over esc2, typical spread)
+    "2":
+      fixed_eur_day: 0.2390
+      energy_eur_kwh: 0.0951

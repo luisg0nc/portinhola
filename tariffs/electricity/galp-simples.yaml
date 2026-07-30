@@ -1,0 +1,26 @@
+# Official Galp price table (residencial), in force from 2026-01-01.
+# Final prices incl. network access, excl. VAT. Simples energy is 0.1561
+# for 3.45-5.75 kVA (6.9+ differs: 0.1640); bi: fora vazio 0.1900,
+# vazio 0.1300. This is the BASE table — Casa & Estrada / Combina plan
+# discounts (dual bundle, direct debit) apply on top of these prices.
+supplier: Galp
+supplier_nif: null  # set when a Galp contract exists, for current-plan matching
+name: Galp Eletricidade (tabela base)
+utility: electricity
+valid_from: 2026-01-01
+valid_to: null
+source_url: https://www.galp.com/pt/casa/system/files/2025-12/Tabela%20Pre%C3%A7os%20e%20Descontos_Residencial.pdf
+retrieved: 2026-07-30
+conditions: "Tabela base — os planos Galp (Casa & Estrada, Combina) aplicam descontos sobre estes preços (dual, débito direto)."
+electricity:
+  power_eur_day:
+    "3.45": 0.3167
+    "4.6": 0.3730
+    "5.75": 0.4547
+    "6.9": 0.5969
+  energy_eur_kwh:
+    simples:
+      total: 0.1561
+    bi:
+      vazio: 0.1300
+      fora_vazio: 0.1900

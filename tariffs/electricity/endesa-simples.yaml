@@ -8,6 +8,7 @@ valid_from: 2026-07-01
 valid_to: null
 source_url: https://www.comparaja.pt/energia/endesa
 retrieved: 2026-07-28
+conditions: "Tarifa Digital: contratação online com débito direto e fatura eletrónica."
 electricity:
   power_eur_day:
     "3.45": 0.1850

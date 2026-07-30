@@ -8,6 +8,7 @@ valid_from: 2026-01-01
 valid_to: null
 source_url: bill:FC FAE/0000003
 retrieved: 2026-07-28
+conditions: "Preços transcritos de fatura dual (luz+gás G9) — oferta isolada de gás pode diferir."
 gas:
   tiers:
     "1":

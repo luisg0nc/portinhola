@@ -27,6 +27,7 @@
     breakdown: Breakdown;
     valid_to: string | null;
     retrieved: string;
+    conditions: string | null;
   };
   type Sp = { id: number; utility: string; identifier: string; name: string };
 
@@ -235,6 +236,9 @@
                 </tr>
               </tbody>
             </table>
+            {#if row.conditions}
+              <p class="conditions">⚠ {row.conditions}</p>
+            {/if}
             <p class="muted src">
               {$_('calculator.prices_retrieved')} {row.retrieved}
               {#if row.valid_to}· {$_('calculator.valid_until')} {row.valid_to}{/if}
@@ -393,6 +397,14 @@
   }
   .src {
     margin: 0.4rem 0 0;
+  }
+  .conditions {
+    margin: 0.5rem 0 0;
+    font-size: 0.8rem;
+    color: var(--warning);
+    background: var(--warning-tint);
+    border-radius: var(--radius-control);
+    padding: 0.35rem 0.6rem;
   }
   .results + :global(.card) {
     margin-top: 1rem;

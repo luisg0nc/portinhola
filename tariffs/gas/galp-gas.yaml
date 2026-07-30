@@ -1,0 +1,20 @@
+# Official Galp price table (residencial), in force from 2026-01-01.
+# Final prices incl. network access, excl. VAT. Base table — plan
+# discounts apply on top.
+supplier: Galp
+supplier_nif: null
+name: Galp Gás Natural (tabela base)
+utility: gas
+valid_from: 2026-01-01
+valid_to: null
+source_url: https://www.galp.com/pt/casa/system/files/2025-12/Tabela%20Pre%C3%A7os%20e%20Descontos_Residencial.pdf
+retrieved: 2026-07-30
+conditions: "Tabela base — os planos Galp aplicam descontos sobre estes preços (dual, débito direto)."
+gas:
+  tiers:
+    "1":
+      fixed_eur_day: 0.0937
+      energy_eur_kwh: 0.0991
+    "2":
+      fixed_eur_day: 0.1648
+      energy_eur_kwh: 0.1000

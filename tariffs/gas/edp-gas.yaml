@@ -8,6 +8,7 @@ valid_from: 2026-07-01
 valid_to: null
 source_url: https://www.comparamais.pt/luz-e-gas/melhor-preco-eletricidade/
 retrieved: 2026-07-28
+conditions: "A EDP aplica desconto adicional no gás a clientes com luz+gás (bundle)."
 gas:
   tiers:
     "1":

@@ -73,6 +73,7 @@ def _result_row(tariff: Tariff, option: str, sim: BillSim, current_total: int | 
         "breakdown": sim.model_dump(),
         "valid_to": tariff.valid_to.isoformat() if tariff.valid_to else None,
         "retrieved": tariff.retrieved.isoformat(),
+        "conditions": tariff.conditions,
     }
 
 

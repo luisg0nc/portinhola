@@ -1,0 +1,20 @@
+# Tarifa regulada de gás natural (comercializador de último recurso),
+# gas year 2025-10-01 → 2026-09-30, excl. VAT. Transcribed from
+# tiagofelicia.pt's ERSE table copy; cross-checked against comparaja
+# (0.0601 €/kWh escalão 2 matches).
+supplier: SU Gás
+supplier_nif: null
+name: Tarifa Regulada Gás (ERSE)
+utility: gas
+valid_from: 2025-10-01
+valid_to: 2026-09-30
+source_url: https://www.tiagofelicia.pt/tarifa-regulada-gas-natural
+retrieved: 2026-07-30
+gas:
+  tiers:
+    "1":
+      fixed_eur_day: 0.0897
+      energy_eur_kwh: 0.0647
+    "2":
+      fixed_eur_day: 0.1298
+      energy_eur_kwh: 0.0601

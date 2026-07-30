@@ -1,0 +1,19 @@
+# Plenitude gás; escalão 2 per comparaja/comparamais July 2026 (fixo
+# 0.0897 €/dia, 0.0904 €/kWh). Escalão 1 energy 0.0935 per selectra;
+# esc1 fixo estimated via the regulated esc1/esc2 ratio. Excl. VAT.
+supplier: Plenitude
+supplier_nif: "509450334"
+name: Plenitude Gás
+utility: gas
+valid_from: 2026-07-01
+valid_to: null
+source_url: https://www.comparaja.pt/energia/plenitude
+retrieved: 2026-07-30
+gas:
+  tiers:
+    "1":
+      fixed_eur_day: 0.0620   # estimated (esc2 x 0.691 regulated ratio)
+      energy_eur_kwh: 0.0935
+    "2":
+      fixed_eur_day: 0.0897
+      energy_eur_kwh: 0.0904
