@@ -17,7 +17,7 @@ from portinhola.integrations.eredes_api import (
     utc_today,
 )
 from portinhola.integrations.eredes_session import load_token
-from portinhola.jobs.registry import job
+from portinhola.jobs.registry import JobFailure, job
 
 # On the first sync we don't assume how far back the portal keeps data —
 # we walk backwards a window at a time until it stops answering. Two
@@ -38,11 +38,20 @@ def eredes_sync(db: Session) -> str:
             "E-Redes is not connected — import your session token in Settings.",
             dedup_key="eredes_not_connected",
         )
-        return "not connected; skipped"
+        raise JobFailure("not_connected")
 
     supply_point = _resolve_supply_point(db)
     if supply_point is None:
-        return "no electricity supply point; skipped"
+        # Without a supply point we don't know which CPE to query, so this
+        # must fail loudly — a silent "skipped" success reads as a sync.
+        raise_alert(
+            db,
+            "eredes_no_supply_point",
+            "E-Redes sync needs an electricity supply point (CPE) — "
+            "add one in Settings or upload a bill first.",
+            dedup_key="eredes_no_supply_point",
+        )
+        raise JobFailure("no_supply_point")
 
     since = last_ts(db, supply_point.id)
     date_to = utc_today()
@@ -65,7 +74,12 @@ def eredes_sync(db: Session) -> str:
             dedup_key="eredes_session_expired",
         )
         notify_send(db, "Portinhola", "E-Redes session expired — tap to reconnect.")
-        raise
+        raise JobFailure("session_expired") from None
+    except EredesFetchError:
+        raise JobFailure("no_data") from None
+
+    if not rows:
+        raise JobFailure("no_data")
 
     inserted, updated = upsert_intervals(
         db,

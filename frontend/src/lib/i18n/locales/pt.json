@@ -107,7 +107,6 @@
     "save": "Guardar sessão",
     "saved": "Sessão importada.",
     "sync_now": "Sincronizar agora",
-    "sync_started": "Sincronização iniciada.",
     "disconnect": "Desligar",
     "err_invalid_token": "Cole apenas o valor do cookie 'aat' (não 'aat=...').",
     "guide_toggle": "Como obter o token 'aat'",
@@ -118,7 +117,16 @@
     "guide_step_4": "Copie o valor do cookie chamado 'aat'.",
     "guide_step_5": "Cole aqui e clique em Guardar.",
     "token_note": "O token da E-Redes dura ~90 minutos e não pode ser renovado pelo servidor (a E-Redes protege a criação de sessões com reCAPTCHA). Ao guardar, os dados são sincronizados imediatamente.",
-    "sync_on_import": "A sincronizar os seus consumos…"
+    "sync_on_import": "A sincronizar os seus consumos…",
+    "needs_sp": "Antes de sincronizar, crie o ponto de abastecimento de eletricidade com o seu CPE em «Pontos de abastecimento», mais abaixo — a sincronização precisa dele para saber o que pedir à E-Redes.",
+    "last_sync_label": "Última sincronização",
+    "sync_running": "A sincronizar…",
+    "sync_ok": "Sincronização concluída: {detail}",
+    "sync_failed": "A sincronização falhou: {detail}",
+    "fail_no_supply_point": "não existe ponto de eletricidade (CPE) configurado",
+    "fail_not_connected": "sem sessão E-Redes — cole o valor do cookie 'aat'",
+    "fail_session_expired": "a sessão expirou — cole um token novo",
+    "fail_no_data": "o portal não devolveu dados"
   },
   "notifications": {
     "title": "Notificações",

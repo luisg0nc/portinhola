@@ -15,7 +15,7 @@ from portinhola.config import Config
 from portinhola.db.base import make_engine
 from portinhola.db.models import Job
 from portinhola.jobs import eredes_sync as _eredes_sync  # noqa: F401  (registers job)
-from portinhola.jobs.registry import JOB_TYPES
+from portinhola.jobs.registry import JOB_TYPES, JobFailure
 
 
 def main(job_type: str) -> int:
@@ -33,6 +33,14 @@ def main(job_type: str) -> int:
         db.commit()
         try:
             log = func(db)
+        except JobFailure as exc:
+            # Expected failure: store the short code, not a traceback, so
+            # the UI can show a human explanation.
+            job_row.status = "failed"
+            job_row.error = str(exc)
+            job_row.finished_at = datetime.now(UTC)
+            db.commit()
+            return 1
         except Exception:  # noqa: BLE001 - job failures must be recorded, never crash silently
             job_row.status = "failed"
             job_row.error = traceback.format_exc(limit=5)

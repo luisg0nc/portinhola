@@ -34,6 +34,22 @@ def test_failing_job_writes_failed_row(app, monkeypatch, tmp_path) -> None:
         assert "boom" in row.error
 
 
+def test_job_failure_stores_clean_code_not_traceback(app, monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv("PORTINHOLA_DATA_DIR", str(tmp_path))
+    from portinhola.jobs.registry import JobFailure, job
+    from portinhola.jobs.run import main
+
+    @job("fails_cleanly")
+    def fails_cleanly(db) -> str:
+        raise JobFailure("some_code")
+
+    assert main("fails_cleanly") == 1
+    with app.state.sessionmaker() as db_session:
+        row = db_session.scalar(select(Job).where(Job.type == "fails_cleanly"))
+        assert row.status == "failed"
+        assert row.error == "some_code"
+
+
 def test_unknown_job_type_exits_nonzero(app, monkeypatch, tmp_path) -> None:
     monkeypatch.setenv("PORTINHOLA_DATA_DIR", str(tmp_path))
     from portinhola.jobs.run import main

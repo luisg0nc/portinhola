@@ -1,11 +1,13 @@
 from datetime import UTC, datetime
 
+import pytest
 from sqlalchemy import select
 
 from portinhola.db.models import Alert, IntervalConsumption, SupplyPoint
 from portinhola.integrations import eredes_session
 from portinhola.integrations.eredes_api import SessionExpiredError
 from portinhola.jobs.eredes_sync import eredes_sync
+from portinhola.jobs.registry import JobFailure
 
 
 def _setup_sp(db) -> int:
@@ -15,12 +17,27 @@ def _setup_sp(db) -> int:
     return sp.id
 
 
-def test_sync_without_session_raises_alert(app) -> None:
+def test_sync_without_session_fails_with_alert(app) -> None:
     with app.state.sessionmaker() as db:
         _setup_sp(db)
-        log = eredes_sync(db)
-        assert "not connected" in log
+        with pytest.raises(JobFailure, match="not_connected"):
+            eredes_sync(db)
         alert = db.scalar(select(Alert).where(Alert.type == "eredes_not_connected"))
+        assert alert is not None
+
+
+def test_sync_without_supply_point_fails_with_alert(app, monkeypatch, tmp_path) -> None:
+    """A fresh install has a token but no CPE to query — that must be a
+    loud, explained failure, not a silent 'skipped' success."""
+    monkeypatch.setenv("PORTINHOLA_DATA_DIR", str(tmp_path))
+    with app.state.sessionmaker() as db:
+        from portinhola.core.secrets import load_or_create_app_key
+
+        app_key = load_or_create_app_key(tmp_path)
+        eredes_session.save_token(db, app_key, "tok123")
+        with pytest.raises(JobFailure, match="no_supply_point"):
+            eredes_sync(db)
+        alert = db.scalar(select(Alert).where(Alert.type == "eredes_no_supply_point"))
         assert alert is not None
 
 
@@ -64,10 +81,8 @@ def test_sync_expired_session_alerts_once(app, monkeypatch, tmp_path) -> None:
         app_key = load_or_create_app_key(tmp_path)
         eredes_session.save_token(db, app_key, "tok123")
         for _ in range(2):
-            try:
+            with pytest.raises(JobFailure, match="session_expired"):
                 eredes_sync(db)
-            except SessionExpiredError:
-                pass
         alerts = db.query(Alert).filter(Alert.type == "eredes_session_expired").all()
         assert len(alerts) == 1
         assert len(notifications) == 2
@@ -124,7 +139,9 @@ def test_incremental_sync_only_fetches_recent(app, monkeypatch, tmp_path) -> Non
 
     def fake_fetch(db, app_key, cpe, date_from, date_to):
         asked.append((date_from, date_to))
-        return []
+        # A real fetch never returns an empty list (it raises instead), and
+        # an empty result now fails the job as "no_data".
+        return [(datetime(2026, 7, 14, 10, 0, tzinfo=UTC), 0.2, "real")]
 
     monkeypatch.setattr("portinhola.jobs.eredes_sync.fetch_consumption", fake_fetch)
     monkeypatch.setattr("portinhola.jobs.eredes_sync.utc_today", lambda: date(2026, 7, 15))

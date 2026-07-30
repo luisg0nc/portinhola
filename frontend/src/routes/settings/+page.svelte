@@ -3,8 +3,9 @@
   import { _ } from 'svelte-i18n';
   import { api } from '$lib/api';
   import { setLocale, type Locale } from '$lib/i18n';
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import Card from '$lib/ui/Card.svelte';
+  import StatusBanner from '$lib/ui/StatusBanner.svelte';
   import Button from '$lib/ui/Button.svelte';
   import PageHeader from '$lib/ui/PageHeader.svelte';
   import UtilityBadge from '$lib/ui/UtilityBadge.svelte';
@@ -48,10 +49,16 @@
     if (res.ok) supplyPoints = await res.json();
   }
 
+  type EredesJob = { status: string; message: string | null; finished_at: string | null };
+
   let appriseUrls = $state('');
   let notifyMessage = $state('');
   let eredesConnected = $state(false);
-  let eredesMessage = $state('');
+  let eredesNeedsSp = $state(false);
+  let eredesLastSync = $state<string | null>(null);
+  let eredesJob = $state<EredesJob | null>(null);
+  let syncing = $state(false);
+  let pollTimer: ReturnType<typeof setTimeout> | undefined;
   let tokenText = $state('');
   let tokenError = $state('');
   let tokenSaved = $state(false);
@@ -68,7 +75,41 @@
     if (res.ok) {
       const data = await res.json();
       eredesConnected = data.connected;
+      eredesNeedsSp = data.needs_supply_point;
+      eredesLastSync = data.last_sync;
+      eredesJob = data.last_job;
     }
+  }
+
+  // The sync runs as a subprocess; poll until its job row finishes so the
+  // user sees the real outcome, not just "started". `before` must be the
+  // finished_at seen BEFORE the sync was triggered — fast jobs can finish
+  // before the first poll.
+  function watchSync(before: string | null) {
+    syncing = true;
+    clearTimeout(pollTimer);
+    const startedAt = Date.now();
+    const poll = async () => {
+      await loadEredes();
+      const done = eredesJob && eredesJob.finished_at !== before && eredesJob.status !== 'running';
+      if (done || Date.now() - startedAt > 180000) {
+        syncing = false;
+        return;
+      }
+      pollTimer = setTimeout(poll, 2000);
+    };
+    pollTimer = setTimeout(poll, 1500);
+  }
+
+  onDestroy(() => clearTimeout(pollTimer));
+
+  const knownFailures = ['no_supply_point', 'not_connected', 'session_expired', 'no_data'];
+
+  function jobDetail(job: EredesJob): string {
+    if (job.status === 'failed' && job.message && knownFailures.includes(job.message)) {
+      return $_(`eredes.fail_${job.message}`);
+    }
+    return job.message ?? '';
   }
 
   onMount(async () => {
@@ -97,8 +138,9 @@
   }
 
   async function syncNow() {
+    const before = eredesJob?.finished_at ?? null;
     const res = await api('/api/jobs/eredes_sync/run', { method: 'POST' });
-    eredesMessage = res.status === 202 ? $_('eredes.sync_started') : '';
+    if (res.status === 202) watchSync(before);
   }
 
   async function disconnectEredes() {
@@ -109,6 +151,7 @@
   async function saveToken() {
     tokenError = '';
     tokenSaved = false;
+    const before = eredesJob?.finished_at ?? null;
     const res = await api('/api/eredes/import', {
       method: 'POST',
       body: JSON.stringify({ token: tokenText })
@@ -116,7 +159,7 @@
     if (res.ok) {
       tokenSaved = true;
       tokenText = '';
-      await loadEredes();
+      watchSync(before);
     } else {
       const detail = (await res.json()).detail;
       tokenError = `eredes.err_${detail}`;
@@ -207,7 +250,16 @@
       <span class={`badge ${eredesConnected ? 'success' : 'neutral'}`}>
         {eredesConnected ? $_('eredes.connected') : $_('eredes.not_connected')}
       </span>
+      {#if eredesLastSync}
+        <span class="muted">
+          {$_('eredes.last_sync_label')}: {eredesLastSync.slice(0, 16).replace('T', ' ')}
+        </span>
+      {/if}
     </p>
+
+    {#if eredesNeedsSp}
+      <StatusBanner kind="warning"><p>{$_('eredes.needs_sp')}</p></StatusBanner>
+    {/if}
 
     <label class="stack">
       {$_('eredes.import_label')}
@@ -218,11 +270,21 @@
     <div class="row">
       <Button onclick={saveToken}>{$_('eredes.save')}</Button>
       {#if eredesConnected}
-        <Button variant="secondary" onclick={syncNow}>{$_('eredes.sync_now')}</Button>
+        <Button variant="secondary" onclick={syncNow} disabled={syncing}>
+          {$_('eredes.sync_now')}
+        </Button>
         <Button variant="danger" onclick={disconnectEredes}>{$_('eredes.disconnect')}</Button>
       {/if}
     </div>
-    {#if eredesMessage}<p class="ok">{eredesMessage}</p>{/if}
+    {#if syncing}
+      <p class="muted">{$_('eredes.sync_running')}</p>
+    {:else if eredesJob}
+      {#if eredesJob.status === 'success'}
+        <p class="ok">{$_('eredes.sync_ok').replace('{detail}', jobDetail(eredesJob))}</p>
+      {:else if eredesJob.status === 'failed'}
+        <p class="error">{$_('eredes.sync_failed').replace('{detail}', jobDetail(eredesJob))}</p>
+      {/if}
+    {/if}
     <p class="muted">{$_('eredes.token_note')}</p>
 
     <details class="guide">
