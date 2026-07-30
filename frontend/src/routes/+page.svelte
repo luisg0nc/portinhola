@@ -9,7 +9,7 @@
   import EmptyState from '$lib/ui/EmptyState.svelte';
   import UtilityBadge from '$lib/ui/UtilityBadge.svelte';
   import Button from '$lib/ui/Button.svelte';
-  import { Zap, ChevronRight, FileText } from '$lib/ui/icons';
+  import { Zap, ChevronRight, FileText, Plug, Flame } from '$lib/ui/icons';
 
   type UtilityCosts = {
     energy: number;
@@ -36,6 +36,8 @@
   let loaded = $state(false);
   let selectedMonth = $state<string | null>(null);
   let last7Kwh = $state<number | null>(null);
+  let contractedPower = $state<{ kva: number; cycle: string | null } | null>(null);
+  let gasTier = $state<number | null>(null);
   let estimate = $state<{ period_start: string; kwh: number; estimated_cents: number } | null>(
     null
   );
@@ -61,9 +63,27 @@
 
     const spRes = await api('/api/supply-points');
     if (spRes.ok) {
-      const sps = (await spRes.json()).filter(
-        (sp: { utility: string }) => sp.utility === 'electricity'
-      );
+      const allSps: {
+        id: number;
+        utility: string;
+        contracts: {
+          end_date: string | null;
+          power_kva: number | null;
+          cycle: string | null;
+          gas_tier: number | null;
+        }[];
+      }[] = await spRes.json();
+      for (const sp of allSps) {
+        const open = sp.contracts.find((c) => c.end_date === null);
+        if (!open) continue;
+        if (sp.utility === 'electricity' && open.power_kva && !contractedPower) {
+          contractedPower = { kva: open.power_kva, cycle: open.cycle };
+        }
+        if (sp.utility === 'gas' && open.gas_tier && gasTier === null) {
+          gasTier = open.gas_tier;
+        }
+      }
+      const sps = allSps.filter((sp: { utility: string }) => sp.utility === 'electricity');
       if (sps.length > 0) {
         const end = new Date();
         const start = new Date(end.getTime() - 7 * 86400000);
@@ -98,6 +118,13 @@
     if (pool.length === 0) return null;
     return Math.round(pool.reduce((sum, m) => sum + entryTotal(m.by_utility), 0) / pool.length);
   });
+
+  const GAS_TIER_RANGES: Record<number, string> = {
+    1: '0–220',
+    2: '221–500',
+    3: '501–1 000',
+    4: '1 001–10 000'
+  };
 
   const categoryKeys = ['energy', 'power', 'fixed', 'tax', 'other', 'vat'] as const;
   const utilityOrder = ['electricity', 'gas', 'water', 'unknown'];
@@ -148,6 +175,37 @@
           <span class="kicker">{$_('dashboard.avg_monthly')}</span>
           <div class="stat-value money">{fmt(avgMonthly)}</div>
           <span class="muted">{$_(`dashboard.range_${range}`)}</span>
+        </div>
+      </div>
+    </Card>
+  {/if}
+  {#if contractedPower}
+    <Card href="/calculator">
+      <div class="stat-row">
+        <span class="stat-icon"><Plug size={20} strokeWidth={2.2} /></span>
+        <div class="stat-body">
+          <span class="kicker">{$_('dashboard.contracted_power')}</span>
+          <div class="stat-value money">{contractedPower.kva} kVA</div>
+          {#if contractedPower.cycle}
+            <span class="muted">{contractedPower.cycle}</span>
+          {/if}
+        </div>
+        <span class="chevron"><ChevronRight size={20} /></span>
+      </div>
+    </Card>
+  {/if}
+  {#if gasTier !== null}
+    <Card>
+      <div class="stat-row">
+        <span class="stat-icon gas-icon"><Flame size={20} strokeWidth={2.2} /></span>
+        <div class="stat-body">
+          <span class="kicker">{$_('dashboard.gas_tier')}</span>
+          <div class="stat-value money">
+            {$_('dashboard.gas_tier_value').replace('{tier}', String(gasTier))}
+          </div>
+          {#if GAS_TIER_RANGES[gasTier]}
+            <span class="muted">{GAS_TIER_RANGES[gasTier]} {$_('dashboard.m3_year')}</span>
+          {/if}
         </div>
       </div>
     </Card>
@@ -278,6 +336,10 @@
     background: var(--electricity-tint);
     color: var(--electricity);
     flex-shrink: 0;
+  }
+  .gas-icon {
+    background: var(--gas-tint);
+    color: var(--gas);
   }
   .stat-body {
     flex: 1;

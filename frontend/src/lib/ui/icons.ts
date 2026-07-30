@@ -6,7 +6,9 @@ import { House as _House } from 'lucide-svelte';
 export type IconComponent = typeof _House;
 
 export {
+  Flame,
   House,
+  Plug,
   ReceiptText,
   Gauge,
   Scale,

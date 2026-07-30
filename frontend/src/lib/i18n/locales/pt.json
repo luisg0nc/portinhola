@@ -106,7 +106,11 @@
     "range_36m": "36 meses",
     "range_all": "Tudo",
     "yearly_title": "Totais anuais",
-    "year": "Ano"
+    "year": "Ano",
+    "contracted_power": "Potência contratada",
+    "gas_tier": "Escalão de gás",
+    "gas_tier_value": "Escalão {tier}",
+    "m3_year": "m³/ano"
   },
   "eredes": {
     "title": "E-Redes",
