@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="frontend/static/icon.svg" width="88" alt="Portinhola — the little arched door" />
+  <img src="frontend/static/icon.svg" width="88" alt="Portinhola, the little arched door" />
 </p>
 
 <h1 align="center">Portinhola</h1>
 
 <p align="center">
-  Self-hosted dashboard for Portuguese household utilities —
+  Self-hosted dashboard for Portuguese household utilities:
   electricity, gas and water.
 </p>
 
@@ -20,44 +20,56 @@
 
 Portinhola ("little door") ingests your utility bills, pulls your real
 15-minute electricity consumption from E-Redes, reminds you to submit
-meter readings, and — the end-game feature — tells you exactly what every
-tariff on the market would have cost **you**, by replaying your actual
-consumption curve instead of estimating from monthly totals.
+meter readings, and tells you what every tariff on the market would have
+cost you. It computes that answer by replaying your actual consumption
+curve, not by estimating from a monthly total.
 
-It runs on a Raspberry Pi 5 or any small home server, stores everything
-in a single SQLite volume, and never talks to a cloud service on your
-behalf. Interface in Portuguese and English. No LLMs, no telemetry, no
-accounts — your data stays behind your own little door.
+It runs on a Raspberry Pi 5 or any small home server and stores
+everything in a single SQLite volume. The interface is in Portuguese and
+English. There are no cloud calls on your behalf, no telemetry, no
+accounts, and no LLMs. Your data stays behind your own little door.
+
+<p align="center">
+  <img src="docs/screenshots/dashboard.png" alt="Dashboard with cost history and contract facts" />
+</p>
+
+| The switch calculator | On a phone |
+|---|---|
+| <img src="docs/screenshots/calculator.png" alt="Tariff calculator ranking" /> | <img src="docs/screenshots/mobile.png" alt="Mobile dashboard" width="390" /> |
+
+*All screenshots show generated demo data.*
 
 ## Features
 
-- **Bill ingestion** — upload a PDF; the fiscal QR (Portaria 195/2020) is
-  decoded for issuer NIF, ATCUD, VAT and totals, and per-supplier
-  extractors parse every line item, consumption figure and contract
-  detail. First upload walks you through creating supply points.
-- **15-minute consumption** — connect your E-Redes account with a
-  browser-session token or import the Balcão Digital XLSX exports;
-  day/month/year charts and period comparison, DST-safe in UTC.
-- **Switch calculator** — replays your real curve against every tariff's
-  full price vector (energy per ERSE period, potência per day, IEC / CAV /
-  DGEG / TOS levies, per-component VAT). Ranks electricity, gas, and
-  **dual luz+gás bundles** including sourced dual discounts, the best
-  mixed pair, and your current combo. A "1.º ano" view prices in
-  promotional phases; a calibration banner shows how closely the engine
-  reproduces your latest real bill (reference: within cents).
-- **Potência right-sizing** — your real 15-minute peak vs contracted kVA.
-- **Meter readings** — fast keypad entry with monotonic validation,
-  per-contract reporting windows, reminders (in-app + push via
-  [Apprise](https://github.com/caronc/apprise)), and per-contract
-  submission guidance (portal link or IVR phone + reference).
-- **Dashboard** — live period-to-date cost estimate, monthly cost history
-  with averages, yearly totals, contracted power and gas tier at a glance.
-- **Community-maintained tariff data** — prices live in YAML with
-  mandatory source URLs and retrieval dates, guarded by schema and
-  sanity validations (a potência below the regulated network-access
-  floor is rejected as fabricated). A weekly
-  [tariff-watch](.github/workflows/tariff-watch.yml) job re-parses the
-  official price sheets and opens a PR when prices move.
+- **Bill ingestion.** Upload a PDF and the fiscal QR (Portaria 195/2020)
+  is decoded for issuer NIF, ATCUD, VAT and totals. Per-supplier
+  extractors then parse every line item, consumption figure and contract
+  detail, and the first upload walks you through creating supply points.
+- **15-minute consumption.** Connect your E-Redes account with a browser
+  session token, or import the Balcão Digital XLSX exports. Day, month
+  and year charts plus period comparison, DST-safe in UTC.
+- **Switch calculator.** Replays your real curve against each tariff's
+  full price vector: energy per ERSE period, potência per day, the IEC,
+  CAV, DGEG and TOS levies, and per-component VAT. It ranks electricity,
+  gas, and dual luz+gás bundles (with sourced dual discounts, plus the
+  best mixed pair and your current combo). A "1.º ano" toggle prices in
+  promotional phases separately from steady state, and a calibration
+  banner shows how closely the engine reproduces your latest real bill.
+  The reference installation lands within cents.
+- **Potência right-sizing.** Your real 15-minute peak next to the kVA
+  you pay for.
+- **Meter readings.** Fast keypad entry with monotonic validation,
+  per-contract reporting windows with reminders (in-app and push via
+  [Apprise](https://github.com/caronc/apprise)), and submission guidance
+  per contract: portal link, or IVR phone plus reference.
+- **Dashboard.** Live period-to-date estimate, monthly cost history with
+  averages, yearly totals, contracted power and gas tier at a glance.
+- **Tariff data that stays honest.** Prices live in YAML with a source
+  URL and retrieval date on every file. The loader rejects implausible
+  data (a potência below the regulated network-access floor cannot load),
+  and a weekly [tariff-watch](.github/workflows/tariff-watch.yml) job
+  re-parses the official price sheets and opens a pull request when a
+  price moves.
 
 ## Supported suppliers (bill extractors)
 
@@ -66,11 +78,11 @@ accounts — your data stays behind your own little door.
 | G9 | electricity + gas (dual-fuel bills) | `g9` |
 | Águas de Valongo (Be Water) | water | `bewater` |
 | EDP Comercial | electricity + gas (multi-invoice PDFs) | `edp` |
-| Iberdrola | electricity, gas (2023 + 2024 layouts) | `iberdrola` |
+| Iberdrola | electricity, gas (2023 and 2024 layouts) | `iberdrola` |
 
-Bills from suppliers without an extractor still work — QR data and manual
-entry cover them — and after adding a new extractor the Bills page can
-re-run extraction over already-uploaded PDFs.
+Bills from other suppliers still work through QR data and manual entry.
+After a new extractor ships, the Bills page can re-run extraction over
+PDFs you already uploaded.
 
 ## Quick start
 
@@ -78,53 +90,71 @@ re-run extraction over already-uploaded PDFs.
 docker compose -f docker-compose.example.yml up --build
 ```
 
-Open http://localhost:8000 — the first visit asks you to set a password.
-All state lives in `./data` (SQLite database, encryption key, bill PDFs);
-back it up by copying that folder.
+Open http://localhost:8000 and set a password on first visit. All state
+lives in `./data` (SQLite database, encryption key, bill PDFs); back it
+up by copying that folder.
 
-For remote/mobile access put Portinhola behind your reverse proxy with
-HTTPS (required for PWA install) and set `PORTINHOLA_COOKIE_SECURE=true`.
+For remote or mobile access, put Portinhola behind your reverse proxy
+with HTTPS (required for PWA install) and set
+`PORTINHOLA_COOKIE_SECURE=true`.
 
 ## Connecting E-Redes
 
 Two ways to get your 15-minute data in:
 
-- **Token import** — log in to the [Balcão Digital](https://balcaodigital.e-redes.pt)
-  in your own browser, copy the `aat` cookie value (DevTools →
-  Application → Cookies), paste it in Settings → E-Redes. Portinhola
-  calls the portal's internal consumption API directly with that token —
-  no embedded browser, no reCAPTCHA — walking your history back to the
-  portal's horizon and persisting each window as it lands. The token is
-  stored encrypted.
-- **File import** — upload the portal's XLSX consumption exports on the
-  Consumption page (both export layouts supported).
+- **Token import.** Log in to the
+  [Balcão Digital](https://balcaodigital.e-redes.pt) in your own
+  browser, copy the `aat` cookie value (DevTools, Application, Cookies)
+  and paste it in Settings. Portinhola calls the portal's internal
+  consumption API directly with that token: no embedded browser and no
+  reCAPTCHA. It walks your history back to the portal's horizon and
+  persists each window as it lands, so an interrupted sync resumes where
+  it stopped. The token is stored encrypted.
+- **File import.** Upload the portal's XLSX consumption exports on the
+  Consumption page. Both export layouts are supported.
 
-There is no unattended daily sync by design: the `aat` token *is* the
-portal session (~91 minutes) and renewing it is gated by reCAPTCHA
-verified at the API layer, so no server-side process can mint one.
-Paste a fresh token whenever you want to top up; syncs resume where they
-left off. (Endpoint shape follows the community
-[`ha-eredes`](https://github.com/mrfyda/ha-eredes) integration.)
+There is no unattended daily sync, and that is deliberate. The `aat`
+token is the portal session itself (about 91 minutes), and minting a new
+one is gated by reCAPTCHA verified at the API layer, so no server-side
+process can renew it honestly. Paste a fresh token whenever you want to
+top up. The endpoint shape follows the community
+[`ha-eredes`](https://github.com/mrfyda/ha-eredes) integration.
 
 ## Why not just use Poupa Energia?
 
 ADENE's comparator has to estimate from a monthly total. Portinhola has
-your actual 15-minute curve, so bi-horário vs simples is decided by your
-real usage pattern, levies and VAT tranches are computed per component,
-and promotional phases are priced separately from steady state — the
-difference between "probably cheaper" and a number you can act on.
-Always confirm current prices with the supplier before switching.
+your actual 15-minute curve, so the bi-horário vs simples question is
+decided by your real usage pattern, levies and VAT tranches are computed
+per component, and promotional pricing is shown separately from what
+year two will cost. That is the difference between "probably cheaper"
+and a number you can act on. Always confirm current prices with the
+supplier before switching.
+
+## Why not use Manie?
+
+Bill-management apps like Manie work by holding your bills for you,
+which means handing invoices full of personal data (name, address, NIF,
+consumption history, bank references) to a third party. A centralized
+service that stores the bills of thousands of households is in a
+position to aggregate and monetize that data, and you have no way to
+verify what happens to it.
+
+Portinhola takes the opposite approach: it runs on your own hardware,
+your bills never leave your network, and the code is open for you to
+check that claim. Convenience features do not require giving anyone
+else a copy of your consumption.
 
 ## Contributing
 
-The per-supplier pieces are designed to be community-maintained:
+The per-supplier pieces are meant to be maintained by the people who
+receive those bills:
 
-- **Bill extractors** — `docs/CONTRIBUTING-extractors.md` (anonymized
-  text fixtures required; privacy checklist included).
-- **Tariff prices** — `docs/CONTRIBUTING-tariffs.md` (source URL +
-  retrieval date mandatory; promo phases and eligibility conditions have
-  dedicated fields).
-- **Reading reporters** — `docs/CONTRIBUTING-reporters.md` (per-supplier
+- Bill extractors: `docs/CONTRIBUTING-extractors.md` (anonymized text
+  fixtures required, privacy checklist included).
+- Tariff prices: `docs/CONTRIBUTING-tariffs.md` (source URL and
+  retrieval date are mandatory; promo phases and eligibility conditions
+  have dedicated fields).
+- Reading reporters: `docs/CONTRIBUTING-reporters.md` (per-supplier
   submission automation).
 
 ## Development
@@ -136,8 +166,8 @@ pytest                       # backend
 cd frontend && npm ci && npm test && npm run build
 ```
 
-FastAPI + SQLAlchemy + SQLite on the back, SvelteKit (static adapter)
-served by the same process on the front, one container, one volume.
+FastAPI, SQLAlchemy and SQLite on the back; SvelteKit (static adapter)
+served by the same process on the front. One container, one volume.
 
 ## License
 
