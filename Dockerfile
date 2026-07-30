@@ -10,9 +10,7 @@ WORKDIR /app
 COPY pyproject.toml README.md LICENSE alembic.ini ./
 COPY portinhola/ portinhola/
 COPY alembic/ alembic/
-RUN pip install --no-cache-dir -e . \
-  && playwright install --with-deps chromium \
-  && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir -e .
 COPY --from=frontend /build/build/ portinhola/frontend_dist/
 
 ENV PORTINHOLA_DATA_DIR=/data
