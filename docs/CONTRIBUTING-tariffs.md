@@ -48,3 +48,21 @@ Rules:
 The best contribution includes a calibration check: replay your own bill
 period through your new YAML (Calculator → calibration banner) and state
 the delta in the PR.
+
+## Promotional phases
+
+Time-limited discounts ("-15% nos primeiros 12 meses") go in an optional
+`promo:` block — `energy_pct`, `fixed_pct` (off potência/termo fixo),
+`months`, `conditions`. The calculator shows two totals: steady state
+(promo excluded) and "1.º ano" (promo pro-rated over the window).
+Permanent conditional discounts (e-invoice/direct-debit) belong in the
+prices themselves with a `conditions:` note, not in `promo:`.
+
+## Potência sanity floor
+
+`load_tariffs()` rejects any electricity ladder priced below the
+regulated network-access component (0.0498 €/day per kVA): every
+supplier passes that through before adding margin, so a value under the
+floor is fabricated data, not a cheap tariff. Transcribe ladders from
+the supplier's official price sheet; if only one kVA point is published,
+derive the others with the access delta and mark them estimated.

@@ -88,3 +88,15 @@ def test_load_dual_bundles_validates_references(tmp_path) -> None:
     )
     with pytest.raises(TariffLoadError, match="nope"):
         load_dual_bundles(tariffs, base_dir=tmp_path)
+
+
+def test_promo_months_excluded_from_steady_state() -> None:
+    """A promo-phase dual discount (EDP-style first-12-months) must not
+    reduce the steady-state total, only the first-year one."""
+    elec = _sim([("energy", 10000, 23)], days=365)
+    gas = _sim([("energy", 5000, 23)], days=365)
+    bundle = _bundle(electricity_energy_pct=10.0, promo_months=12)
+    result = combine(elec, gas, bundle, load_taxes())
+    assert result.discount_cents == 0
+    assert result.total_cents == elec.total_cents + gas.total_cents
+    assert result.first_year_total_cents < result.total_cents

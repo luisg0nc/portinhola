@@ -13,3 +13,4 @@ conditions: "Desconto dos primeiros 12 meses; exige débito direto e fatura elet
 discounts:
   electricity_energy_pct: 15.0
   gas_energy_pct: 5.0
+  promo_months: 12

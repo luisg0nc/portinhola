@@ -12,6 +12,10 @@ valid_to: null
 source_url: https://lojaluz.com/fornecedores/edp/tarifas
 retrieved: 2026-07-30
 conditions: "Preço exclusivo para contratação online com fatura eletrónica e débito direto."
+promo:
+  energy_pct: 15.0
+  months: 12
+  conditions: "Campanha novos clientes (comparaja julho 2026): -15% no consumo nos primeiros 12 meses."
 electricity:
   power_eur_day:
     "3.45": 0.4004   # estimated from the 6.9 anchor via access-tariff delta

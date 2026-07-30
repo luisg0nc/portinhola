@@ -5,6 +5,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from portinhola.api.deps import get_db, require_auth
+from portinhola.core.promos import first_year_total
 from portinhola.core.replay import BillSim, replay_electricity, replay_gas
 from portinhola.core.tariffs import Tariff, load_tariffs, load_taxes
 from portinhola.db.models import (
@@ -74,6 +75,16 @@ def _result_row(tariff: Tariff, option: str, sim: BillSim, current_total: int | 
         "valid_to": tariff.valid_to.isoformat() if tariff.valid_to else None,
         "retrieved": tariff.retrieved.isoformat(),
         "conditions": tariff.conditions,
+        "first_year_total_cents": first_year_total(sim, tariff.promo),
+        "promo": (
+            {
+                "energy_pct": tariff.promo.energy_pct,
+                "fixed_pct": tariff.promo.fixed_pct,
+                "months": tariff.promo.months,
+            }
+            if tariff.promo is not None
+            else None
+        ),
     }
 
 
@@ -413,6 +424,7 @@ def dual(months: int = 12, db: Session = Depends(get_db)) -> dict:
             "gas_total_cents": result.gas_total_cents,
             "discount_cents": result.discount_cents,
             "total_cents": result.total_cents,
+            "first_year_total_cents": result.first_year_total_cents,
             "delta_cents": None,
             "conditions": conditions,
             "no_discount_data": no_data,

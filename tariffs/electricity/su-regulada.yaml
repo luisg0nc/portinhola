@@ -1,23 +1,23 @@
-# Tarifa regulada (comercializador de último recurso). Energy price derived
-# from ERSE's 2026 communiqué (BTN average 0.1979 €/kWh all-in); component
-# split estimated — refine from Diretiva 1/2026 tables when transcribed.
+# Tarifa regulada BTN 2026 (comercializador de último recurso) —
+# transcribed from tiagofelicia.pt's copy of the ERSE table, in force
+# from 2026-01-01. Full sourced ladder and energies, excl. VAT.
 supplier: SU Eletricidade
 supplier_nif: null
 name: Tarifa Regulada BTN (ERSE)
 utility: electricity
 valid_from: 2026-01-01
 valid_to: 2026-12-31
-source_url: https://www.erse.pt/media/5dypdjby/comunicado-tarifas-ele_2026.pdf
-retrieved: 2026-07-28
+source_url: https://www.tiagofelicia.pt/tarifa-regulada-eletricidade
+retrieved: 2026-07-30
 electricity:
   power_eur_day:
-    "3.45": 0.1580
-    "4.6": 0.2107   # estimated ladder scaling
-    "5.75": 0.2634
-    "6.9": 0.3161
+    "3.45": 0.1917
+    "4.6": 0.2499
+    "5.75": 0.3079
+    "6.9": 0.3659
   energy_eur_kwh:
     simples:
-      total: 0.1660
+      total: 0.1654
     bi:
-      vazio: 0.1030
-      fora_vazio: 0.1950
+      vazio: 0.1087
+      fora_vazio: 0.1988

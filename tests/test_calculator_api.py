@@ -238,7 +238,10 @@ def test_dual_ranking(client, app) -> None:
     assert "G9" in current["supplier"]
 
     edp = next(row for row in body["results"] if row["name"] == "EDP Luz+Gás")
-    assert edp["discount_cents"] < 0  # sourced 15%/5% dual discount applied
+    # EDP's 15%/5% dual discount is a first-12-months promo: excluded from
+    # the steady-state total, pro-rated into the first-year one.
+    assert edp["discount_cents"] == 0
+    assert edp["first_year_total_cents"] < edp["total_cents"]
     assert edp["no_discount_data"] is False
 
     plain = [row for row in body["results"] if row["no_discount_data"]]

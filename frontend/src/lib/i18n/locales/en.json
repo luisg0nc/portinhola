@@ -240,7 +240,11 @@
     "dual_discount": "Dual discount",
     "mixed_pair": "Mixed pair",
     "no_discount_data": "No dual-discount data — plain sum of both tariffs.",
-    "no_dual_data": "Comparing elec+gas needs electricity consumption and gas bills."
+    "no_dual_data": "Comparing elec+gas needs electricity consumption and gas bills.",
+    "view_steady": "No promos",
+    "view_year1": "1st year",
+    "promo_available": "has a 1st-year promo",
+    "promo_applied": "promo −{pct}% ({months} months)"
   },
   "common": {
     "loading": "Loading…",

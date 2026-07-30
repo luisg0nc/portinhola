@@ -28,6 +28,8 @@
     valid_to: string | null;
     retrieved: string;
     conditions: string | null;
+    first_year_total_cents: number;
+    promo: { energy_pct: number; fixed_pct: number; months: number } | null;
   };
   type Sp = { id: number; utility: string; identifier: string; name: string };
   type DualRow = {
@@ -38,12 +40,16 @@
     gas_total_cents: number;
     discount_cents: number;
     total_cents: number;
+    first_year_total_cents: number;
     delta_cents: number | null;
     conditions: string | null;
     no_discount_data: boolean;
   };
 
   let utility = $state<'electricity' | 'gas' | 'dual'>('electricity');
+  // 'steady' ranks by regular prices; 'year1' pro-rates promotional
+  // phases in, the Tiago Felícia "1.º ano" methodology.
+  let promoView = $state<'steady' | 'year1'>('steady');
   let dualData = $state<{
     window: { elec_kwh: number; elec_days: number; gas_kwh: number; gas_days: number };
     results: DualRow[];
@@ -137,10 +143,40 @@
     return translated === key ? label : translated;
   }
 
+  function rowTotal(row: { total_cents: number; first_year_total_cents: number }): number {
+    return promoView === 'year1' ? row.first_year_total_cents : row.total_cents;
+  }
+
+  // Current plan is never a "new customer" — promos don't apply to it, so
+  // deltas in the 1.º ano view still compare against the steady current.
+  let sortedResults = $derived.by(() => {
+    if (!data) return [];
+    return [...data.results].sort((a, b) => rowTotal(a) - rowTotal(b));
+  });
+
+  function rowDelta(row: ResultRow): number | null {
+    if (!data?.current) return null;
+    return rowTotal(row) - data.current.total_cents;
+  }
+
+  let sortedDual = $derived.by(() => {
+    if (!dualData) return [];
+    return [...dualData.results].sort((a, b) => rowTotal(a) - rowTotal(b));
+  });
+
+  let dualCurrentTotal = $derived(
+    dualData?.results.find((r) => r.kind === 'current')?.total_cents ?? null
+  );
+
+  function dualDelta(row: DualRow): number | null {
+    if (dualCurrentTotal === null) return null;
+    return rowTotal(row) - dualCurrentTotal;
+  }
+
   // The cheapest plan that is not the current one, for the "best deal" crown.
   let bestKey = $derived.by(() => {
-    if (!data || data.results.length === 0) return null;
-    const best = data.results.find((r) => data!.current?.tariff_id !== r.tariff_id);
+    if (!data || sortedResults.length === 0) return null;
+    const best = sortedResults.find((r) => data!.current?.tariff_id !== r.tariff_id);
     return best ? best.tariff_id + best.option : null;
   });
 </script>
@@ -160,6 +196,17 @@
       >
         {u === 'electricity' ? '⚡' : u === 'gas' ? '🔥' : '⚡🔥'}
         {u === 'dual' ? $_('calculator.dual_tab') : $_(`dashboard.utility_${u}`)}
+      </button>
+    {/each}
+  </div>
+  <div class="chip-row">
+    {#each ['steady', 'year1'] as v}
+      <button
+        class="chip"
+        class:active={promoView === v}
+        onclick={() => (promoView = v as 'steady' | 'year1')}
+      >
+        {$_(`calculator.view_${v}`)}
       </button>
     {/each}
   </div>
@@ -189,10 +236,15 @@
     &nbsp; 🔥 {dualData.window.gas_kwh} kWh · {dualData.window.gas_days}d
   </p>
   <ul class="results">
-    {#each dualData.results as row, index}
+    {#each sortedDual as row, index}
       {@const rowKey = `dual-${index}`}
       {@const isCurrent = row.kind === 'current'}
       {@const isBest = index === 0 && !isCurrent}
+      {@const delta = dualDelta(row)}
+      {@const shownDiscount =
+        promoView === 'year1'
+          ? row.first_year_total_cents - row.elec_total_cents - row.gas_total_cents
+          : row.discount_cents}
       <li class:current={isCurrent} class:best={isBest}>
         {#if isBest}
           <div class="crown">
@@ -211,12 +263,12 @@
             {/if}
           </span>
           <span class="numbers">
-            <span class="total money">{fmt(row.total_cents)}</span>
-            {#if row.delta_cents !== null && !isCurrent}
-              <span class={`delta ${row.delta_cents < 0 ? 'save' : 'more'}`}>
-                {row.delta_cents < 0
-                  ? $_('calculator.delta_save').replace('{amount}', fmt(-row.delta_cents))
-                  : $_('calculator.delta_more').replace('{amount}', fmt(row.delta_cents))}
+            <span class="total money">{fmt(rowTotal(row))}</span>
+            {#if delta !== null && !isCurrent}
+              <span class={`delta ${delta < 0 ? 'save' : 'more'}`}>
+                {delta < 0
+                  ? $_('calculator.delta_save').replace('{amount}', fmt(-delta))
+                  : $_('calculator.delta_more').replace('{amount}', fmt(delta))}
               </span>
             {/if}
           </span>
@@ -236,10 +288,10 @@
                   <td>🔥 {$_('dashboard.utility_gas')}</td>
                   <td class="amount money">{fmt(row.gas_total_cents)}</td>
                 </tr>
-                {#if row.discount_cents !== 0}
+                {#if shownDiscount !== 0}
                   <tr class="discount-row">
                     <td>{$_('calculator.dual_discount')}</td>
-                    <td class="amount money">{fmt(row.discount_cents)}</td>
+                    <td class="amount money">{fmt(shownDiscount)}</td>
                   </tr>
                 {/if}
               </tbody>
@@ -284,9 +336,10 @@
   </p>
 
   <ul class="results">
-    {#each data.results as row}
+    {#each sortedResults as row}
       {@const rowKey = row.tariff_id + row.option}
       {@const isCurrent = data.current?.tariff_id === row.tariff_id}
+      {@const delta = rowDelta(row)}
       {@const isBest = bestKey === rowKey && !isCurrent}
       <li class:current={isCurrent} class:best={isBest}>
         {#if isBest}
@@ -302,14 +355,23 @@
             {#if isCurrent}
               <span class="badge accent">{$_('calculator.current_plan')}</span>
             {/if}
+            {#if row.promo}
+              <span class="badge success promo-badge">
+                {promoView === 'year1'
+                  ? $_('calculator.promo_applied')
+                      .replace('{pct}', String(row.promo.energy_pct || row.promo.fixed_pct))
+                      .replace('{months}', String(row.promo.months))
+                  : $_('calculator.promo_available')}
+              </span>
+            {/if}
           </span>
           <span class="numbers">
-            <span class="total money">{fmt(row.total_cents)}</span>
-            {#if row.delta_cents !== null && !isCurrent}
-              <span class={`delta ${row.delta_cents < 0 ? 'save' : 'more'}`}>
-                {row.delta_cents < 0
-                  ? $_('calculator.delta_save').replace('{amount}', fmt(-row.delta_cents))
-                  : $_('calculator.delta_more').replace('{amount}', fmt(row.delta_cents))}
+            <span class="total money">{fmt(rowTotal(row))}</span>
+            {#if delta !== null && !isCurrent}
+              <span class={`delta ${delta < 0 ? 'save' : 'more'}`}>
+                {delta < 0
+                  ? $_('calculator.delta_save').replace('{amount}', fmt(-delta))
+                  : $_('calculator.delta_more').replace('{amount}', fmt(delta))}
               </span>
             {/if}
           </span>
@@ -448,6 +510,9 @@
   }
   .who .badge {
     align-self: flex-start;
+  }
+  .promo-badge {
+    margin-top: 0.15rem;
   }
   .numbers {
     display: flex;

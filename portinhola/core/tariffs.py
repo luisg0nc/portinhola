@@ -32,6 +32,17 @@ class GasPrices(BaseModel):
     tiers: dict[str, GasTier]
 
 
+class Promo(BaseModel):
+    """Time-limited promotional phase (e.g. -15% energy, first 12 months)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    energy_pct: float = 0.0
+    fixed_pct: float = 0.0  # off potência / termo fixo lines
+    months: int
+    conditions: str | None = None
+
+
 class Tariff(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -47,6 +58,7 @@ class Tariff(BaseModel):
     # Human-readable eligibility note shown with the result — e.g. "requires
     # direct debit + e-invoice" or "base table; dual-bundle discounts apply".
     conditions: str | None = None
+    promo: Promo | None = None
     electricity: ElectricityPrices | None = None
     gas: GasPrices | None = None
 
@@ -89,6 +101,24 @@ def load_taxes(base_dir: Path | None = None) -> TaxConfig:
         raise TariffLoadError(f"{path}: {exc}") from exc
 
 
+# Regulated network-access potência component (ERSE 2026): 0.0498 €/day
+# per kVA, linear — every supplier must pass it through before margin. A
+# ladder below this floor is fabricated data, not a cheap tariff.
+ACCESS_FLOOR_EUR_DAY_PER_KVA = 0.0498
+
+
+def _check_power_floor(tariff: "Tariff", filename: str) -> None:
+    if tariff.electricity is None:
+        return
+    for kva_str, price in tariff.electricity.power_eur_day.items():
+        floor = ACCESS_FLOOR_EUR_DAY_PER_KVA * float(kva_str)
+        if price < floor * 0.999:
+            raise TariffLoadError(
+                f"{filename}: potência {price} €/day at {kva_str} kVA is below "
+                f"the regulated access floor ({floor:.4f}) — implausible data"
+            )
+
+
 def load_tariffs(base_dir: Path | None = None) -> list[Tariff]:
     base = base_dir or TARIFFS_DIR
     if not base.exists():
@@ -107,6 +137,7 @@ def load_tariffs(base_dir: Path | None = None) -> list[Tariff]:
                 raise TariffLoadError(f"{path.name}: {exc}") from exc
             if tariff.id in seen:
                 raise TariffLoadError(f"duplicate tariff id: {tariff.id}")
+            _check_power_floor(tariff, path.name)
             seen.add(tariff.id)
             tariffs.append(tariff)
     return tariffs
@@ -118,6 +149,9 @@ class DualDiscounts(BaseModel):
     electricity_energy_pct: float = 0.0
     gas_energy_pct: float = 0.0
     fixed_eur_month: float = 0.0
+    # When set, the discounts above are a promotional phase limited to the
+    # first N months; steady-state totals exclude them.
+    promo_months: int | None = None
 
 
 class DualBundle(BaseModel):

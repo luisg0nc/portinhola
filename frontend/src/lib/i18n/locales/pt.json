@@ -240,7 +240,11 @@
     "dual_discount": "Desconto dual",
     "mixed_pair": "Par misto",
     "no_discount_data": "Sem dados de desconto dual — soma simples das duas tarifas.",
-    "no_dual_data": "Para comparar luz+gás são precisos consumos de eletricidade e faturas de gás."
+    "no_dual_data": "Para comparar luz+gás são precisos consumos de eletricidade e faturas de gás.",
+    "view_steady": "Sem promoções",
+    "view_year1": "1.º ano",
+    "promo_available": "tem promoção de 1.º ano",
+    "promo_applied": "promo −{pct}% ({months} meses)"
   },
   "common": {
     "loading": "A carregar…",
