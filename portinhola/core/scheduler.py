@@ -5,9 +5,16 @@ from datetime import UTC, datetime
 
 from fastapi import FastAPI
 
+# A full E-Redes backfill is many chunked portal calls with `wait: true`,
+# each slow — far beyond the default watchdog. Progress persists per
+# window, so even the long ceiling only bounds runaway processes.
+JOB_TIMEOUTS = {"eredes_sync": 3600}
 
-def spawn_job(job_type: str, timeout: int = 600) -> None:
+
+def spawn_job(job_type: str, timeout: int | None = None) -> None:
     """Run a job as a short-lived subprocess with a hard timeout."""
+    if timeout is None:
+        timeout = JOB_TIMEOUTS.get(job_type, 600)
     process = subprocess.Popen(
         [sys.executable, "-m", "portinhola.jobs.run", job_type],
         stdout=subprocess.DEVNULL,

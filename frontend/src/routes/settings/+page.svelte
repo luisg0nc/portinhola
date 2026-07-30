@@ -281,6 +281,10 @@
     {:else if eredesJob}
       {#if eredesJob.status === 'success'}
         <p class="ok">{$_('eredes.sync_ok').replace('{detail}', jobDetail(eredesJob))}</p>
+      {:else if eredesJob.status === 'timeout'}
+        <p class="error">
+          {$_('eredes.sync_failed').replace('{detail}', $_('eredes.fail_timeout'))}
+        </p>
       {:else if eredesJob.status === 'failed'}
         <p class="error">{$_('eredes.sync_failed').replace('{detail}', jobDetail(eredesJob))}</p>
       {/if}

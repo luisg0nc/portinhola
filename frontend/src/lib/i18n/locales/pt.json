@@ -99,7 +99,14 @@
     "utility_electricity": "Eletricidade",
     "utility_gas": "Gás",
     "utility_water": "Água",
-    "utility_unknown": "Outros"
+    "utility_unknown": "Outros",
+    "avg_monthly": "Média mensal",
+    "range_12m": "12 meses",
+    "range_24m": "24 meses",
+    "range_36m": "36 meses",
+    "range_all": "Tudo",
+    "yearly_title": "Totais anuais",
+    "year": "Ano"
   },
   "eredes": {
     "title": "E-Redes",
@@ -128,7 +135,8 @@
     "fail_no_supply_point": "não existe ponto de eletricidade (CPE) configurado",
     "fail_not_connected": "sem sessão E-Redes — cole o valor do cookie 'aat'",
     "fail_session_expired": "a sessão expirou — cole um token novo",
-    "fail_no_data": "o portal não devolveu dados"
+    "fail_no_data": "o portal não devolveu dados",
+    "fail_timeout": "excedeu o tempo limite — o progresso ficou guardado, sincronize novamente para continuar"
   },
   "notifications": {
     "title": "Notificações",

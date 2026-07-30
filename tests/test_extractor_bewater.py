@@ -32,3 +32,19 @@ def test_bewater_vat_code_mapping() -> None:
     rates = {line.vat_rate for line in data.lines}
     assert rates <= {6, None}
     assert all(line.utility == "water" for line in data.lines)
+
+
+def test_bewater_old_layout_reconciles_to_document_total() -> None:
+    """Pre-2025 'Documento de Pagamento' layout: per-row periods, acerto
+    reversal rows without quantity, 1-2 decimal amounts."""
+    pages = load_pages("bewater/pages_old_2024-01.txt")
+    data = BeWaterExtractor().parse(pages)
+    assert len(data.lines) == 19
+    net = sum(line.amount_cents for line in data.lines)
+    vat = sum(round(line.amount_cents * (line.vat_rate or 0) / 100) for line in data.lines)
+    assert net == 3518  # "Total sem IVA 35,18€"
+    assert net + vat == 3672  # "TOTAL 36,72€"
+    assert data.supplies[0].identifier == "200000"
+    assert all(line.utility == "water" for line in data.lines)
+    # per-row periods, not the bill period
+    assert any(str(line.period_end) == "2023-12-31" for line in data.lines)

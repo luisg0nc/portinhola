@@ -1,0 +1,149 @@
+Documento de Pagamento
+1/2
+Documento: Emissão:
+240101800000001 2024-01-19
+2024-02-13
+MARIA EXEMPLO SILVA
+Titular da conta: MARIA EXEMPLO SILVA
+RUA EXEMPLO 1
+Cliente / Conta: 3000000 / 001
+CIDADE
+NIF: 299999998
+4000-000 CIDADE
+Local Consumo: 200000
+Morada: RUA EXEMPLO 1 CIDADE
+otroP
+.C.R.C
+040
+480
+505
+TP:.C.P.N
+,soruE
+000
+005
+laicoS
+latipaC
+,ognolaV
+305-0444
+- 603
+,orbutuO
+ed
+5 .ªvA
+- .A.S
+,ognolaV
+ed
+saugÁ
+:laicoS
+edeS
+00331
+.ºn
+)IGC(
+rodatupmoc
+rop
+odassecorP
+*
+açnarboc
+aob
+sópa
+obicer
+omoc
+odilaV
+Resumo de faturação Período Faturação: 2023-12-22 ~ 2024-01-19
+Débito a
+2024-02-13
+Valor a Pagar
+Água Saneamento RSU - Rec. Câmara Taxas Estado Outros IVA
+15,25€ 10,14€ 8,97€ 0,82€ 0,00€ 1,54€ 36,72€
+Histórico de Consumo Conta Corrente
+Saldo Anterior 2023-12-21 35,16
+Fatura/Recibo Água 80000001 - Instalação 200000 2024-01-19 36,72
+9,92 Pagamento 2024-01-17 -35,16
+Saldo Atual 2024-01-19 36,72
+média
+(m3)
+Comunicação de Leituras
+Gasto médio diário em m3 (363 dias): 0,33 Período de Comunicação 2024-02-12 ~ 2024-02-15
+Telefone: Referência Leitura: Dígitos a comunicar:
+Média Consumo dos últimos 12 meses
+9000 litros a cada 30 dias 800205484 0400000000
+Mensagens
+Caso o valor da sua fatura seja a receber, antes de se deslocar a um dos nossos balcões, contacte-nos pelo 224227390.
+Horário de atendimento - Valongo (dias úteis, das 8h30-15h30), Loja Cidadão CIDADE (Dias úteis, das 9h-16h30. sábados das 9h-13h).
+Comunicação Leituras Linha geral Linha Piquete aguas.valongo@bewater.com.pt
+800 205 484 224 227 390 224 222 423 www.valongo-bewater.com.pt
+Linha gratuita Chamada para rede fixa nacional Chamada para rede fixa nacional
+(24h/24h) todo o ano (dias úteis, das 8h30 às 16h30) 24h
+Dados da sua Conta Bancária
+Estimado Cliente.
+Se verificar que o número da sua conta bancária não está correto, solicitamos que nos comunique o facto. Poderá também, proceder facilmente
+à alteração da morada de envio da fatura.
+Nº Cliente / Conta IBAN Banco
+3000000 / 001 PT500000000000000000*0 BANCO EXEMPLO
+Data de Emissão Mandato
+19 jan 2024 10000000000
+Débito a partir de Identificação do Credor Balcão
+13 fev 2024 PT00000000 Geral (0000)
+Valor a enviar ao banco:
+36,72€Fatura Tipo de Cliente Tipo de Leitura 2/2
+80000001 Domésticos Estimativa
+Data de Fatura Tarifa Período
+2024-01-19 510 - Domestica (água/saneam) 2023-12-22 ~ 2024-01-19
+Resumo Média de Consumo: Entre 2023-07-24 (108m3) e 2023-11-22 (145m3): 9100 litros/30 dias
+Contador Nº Diâmetro / Caudal Tipo de Consumo Data Origem Leitura Fator Multipl. Consumo
+21500000 15 mm / 2.5 m3/h Consumo de Água 2023-11-22 145
+2024-01-19 1,00000 Estimado 9,00 m3
+Descrição Período Faturado Valor Unit. Valor IVA ATCUD:AAAA0009-80000001
+ÁGUA-RECEITA ÁGUAS VALONGO 15,25
+1 Esc. Consumo Água 0 - 5 m3 em 30 dias 2023-12-22 2023-12-31 2,0000 m3 em 10 dias 0,893300 1,79 (2)
+2 Esc. Consumo Água 6 - 15 m3 em 30 dias 2023-12-22 2023-12-31 1,0000 m3 em 10 dias 1,305100 1,31 (2)
+1 Esc. Consumo Água 0 - 5 m3 em 30 dias 2024-01-01 2024-01-19 3,0000 m3 em 19 dias 0,915900 2,75 (2)
+2 Esc. Consumo Água 6 - 15 m3 em 30 dias 2024-01-01 2024-01-19 3,0000 m3 em 19 dias 1,338200 4,01 (2)
+Tarifa de Disponibilidade 2023-12-22 2023-12-31 15 mm 0,180900 1,81 (2)
+Tarifa de Disponibilidade 2024-01-01 2024-01-19 15 mm 0,188400 3,58 (2)
+SANEAMENTO-RECEITA ÁGUAS VALONGO 10,14
+1 Esc. Saneamento Variável 0 - 5 m3 em 30 dias 2023-12-22 2023-12-31 2,0000 m3 em 10 dias 0,692700 1,39 (4)
+2 Esc. Saneamento Variável 6 - 15 m3 em 30 dias 2023-12-22 2023-12-31 0,7000 m3 em 10 dias 0,969900 0,68 (4)
+1 Esc. Saneamento Variável 0 - 5 m3 em 30 dias 2024-01-01 2024-01-19 3,0000 m3 em 19 dias 0,724300 2,17 (4)
+Nu1r- Processado por programa
+2 Esc. Saneamento Variável 6 - 15 m3 em 30 dias 2024-01-01 2024-01-19 2,4000 m3 em 19 dias 1,014100 2,43 (4) certificado nº.809/AT
+Tar.Disp. Serv.Saneamento 2023-12-22 2023-12-31 10 dias 0,110600 1,11 (4)
+Tar.Disp. Serv.Saneamento 2024-01-01 2024-01-19 19 dias 0,124100 2,36 (4)
+TRSU-RECEITA CÂMARA MUNICIPAL 8,97
+Resíduos Sólidos Fixo 2023-12-22 2023-12-31 10 dias 0,070200 0,70 (5)
+Resíduos Sólidos Fixo 2024-01-01 2024-01-19 19 dias 0,080700 1,53 (5)
+Resíduos Sólidos Variável 2023-12-22 2023-12-31 3 m3 0,681400 2,04 (5)
+Resíduos Sólidos Variável 2024-01-01 2024-01-19 6 m3 0,783600 4,70 (5)
+TAXAS ESTADO 0,82
+Taxa Recursos Hídricos Água 2023-12-22 2024-01-19 9 m3 0,044200 0,40 (2)
+Taxa Gestão Resíduos 2023-12-22 2023-12-31 3 m3 0,052500 0,16 (5)
+Taxa Gestão Resíduos 2024-01-01 2024-01-19 6 m3 0,043100 0,26 (5)
+IVA-RECEITA ESTADO 1,54
+(2)IVA 6% 2023-12-22 2024-01-19 15,65 0,93
+(4)IVA 6% 2023-12-22 2024-01-19 10,14 0,61
+(5)IVA não suj. n.º2 art.º 2º CIVA 2024-01-01 2024-01-31 9,39 0,00
+Total sem IVA 35,18€
+TOTAL 36,72€
+O volume de saneamento faturado corresponde a 0,9 do volume de água consumida no período.
+O volume de RSU faturado está indexado ao volume de água consumida no período.
+Estimado cliente o tarifário foi atualizado para o ano de 2024. Está disponível no sítio internet www.valongo-bewater.com.pt e nas lojas de atendimento.
+Controlo de Prestação de Serviços em Alta
+Custo Médio
+Entidade Serviço (euro/m3)
+LIPOR Gestão de Resíduos Urbanos 0,510000
+Águas Douro e Paiva Abastecimento de Água 0,051500
+Nota: O valor de referência tem em consideração o custo médio do ano 2022. TGR relativa ano 2022 (faturas
+LIPOR): 162.462,44 Eur (IVA incluído)
+CONTROLO DA QUALIDADE DA RESULTADOS OBTIDOS NO DESTINO DOS RESÍDUOS
+ÁGUA PARA CONSUMO HUMANO SANEAMENTO DE ÁGUAS RESIDUAIS URBANOS RECOLHIDOS
+Os últimos resultados obtidos sobre a qualidade da A instalação de tratamento de águas residuais
+água distribuída na sua zona de abastecimento urbanas da área do utilizador encontra-se
+estão em conformidade com as normas de qualidade licenciada?
+fixadas na legislação.
+SIM NÃO
+A instalação de tratamento de águas residuais da
+área de saneamento do utilizador cumpre a licença
+de descarga?
+SIM NÃO
+Resultados obtidos na implementação do PCQA aprovado pela ERSAR, Informação anual sobre os resultados do processo de avaliação de
+conforme o artº 14.º do DL n.º 69/2023, de 21 de agosto qualidade de serviço 2022
+Informação mais detalhada pode ser consultada no sítio da internet: www.valongo-bewater.com.pt e em www.ersar.pt

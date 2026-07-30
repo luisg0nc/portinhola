@@ -208,13 +208,14 @@ class InvalidContractRefError(Exception):
 
 
 def reparse_partial_bills(db: Session) -> tuple[int, int]:
-    """Re-run extractors over the stored PDFs of partial bills.
+    """Re-run extractors over the stored PDFs of partial or line-less bills.
 
-    Useful after a new supplier extractor ships: existing QR-only bills get
-    their line items without re-uploading. Lines are replaced wholesale;
-    each line is assigned to the open contract of its utility when that is
-    unambiguous (exactly one open contract for the utility), else left
-    unassigned. Returns (reparsed, skipped).
+    Useful after a new supplier extractor (or layout support) ships:
+    existing QR-only bills get their line items without re-uploading.
+    Bills that already have lines are never touched. Each new line is
+    assigned to the open contract of its utility when that is unambiguous
+    (exactly one open contract for the utility), else left unassigned.
+    Returns (reparsed, skipped).
     """
     open_contracts: dict[str, list[int]] = {}
     utility_by_sp = {sp.id: sp.utility for sp in db.scalars(select(SupplyPoint)).all()}
@@ -228,7 +229,11 @@ def reparse_partial_bills(db: Session) -> tuple[int, int]:
 
     reparsed = 0
     skipped = 0
-    for bill in db.scalars(select(Bill).where(Bill.parse_status == "partial")).all():
+    for bill in db.scalars(
+        select(Bill).where(Bill.parse_status.in_(("partial", "parsed")))
+    ).all():
+        if bill.parse_status == "parsed" and bill.lines:
+            continue  # already has line items; never clobber those
         extractor = get_extractor(bill.issuer_nif)
         if (
             extractor is None

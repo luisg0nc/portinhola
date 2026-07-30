@@ -102,3 +102,58 @@ def test_live_estimate(client, app) -> None:
     assert body["kwh"] > 0
     assert body["estimated_cents"] > 0
     assert body["period_start"]
+
+
+def test_costs_totals_include_vat(client) -> None:
+    _login(client)
+    _make_bill(
+        client,
+        "FT V/1",
+        "2026-05-09",
+        [
+            {"description": "energia", "category": "energy", "amount_cents": 1000,
+             "vat_rate": 23, "contract_id": -1},
+        ],
+        [
+            {"utility": "electricity", "identifier": "PT000VAT", "name": "Casa",
+             "contract": {"supplier_name": "G9", "supplier_nif": "504435302",
+                          "start_date": "2026-01-01"}}
+        ],
+    )
+    data = client.get("/api/dashboard/costs?months=13").json()
+    may = data["months"][0]["by_utility"]["electricity"]
+    assert may["energy"] == 1000
+    assert may["vat"] == 230
+    assert may["total"] == 1230
+
+
+def test_yearly_totals(client) -> None:
+    _login(client)
+    _make_bill(
+        client,
+        "FT Y/1",
+        "2025-03-09",
+        [
+            {"description": "energia", "category": "energy", "amount_cents": 2000,
+             "vat_rate": 6, "contract_id": -1},
+        ],
+        [
+            {"utility": "electricity", "identifier": "PT000YR", "name": "Casa",
+             "contract": {"supplier_name": "G9", "supplier_nif": "504435302",
+                          "start_date": "2025-01-01"}}
+        ],
+    )
+    _make_bill(
+        client,
+        "FT Y/2",
+        "2026-03-09",
+        [
+            {"description": "energia", "category": "energy", "amount_cents": 3000,
+             "vat_rate": 6, "contract_id": 1},
+        ],
+        [],
+    )
+    data = client.get("/api/dashboard/yearly").json()
+    years = {y["year"]: y["by_utility"] for y in data["years"]}
+    assert years["2025"]["electricity"]["total"] == 2120
+    assert years["2026"]["electricity"]["total"] == 3180

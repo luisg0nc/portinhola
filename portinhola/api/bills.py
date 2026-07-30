@@ -43,6 +43,7 @@ class BillListItem(BaseModel):
     parse_status: str
     utilities: list[str]
     supplier_name: str | None
+    line_count: int
 
 
 class BillLineOut(BaseModel):
@@ -164,6 +165,7 @@ def list_bills(
                 parse_status=bill.parse_status,
                 utilities=utilities,
                 supplier_name=supplier,
+                line_count=len(bill.lines),
             )
         )
     return items

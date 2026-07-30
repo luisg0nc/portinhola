@@ -19,6 +19,7 @@
     parse_status: string;
     utilities: string[];
     supplier_name: string | null;
+    line_count: number;
   };
 
   let bills = $state<BillItem[]>([]);
@@ -48,7 +49,9 @@
     load();
   }
 
-  let hasPartial = $derived(bills.some((bill) => bill.parse_status === 'partial'));
+  let hasPartial = $derived(
+    bills.some((bill) => bill.parse_status === 'partial' || bill.line_count === 0)
+  );
 
   async function reparse() {
     reparsing = true;

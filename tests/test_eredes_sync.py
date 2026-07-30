@@ -47,10 +47,15 @@ def test_sync_happy_path_upserts(app, monkeypatch, tmp_path) -> None:
         (datetime(2026, 7, 20, 10, 0, tzinfo=UTC), 0.25, "real"),
         (datetime(2026, 7, 20, 10, 15, tzinfo=UTC), 0.30, "real"),
     ]
-    monkeypatch.setattr(
-        "portinhola.jobs.eredes_sync.fetch_consumption",
-        lambda db, app_key, cpe, date_from, date_to: rows,
-    )
+    calls = {"n": 0}
+
+    def fake_fetch(db, app_key, cpe, date_from, date_to):
+        # First (newest) window has data; everything older is empty so the
+        # walk-back stops after the empty-window streak.
+        calls["n"] += 1
+        return rows if calls["n"] == 1 else []
+
+    monkeypatch.setattr("portinhola.jobs.eredes_sync.fetch_consumption", fake_fetch)
     with app.state.sessionmaker() as db:
         _setup_sp(db)
         from portinhola.core.secrets import load_or_create_app_key
@@ -158,3 +163,32 @@ def test_incremental_sync_only_fetches_recent(app, monkeypatch, tmp_path) -> Non
 
     assert len(asked) == 1  # single window, no walk-back
     assert asked[0][0] == date(2026, 7, 12)  # last stored day minus 1
+
+
+def test_walk_back_persists_each_window_before_failing(app, monkeypatch, tmp_path) -> None:
+    """A token expiry (or watchdog kill) mid-backfill must not lose the
+    windows already fetched — each window is upserted immediately."""
+    monkeypatch.setenv("PORTINHOLA_DATA_DIR", str(tmp_path))
+    from datetime import UTC, date, datetime
+
+    calls = {"n": 0}
+
+    def fake_fetch(db, app_key, cpe, date_from, date_to):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            return [(datetime(2026, 7, 20, 10, 0, tzinfo=UTC), 0.25, "real")]
+        raise SessionExpiredError()
+
+    monkeypatch.setattr("portinhola.jobs.eredes_sync.fetch_consumption", fake_fetch)
+    monkeypatch.setattr("portinhola.jobs.eredes_sync.utc_today", lambda: date(2026, 7, 20))
+    monkeypatch.setattr(
+        "portinhola.jobs.eredes_sync.notify_send", lambda db, title, body: True
+    )
+    with app.state.sessionmaker() as db:
+        _setup_sp(db)
+        from portinhola.core.secrets import load_or_create_app_key
+
+        eredes_session.save_token(db, load_or_create_app_key(tmp_path), "tok123")
+        with pytest.raises(JobFailure, match="session_expired"):
+            eredes_sync(db)
+        assert db.query(IntervalConsumption).count() == 1

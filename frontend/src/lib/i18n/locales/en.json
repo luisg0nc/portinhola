@@ -99,7 +99,14 @@
     "utility_electricity": "Electricity",
     "utility_gas": "Gas",
     "utility_water": "Water",
-    "utility_unknown": "Other"
+    "utility_unknown": "Other",
+    "avg_monthly": "Monthly average",
+    "range_12m": "12 months",
+    "range_24m": "24 months",
+    "range_36m": "36 months",
+    "range_all": "All",
+    "yearly_title": "Yearly totals",
+    "year": "Year"
   },
   "eredes": {
     "title": "E-Redes",
@@ -128,7 +135,8 @@
     "fail_no_supply_point": "no electricity supply point (CPE) configured",
     "fail_not_connected": "no E-Redes session — paste the 'aat' cookie value",
     "fail_session_expired": "the session expired — paste a fresh token",
-    "fail_no_data": "the portal returned no data"
+    "fail_no_data": "the portal returned no data",
+    "fail_timeout": "timed out — progress was saved, sync again to continue"
   },
   "notifications": {
     "title": "Notifications",

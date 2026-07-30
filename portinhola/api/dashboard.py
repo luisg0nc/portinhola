@@ -22,36 +22,62 @@ def _month_floor(day: date, months_back: int) -> date:
     return date(year, month, 1)
 
 
-@router.get("/costs")
-def costs(months: int = 13, db: Session = Depends(get_db)) -> dict:
-    today = date.today()  # noqa: DTZ011 - server-local month bucketing is fine here
-    cutoff = _month_floor(today, months - 1)
-
-    utility_by_contract: dict[int, str] = {}
+def _utility_by_contract(db: Session) -> dict[int, str]:
+    mapping: dict[int, str] = {}
     for contract in db.scalars(select(Contract)):
         sp = db.get(SupplyPoint, contract.supply_point_id)
         if sp is not None:
-            utility_by_contract[contract.id] = sp.utility
+            mapping[contract.id] = sp.utility
+    return mapping
 
+
+def _bucket_bills(db: Session, cutoff: date | None, key_fmt: str) -> dict:
+    """Group bill lines into {bucket: {utility: {category..., vat, total}}}.
+
+    Line amounts are VAT-exclusive; `vat` accumulates each line's VAT and
+    `total` is VAT-inclusive — the number the household actually paid.
+    """
+    utility_by_contract = _utility_by_contract(db)
+    query = select(Bill)
+    if cutoff is not None:
+        query = query.where(Bill.issue_date >= cutoff)
     buckets: dict[str, dict[str, dict[str, int]]] = defaultdict(dict)
-    for bill in db.scalars(select(Bill).where(Bill.issue_date >= cutoff)):
-        month_key = bill.issue_date.strftime("%Y-%m")
+    for bill in db.scalars(query):
+        bucket_key = bill.issue_date.strftime(key_fmt)
         for line in bill.lines:
             utility = (
                 utility_by_contract.get(line.contract_id, "unknown")
                 if line.contract_id is not None
                 else "unknown"
             )
-            per_utility = buckets[month_key].setdefault(
-                utility, {category: 0 for category in (*CATEGORIES, "total")}
+            per_utility = buckets[bucket_key].setdefault(
+                utility, {category: 0 for category in (*CATEGORIES, "vat", "total")}
             )
+            vat = round(line.amount_cents * (line.vat_rate or 0) / 100)
             per_utility[line.category] += line.amount_cents
-            per_utility["total"] += line.amount_cents
+            per_utility["vat"] += vat
+            per_utility["total"] += line.amount_cents + vat
+    return buckets
 
+
+@router.get("/costs")
+def costs(months: int = 13, db: Session = Depends(get_db)) -> dict:
+    today = date.today()  # noqa: DTZ011 - server-local month bucketing is fine here
+    cutoff = _month_floor(today, months - 1)
+    buckets = _bucket_bills(db, cutoff, "%Y-%m")
     return {
         "months": [
             {"month": month, "by_utility": buckets[month]} for month in sorted(buckets)
         ]
+    }
+
+
+@router.get("/yearly")
+def yearly(db: Session = Depends(get_db)) -> dict:
+    """Whole-history totals per calendar year and utility."""
+    buckets = _bucket_bills(db, None, "%Y")
+    return {
+        "years": [{"year": year, "by_utility": buckets[year]} for year in sorted(buckets)]
     }
 
 

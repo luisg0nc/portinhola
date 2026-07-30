@@ -19,10 +19,12 @@ from portinhola.integrations.eredes_api import (
 from portinhola.integrations.eredes_session import load_token
 from portinhola.jobs.registry import JobFailure, job
 
-# On the first sync we don't assume how far back the portal keeps data —
-# we walk backwards a window at a time until it stops answering. Two
-# consecutive empty windows end the walk (one alone could be a genuine
-# gap or the portal's known flakiness); the cap is only a runaway guard.
+# The portal rejects or times out on wide ranges, and with `wait: true`
+# even a 31-day window can take a while to compute server-side. Every
+# window is therefore fetched AND persisted individually: if the token
+# expires or the job watchdog kills the process mid-backfill, everything
+# already fetched survives and the next sync resumes from the newest
+# stored interval.
 HISTORY_WINDOW_DAYS = 31
 HISTORY_EMPTY_WINDOWS_TO_STOP = 2
 HISTORY_MAX_DAYS = 3650
@@ -58,13 +60,15 @@ def eredes_sync(db: Session) -> str:
 
     try:
         if since is None:
-            rows, date_from = _walk_back_history(db, app_key, supply_point.identifier, date_to)
+            total, inserted, updated, date_from = _walk_back_history(
+                db, app_key, supply_point, date_to
+            )
         else:
             # Incremental: re-fetch the last stored day too, because E-Redes
             # revises recent readings (estimated -> real). Upsert dedupes.
             date_from = since.date() - timedelta(days=1)
-            rows = fetch_consumption(
-                db, app_key, supply_point.identifier, date_from, date_to
+            total, inserted, updated = _sync_forward(
+                db, app_key, supply_point, date_from, date_to
             )
     except SessionExpiredError:
         raise_alert(
@@ -75,30 +79,61 @@ def eredes_sync(db: Session) -> str:
         )
         notify_send(db, "Portinhola", "E-Redes session expired — tap to reconnect.")
         raise JobFailure("session_expired") from None
-    except EredesFetchError:
-        raise JobFailure("no_data") from None
 
-    if not rows:
+    if total == 0:
         raise JobFailure("no_data")
 
+    return f"{total} intervals ({inserted} new, {updated} updated) from {date_from} to {date_to}"
+
+
+def _persist_window(
+    db: Session, supply_point_id: int, rows: list
+) -> tuple[int, int]:
+    """Upsert one window's rows and stamp last_sync immediately, so a
+    killed or expired sync keeps everything fetched so far."""
     inserted, updated = upsert_intervals(
         db,
-        supply_point.id,
+        supply_point_id,
         [(ts, kwh, "eredes_scrape", quality) for ts, kwh, quality in rows],
     )
     set_setting(db, "eredes_last_sync", datetime.now(UTC).isoformat())
-    return f"{len(rows)} intervals ({inserted} new, {updated} updated) from {date_from} to {date_to}"
+    db.commit()
+    return inserted, updated
 
 
-def _walk_back_history(db: Session, app_key: bytes, cpe: str, date_to: date):
+def _sync_forward(
+    db: Session, app_key: bytes, supply_point: SupplyPoint, date_from: date, date_to: date
+) -> tuple[int, int, int]:
+    total = inserted_total = updated_total = 0
+    window_start = date_from
+    while window_start <= date_to:
+        window_end = min(window_start + timedelta(days=HISTORY_WINDOW_DAYS - 1), date_to)
+        try:
+            rows = fetch_consumption(
+                db, app_key, supply_point.identifier, window_start, window_end
+            )
+        except EredesFetchError:
+            rows = []
+        if rows:
+            inserted, updated = _persist_window(db, supply_point.id, rows)
+            total += len(rows)
+            inserted_total += inserted
+            updated_total += updated
+        window_start = window_end + timedelta(days=1)
+    return total, inserted_total, updated_total
+
+
+def _walk_back_history(
+    db: Session, app_key: bytes, supply_point: SupplyPoint, date_to: date
+) -> tuple[int, int, int, date]:
     """First sync: discover how far back the portal actually goes.
 
-    Requests one window at a time, walking backwards, and stops after
-    HISTORY_EMPTY_WINDOWS_TO_STOP consecutive empty windows. Returns the
-    merged rows plus the oldest date actually reached, so we never have to
-    guess a retention period.
+    Requests one window at a time, walking backwards, persisting each
+    window as it lands, and stops after HISTORY_EMPTY_WINDOWS_TO_STOP
+    consecutive empty windows — so we never have to guess a retention
+    period and never lose progress to a timeout.
     """
-    merged: dict[datetime, tuple] = {}
+    total = inserted_total = updated_total = 0
     oldest = date_to
     empty_streak = 0
     window_end = date_to
@@ -107,20 +142,24 @@ def _walk_back_history(db: Session, app_key: bytes, cpe: str, date_to: date):
     while empty_streak < HISTORY_EMPTY_WINDOWS_TO_STOP and days_walked < HISTORY_MAX_DAYS:
         window_start = window_end - timedelta(days=HISTORY_WINDOW_DAYS - 1)
         try:
-            rows = fetch_consumption(db, app_key, cpe, window_start, window_end)
+            rows = fetch_consumption(
+                db, app_key, supply_point.identifier, window_start, window_end
+            )
         except EredesFetchError:
             rows = []
         if rows:
             empty_streak = 0
-            for row in rows:
-                merged[row[0]] = row
+            inserted, updated = _persist_window(db, supply_point.id, rows)
+            total += len(rows)
+            inserted_total += inserted
+            updated_total += updated
             oldest = window_start
         else:
             empty_streak += 1
         window_end = window_start - timedelta(days=1)
         days_walked += HISTORY_WINDOW_DAYS
 
-    return [merged[ts] for ts in sorted(merged)], oldest
+    return total, inserted_total, updated_total, oldest
 
 
 def _resolve_supply_point(db: Session) -> SupplyPoint | None:
