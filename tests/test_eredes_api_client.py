@@ -1,3 +1,4 @@
+import itertools
 from datetime import UTC, date, datetime, timedelta
 
 import httpx
@@ -167,7 +168,7 @@ def test_fetch_chunks_wide_ranges(app, monkeypatch) -> None:
     assert windows[0] == ("2026-01-01", "2026-01-31")
     assert windows[-1][1] == "2026-03-31"
     # windows are contiguous and never exceed the cap
-    for (_, prev_end), (next_start, _) in zip(windows, windows[1:], strict=False):
+    for (_, prev_end), (next_start, _) in itertools.pairwise(windows):
         assert date.fromisoformat(next_start) == date.fromisoformat(prev_end) + timedelta(
             days=1
         )

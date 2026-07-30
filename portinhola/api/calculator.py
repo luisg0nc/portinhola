@@ -253,15 +253,13 @@ def potencia(supply_point_id: int, db: Session = Depends(get_db)) -> dict:
             from portinhola.core.replay import _nearest_power_price
 
             prices = current_tariff.electricity.power_eur_day
-            saving = int(
-                round(
-                    (
-                        _nearest_power_price(prices, contracted)
-                        - _nearest_power_price(prices, recommended)
-                    )
-                    * 365.25
-                    * 100
+            saving = round(
+                (
+                    _nearest_power_price(prices, contracted)
+                    - _nearest_power_price(prices, recommended)
                 )
+                * 365.25
+                * 100
             )
 
     return {

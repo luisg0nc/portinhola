@@ -1,0 +1,72 @@
+name: tariff-watch
+
+on:
+  schedule:
+    - cron: "0 7 * * 1" # Mondays 07:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pip install -e .
+
+      - name: Run tariff watch
+        run: python -m tools.tariff_watch.main
+
+      - name: Open update PR when anything changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "tariff-watch"
+          git config user.email "tariff-watch@users.noreply.github.com"
+          git add tariffs tools/tariff_watch/state.json
+          if git diff --cached --quiet; then
+            echo "no changes to propose"
+            exit 0
+          fi
+          branch="tariff-watch/update-$(date -u +%Y-%m-%d)"
+          git checkout -b "$branch"
+          git commit -m "chore: tariff-watch weekly update"
+          git push -u origin "$branch" --force
+          if ! gh pr list --head "$branch" --state open --json number --jq length | grep -q '^[1-9]'; then
+            gh pr create \
+              --title "Tariff watch: price updates $(date -u +%Y-%m-%d)" \
+              --body-file tools/tariff_watch/summary.md \
+              --label tariff-watch
+          fi
+
+      - name: Open issues for watch changes and parser failures
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'EOF' > /tmp/issue_titles.txt
+          import json
+          data = json.load(open("tools/tariff_watch/issues.json"))
+          for change in data["watch_changes"]:
+              print(f"Tariff source changed: {change.split(' ')[0]}")
+          for failure in data["failures"]:
+              print(f"Tariff parser failed: {failure.split(':')[0]}")
+          EOF
+          while IFS= read -r title; do
+            [ -z "$title" ] && continue
+            if gh issue list --state open --label tariff-watch \
+                 --search "in:title \"$title\"" --json number --jq length | grep -q '^[1-9]'; then
+              echo "issue already open: $title"
+              continue
+            fi
+            gh issue create --title "$title" \
+              --body-file tools/tariff_watch/summary.md --label tariff-watch
+          done < /tmp/issue_titles.txt

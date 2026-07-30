@@ -66,3 +66,14 @@ supplier passes that through before adding margin, so a value under the
 floor is fabricated data, not a cheap tariff. Transcribe ladders from
 the supplier's official price sheet; if only one kVA point is published,
 derive the others with the access delta and mark them estimated.
+
+## Automated freshness (tariff-watch)
+
+A weekly GitHub Actions job (`.github/workflows/tariff-watch.yml`)
+re-parses the official sources (Galp and Endesa price PDFs, Goldenergy's
+reference page, the regulated gas table) and opens a PR when prices
+moved; the PR runs the full test suite, including the potência floor.
+Comparator-sourced files are only watched: a price-token fingerprint of
+each cited page is kept in `tools/tariff_watch/state.json`, and a change
+opens a `tariff-watch` issue for manual review. Parsers never guess — a
+layout change fails loudly as an issue instead of producing numbers.

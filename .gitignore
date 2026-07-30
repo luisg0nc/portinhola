@@ -15,3 +15,5 @@ sample-eredes/
 # brainstorming visual companion sessions
 .superpowers/
 tools/fixture_replacements_local.py
+tools/tariff_watch/summary.md
+tools/tariff_watch/issues.json

@@ -36,7 +36,7 @@ class BillSim(BaseModel):
 
 
 def _cents(eur: float) -> int:
-    return int(floor(eur * 100 + 0.5))
+    return floor(eur * 100 + 0.5)
 
 
 def _finalize(lines: list[BillLineSim], energy_kwh: float, days: int) -> BillSim:

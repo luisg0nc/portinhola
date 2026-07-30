@@ -96,7 +96,7 @@ def parse_response(data: dict) -> list[IntervalRow]:
                 value = point.get("meterLoadCurve")
                 if ts_raw is None or value is None:
                     continue
-                naive = datetime.strptime(ts_raw, "%Y-%m-%dT%H:%M:%SZ")
+                naive = datetime.strptime(ts_raw, "%Y-%m-%dT%H:%M:%SZ")  # noqa: DTZ007 - the "Z" lies; portal sends Lisbon local
                 end_utc = naive.replace(tzinfo=LISBON).astimezone(UTC)
                 start = end_utc - timedelta(minutes=15)
                 if start in seen:
