@@ -20,3 +20,6 @@ tools/tariff_watch/issues.json
 
 # local design/planning docs, not published
 docs/superpowers/
+
+# Claude Code workspace (worktrees, local session files)
+.claude/
