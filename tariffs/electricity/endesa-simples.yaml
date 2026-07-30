@@ -1,23 +1,23 @@
-# Endesa digital tariff; anchor 0.1452 €/kWh simples @3.45 kVA (comparaja
-# July 2026); power ladder + bi split estimated.
+# Endesa Tarifa Digital Luz Simples — transcribed from the official price
+# annex (endesa.pt, "Documento editado a 17/07/2026"). Prices are the
+# 20%-discounted values (the discount is permanent but requires online
+# contracting + direct debit + digital invoice). Excl. VAT. Full sourced
+# ladder. Bi-horária lives in endesa-bi.yaml (its own potência ladder).
 supplier: Endesa
 supplier_nif: "503504308"
-name: Endesa Tarifa Digital
+name: Endesa Digital Luz Simples
 utility: electricity
-valid_from: 2026-07-01
+valid_from: 2026-07-17
 valid_to: null
-source_url: https://www.comparaja.pt/energia/endesa
-retrieved: 2026-07-28
-conditions: "Tarifa Digital: contratação online com débito direto e fatura eletrónica."
+source_url: https://www.endesa.pt/content/dam/endesa-pt/precos/Tarifa-Digital-Luz-e-Gas.pdf
+retrieved: 2026-07-30
+conditions: "Preços com desconto de 20% permanente — exige contratação/gestão online, débito direto e fatura digital."
 electricity:
   power_eur_day:
-    "3.45": 0.1850
-    "4.6": 0.2467
-    "5.75": 0.3084
-    "6.9": 0.3700
+    "3.45": 0.3262
+    "4.6": 0.4584
+    "5.75": 0.5588
+    "6.9": 0.7452
   energy_eur_kwh:
     simples:
-      total: 0.1452
-    bi:
-      vazio: 0.0980
-      fora_vazio: 0.1750
+      total: 0.1399

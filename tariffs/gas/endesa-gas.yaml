@@ -1,19 +1,19 @@
-# Endesa Tarifa Digital Gás (DD+FE); published as €/month, converted to
-# €/day via x12/365.25 (esc1 4.3170, esc2 7.1160 €/month). Excl. VAT.
+# Endesa Tarifa Digital Gás — official price annex (endesa.pt, edited
+# 17/07/2026), 20%-discounted values, excl. VAT.
 supplier: Endesa
 supplier_nif: "503504308"
-name: Endesa Tarifa Digital Gás
+name: Endesa Digital Gás
 utility: gas
-valid_from: 2026-07-01
+valid_from: 2026-07-17
 valid_to: null
-source_url: https://lojaluz.com/fornecedores/endesa/tarifas
+source_url: https://www.endesa.pt/content/dam/endesa-pt/precos/Tarifa-Digital-Luz-e-Gas.pdf
 retrieved: 2026-07-30
-conditions: "Contratação online com débito direto e fatura eletrónica obrigatórios."
+conditions: "Preços com desconto de 20% permanente — exige contratação/gestão online, débito direto e fatura digital."
 gas:
   tiers:
     "1":
-      fixed_eur_day: 0.1419
+      fixed_eur_day: 0.1439
       energy_eur_kwh: 0.0830
     "2":
-      fixed_eur_day: 0.2338
+      fixed_eur_day: 0.2372
       energy_eur_kwh: 0.0830

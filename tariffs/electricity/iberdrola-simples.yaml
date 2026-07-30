@@ -1,19 +1,27 @@
-# Iberdrola standard plan; positioned near EDP per July 2026 comparators
-# (estimates pending direct price-sheet transcription).
+# Iberdrola Plano Mais Casa — luzegas.pt transcription (July 2026 page).
+# Sourced: energy simples 0.1639, bi 0.1065/0.1967, potência 0.5884 €/day
+# at 6.9 kVA. Other kVA points derived from the 6.9 anchor minus the
+# regulated network-access delta (0.0498 €/day per kVA), marked estimated.
+# The advertised 20% discount requires DD + e-invoice + a paid electrical
+# protection service — treated as conditional, not baked in.
 supplier: Iberdrola
 supplier_nif: "980292117"
-name: Iberdrola Plano Simples
+name: Iberdrola Mais Casa
 utility: electricity
 valid_from: 2026-07-01
 valid_to: null
-source_url: https://www.comparamais.pt/luz-e-gas/melhor-preco-eletricidade/
-retrieved: 2026-07-28
+source_url: https://luzegas.pt/fornecedores-energia/iberdrola/precos
+retrieved: 2026-07-30
+conditions: "Desconto de 20% adicional exige débito direto, fatura eletrónica e serviço de proteção elétrica (pago)."
 electricity:
   power_eur_day:
-    "3.45": 0.1900
-    "4.6": 0.2533
-    "5.75": 0.3167
-    "6.9": 0.3800
+    "3.45": 0.4166   # estimated from the 6.9 anchor via access-tariff delta
+    "4.6": 0.4739    # estimated
+    "5.75": 0.5312   # estimated
+    "6.9": 0.5884
   energy_eur_kwh:
     simples:
-      total: 0.1590
+      total: 0.1639
+    bi:
+      vazio: 0.1065
+      fora_vazio: 0.1967

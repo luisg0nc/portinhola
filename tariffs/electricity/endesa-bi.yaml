@@ -1,0 +1,22 @@
+# Endesa Tarifa Digital Luz Bi-horária — official price annex (endesa.pt,
+# edited 17/07/2026), 20%-discounted values, excl. VAT. Separate file
+# because Endesa prices bi-horária with its own potência ladder.
+supplier: Endesa
+supplier_nif: "503504308"
+name: Endesa Digital Luz Bi
+utility: electricity
+valid_from: 2026-07-17
+valid_to: null
+source_url: https://www.endesa.pt/content/dam/endesa-pt/precos/Tarifa-Digital-Luz-e-Gas.pdf
+retrieved: 2026-07-30
+conditions: "Preços com desconto de 20% permanente — exige contratação/gestão online, débito direto e fatura digital."
+electricity:
+  power_eur_day:
+    "3.45": 0.3269
+    "4.6": 0.4076
+    "5.75": 0.4789
+    "6.9": 0.5508
+  energy_eur_kwh:
+    bi:
+      vazio: 0.1191
+      fora_vazio: 0.1742

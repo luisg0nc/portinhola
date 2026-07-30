@@ -1,19 +1,27 @@
-# Goldenergy; competitive segment per July 2026 comparators (estimates
-# pending direct price-sheet transcription).
+# Goldenergy Tarifário Digital — official reference-price page
+# (goldenergy.pt/precos-de-referencia, "atualizados a 19-01-2026").
+# Energy shown with the 12% e-invoice + direct-debit discount, plus the
+# mandatory 0.0020666 €/kWh social-tariff financing surcharge Goldenergy
+# lists separately (other suppliers embed it). Full sourced ladder,
+# excl. VAT.
 supplier: Goldenergy
 supplier_nif: "508846135"
-name: Goldenergy Tarifa Flex
+name: Goldenergy Digital
 utility: electricity
-valid_from: 2026-07-01
+valid_from: 2026-01-19
 valid_to: null
-source_url: https://selectra.pt/energia/empresas/goldenergy/tarifas
-retrieved: 2026-07-28
+source_url: https://goldenergy.pt/precos-de-referencia/
+retrieved: 2026-07-30
+conditions: "Desconto de 12% incluído — exige fatura eletrónica e débito direto."
 electricity:
   power_eur_day:
-    "3.45": 0.1800
-    "4.6": 0.2400
-    "5.75": 0.3000
-    "6.9": 0.3600
+    "3.45": 0.3199
+    "4.6": 0.4499
+    "5.75": 0.5549
+    "6.9": 0.6199
   energy_eur_kwh:
     simples:
-      total: 0.1490
+      total: 0.1420
+    bi:
+      vazio: 0.1008
+      fora_vazio: 0.1660
