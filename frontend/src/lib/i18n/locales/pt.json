@@ -163,7 +163,8 @@
     "last7": "Últimos 7 dias",
     "estimate_title": "Este período até agora",
     "estimate_since": "desde {date}",
-    "view_details": "Ver consumo"
+    "view_details": "Ver consumo",
+    "no_data_range": "Sem dados neste período — os dados da E-Redes chegam com 1-2 dias de atraso."
   },
   "readings": {
     "title": "Leituras",

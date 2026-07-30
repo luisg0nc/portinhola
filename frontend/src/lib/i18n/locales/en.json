@@ -163,7 +163,8 @@
     "last7": "Last 7 days",
     "estimate_title": "This period so far",
     "estimate_since": "since {date}",
-    "view_details": "View consumption"
+    "view_details": "View consumption",
+    "no_data_range": "No data for this period — E-Redes data arrives with a 1-2 day lag."
   },
   "readings": {
     "title": "Readings",

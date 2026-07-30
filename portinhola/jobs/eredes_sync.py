@@ -7,7 +7,7 @@ from portinhola.config import Config
 from portinhola.core.alerts import raise_alert
 from portinhola.core.notify import send as notify_send
 from portinhola.core.secrets import load_or_create_app_key
-from portinhola.db.consumption_repo import last_ts, upsert_intervals
+from portinhola.db.consumption_repo import first_ts, last_ts, upsert_intervals
 from portinhola.db.models import SupplyPoint
 from portinhola.db.settings_repo import get_setting, set_setting
 from portinhola.integrations.eredes_api import (
@@ -57,6 +57,7 @@ def eredes_sync(db: Session) -> str:
 
     since = last_ts(db, supply_point.id)
     date_to = utc_today()
+    backfill_done = get_setting(db, "eredes_backfill_done") == "1"
 
     try:
         if since is None:
@@ -70,6 +71,18 @@ def eredes_sync(db: Session) -> str:
             total, inserted, updated = _sync_forward(
                 db, app_key, supply_point, date_from, date_to
             )
+            if not backfill_done:
+                # A previous walk-back was interrupted (watchdog kill or
+                # token expiry) — continue it from the oldest stored
+                # interval instead of leaving the deep history unfetched.
+                oldest = first_ts(db, supply_point.id)
+                if oldest is not None:
+                    more, ins2, upd2, date_from = _walk_back_history(
+                        db, app_key, supply_point, oldest.date() - timedelta(days=1)
+                    )
+                    total += more
+                    inserted += ins2
+                    updated += upd2
     except SessionExpiredError:
         raise_alert(
             db,
@@ -159,6 +172,10 @@ def _walk_back_history(
         window_end = window_start - timedelta(days=1)
         days_walked += HISTORY_WINDOW_DAYS
 
+    # The walk-back ran to the portal's horizon (or the hard cap) without
+    # being interrupted — no need to ever repeat it.
+    set_setting(db, "eredes_backfill_done", "1")
+    db.commit()
     return total, inserted_total, updated_total, oldest
 
 

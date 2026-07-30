@@ -157,12 +157,53 @@ def test_incremental_sync_only_fetches_recent(app, monkeypatch, tmp_path) -> Non
             db, sp_id, [(datetime(2026, 7, 13, 10, 0, tzinfo=UTC), 0.2, "eredes_scrape", "real")]
         )
         from portinhola.core.secrets import load_or_create_app_key
+        from portinhola.db.settings_repo import set_setting
 
+        set_setting(db, "eredes_backfill_done", "1")
         eredes_session.save_token(db, load_or_create_app_key(tmp_path), "tok123")
         eredes_sync(db)
 
     assert len(asked) == 1  # single window, no walk-back
     assert asked[0][0] == date(2026, 7, 12)  # last stored day minus 1
+
+
+def test_interrupted_backfill_continues_backwards(app, monkeypatch, tmp_path) -> None:
+    """If a walk-back was killed mid-flight (no eredes_backfill_done flag),
+    the next sync must both top up recent data AND continue the walk-back
+    from the oldest stored interval."""
+    monkeypatch.setenv("PORTINHOLA_DATA_DIR", str(tmp_path))
+    from datetime import UTC, date, datetime
+
+    from portinhola.db.consumption_repo import upsert_intervals
+    from portinhola.db.settings_repo import get_setting
+
+    asked: list[tuple[date, date]] = []
+
+    def fake_fetch(db, app_key, cpe, date_from, date_to):
+        asked.append((date_from, date_to))
+        if date_to >= date(2026, 7, 12):  # forward top-up window
+            return [(datetime(2026, 7, 14, 10, 0, tzinfo=UTC), 0.2, "real")]
+        if date_to >= date(2026, 6, 1):  # one older window still has data
+            return [(datetime(date_to.year, date_to.month, date_to.day, tzinfo=UTC), 0.3, "real")]
+        return []  # beyond the horizon
+
+    monkeypatch.setattr("portinhola.jobs.eredes_sync.fetch_consumption", fake_fetch)
+    monkeypatch.setattr("portinhola.jobs.eredes_sync.utc_today", lambda: date(2026, 7, 15))
+
+    with app.state.sessionmaker() as db:
+        sp_id = _setup_sp(db)
+        upsert_intervals(
+            db, sp_id, [(datetime(2026, 7, 13, 10, 0, tzinfo=UTC), 0.2, "eredes_scrape", "real")]
+        )
+        from portinhola.core.secrets import load_or_create_app_key
+
+        eredes_session.save_token(db, load_or_create_app_key(tmp_path), "tok123")
+        eredes_sync(db)
+        # forward window + backward continuation windows past the oldest data
+        assert len(asked) > 1
+        assert any(a[1] < date(2026, 7, 12) for a in asked)
+        # completing the walk marks the backfill done for future syncs
+        assert get_setting(db, "eredes_backfill_done") == "1"
 
 
 def test_walk_back_persists_each_window_before_failing(app, monkeypatch, tmp_path) -> None:

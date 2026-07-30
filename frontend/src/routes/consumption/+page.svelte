@@ -87,6 +87,13 @@
       const s = await res.json();
       hasData = s.count > 0;
       statusText = hasData ? `${s.first_ts.slice(0, 10)} → ${s.last_ts.slice(0, 10)}` : '';
+      if (hasData) {
+        // The portal's data lags behind by a day or two, so "today" is
+        // usually empty — open the day view on the newest day that has data.
+        const lastDay = s.last_ts.slice(0, 10);
+        if (dayDate > lastDay) dayDate = lastDay;
+        if (monthValue > lastDay.slice(0, 7)) monthValue = lastDay.slice(0, 7);
+      }
     }
   }
 
@@ -231,7 +238,9 @@
           <ChevronRight size={18} />
         </button>
       </div>
-      {#if dayData}
+      {#if dayData && dayData[0].length === 0}
+        <p class="muted">{$_('consumption.no_data_range')}</p>
+      {:else if dayData}
         <UPlotChart data={dayData} options={lineOpts('kW')} />
       {/if}
     {:else if view === 'month'}
@@ -244,7 +253,9 @@
           <ChevronRight size={18} />
         </button>
       </div>
-      {#if monthData}
+      {#if monthData && monthData[0].length === 0}
+        <p class="muted">{$_('consumption.no_data_range')}</p>
+      {:else if monthData}
         <UPlotChart data={monthData} options={barOpts('kWh')} onclickx={onMonthBarClick} />
       {/if}
     {:else if view === 'year'}

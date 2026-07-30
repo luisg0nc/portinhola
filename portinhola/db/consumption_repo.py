@@ -51,3 +51,16 @@ def last_ts(db: Session, supply_point_id: int) -> datetime | None:
     if value.tzinfo is None:
         return value.replace(tzinfo=UTC)
     return value
+
+
+def first_ts(db: Session, supply_point_id: int) -> datetime | None:
+    value = db.scalar(
+        select(func.min(IntervalConsumption.ts)).where(
+            IntervalConsumption.supply_point_id == supply_point_id
+        )
+    )
+    if value is None:
+        return None
+    if value.tzinfo is None:
+        return value.replace(tzinfo=UTC)
+    return value
