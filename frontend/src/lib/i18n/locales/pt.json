@@ -87,7 +87,9 @@
     "saved": "Fatura guardada.",
     "drop_hint": "Arraste o PDF da fatura para aqui, ou toque para escolher o ficheiro",
     "step_pick": "Escolher ficheiro",
-    "step_review": "Rever e confirmar"
+    "step_review": "Rever e confirmar",
+    "reparse": "Reprocessar faturas pendentes",
+    "reparse_done": "{n} faturas reprocessadas"
   },
   "dashboard": {
     "monthly_costs": "Custos mensais",

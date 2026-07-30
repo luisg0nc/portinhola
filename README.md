@@ -23,6 +23,11 @@ add yours.
 |---|---|---|
 | G9 | electricity + gas (dual-fuel bills) | `g9` |
 | Águas de Valongo (Be Water) | water | `bewater` |
+| EDP Comercial | electricity + gas (multi-invoice PDFs) | `edp` |
+| Iberdrola | electricity, gas (2023 + 2024 layouts) | `iberdrola` |
+
+After adding a new extractor, the Bills page offers "re-run extractors"
+to fill in line items for bills that were previously QR-only.
 
 ## Consumption (E-Redes)
 

@@ -87,7 +87,9 @@
     "saved": "Bill saved.",
     "drop_hint": "Drag the bill PDF here, or tap to choose the file",
     "step_pick": "Choose file",
-    "step_review": "Review and confirm"
+    "step_review": "Review and confirm",
+    "reparse": "Re-run extractors on partial bills",
+    "reparse_done": "{n} bills re-parsed"
   },
   "dashboard": {
     "monthly_costs": "Monthly costs",

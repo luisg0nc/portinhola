@@ -1,0 +1,152 @@
+{
+ "supplier_name": "Iberdrola",
+ "period_start": "2024-02-08",
+ "period_end": "2024-03-08",
+ "supplies": [],
+ "lines": [
+  {
+   "description": "Potência Contratada (4,60 kVA)",
+   "category": "power",
+   "utility": "electricity",
+   "period_start": null,
+   "period_end": null,
+   "quantity": 29.0,
+   "unit": "dias",
+   "unit_price": 0.309352,
+   "amount_cents": 897,
+   "vat_rate": 23
+  },
+  {
+   "description": "Desconto: Potência Contratada",
+   "category": "power",
+   "utility": "electricity",
+   "period_start": null,
+   "period_end": null,
+   "quantity": null,
+   "unit": null,
+   "unit_price": null,
+   "amount_cents": -19,
+   "vat_rate": 23
+  },
+  {
+   "description": "Desconto: Potência Contratada",
+   "category": "power",
+   "utility": "electricity",
+   "period_start": null,
+   "period_end": null,
+   "quantity": null,
+   "unit": null,
+   "unit_price": null,
+   "amount_cents": -10,
+   "vat_rate": 23
+  },
+  {
+   "description": "Desconto: Potência Contratada",
+   "category": "power",
+   "utility": "electricity",
+   "period_start": null,
+   "period_end": null,
+   "quantity": null,
+   "unit": null,
+   "unit_price": null,
+   "amount_cents": -10,
+   "vat_rate": 23
+  },
+  {
+   "description": "Energia Real: Simples",
+   "category": "energy",
+   "utility": "electricity",
+   "period_start": null,
+   "period_end": null,
+   "quantity": 283.0,
+   "unit": "kWh",
+   "unit_price": 0.176,
+   "amount_cents": 4981,
+   "vat_rate": 23
+  },
+  {
+   "description": "Desconto: Energia Real",
+   "category": "energy",
+   "utility": "electricity",
+   "period_start": null,
+   "period_end": null,
+   "quantity": null,
+   "unit": null,
+   "unit_price": null,
+   "amount_cents": -106,
+   "vat_rate": 23
+  },
+  {
+   "description": "Desconto: Energia Real",
+   "category": "energy",
+   "utility": "electricity",
+   "period_start": null,
+   "period_end": null,
+   "quantity": null,
+   "unit": null,
+   "unit_price": null,
+   "amount_cents": -53,
+   "vat_rate": 23
+  },
+  {
+   "description": "Desconto: Energia Real",
+   "category": "energy",
+   "utility": "electricity",
+   "period_start": null,
+   "period_end": null,
+   "quantity": null,
+   "unit": null,
+   "unit_price": null,
+   "amount_cents": -53,
+   "vat_rate": 23
+  },
+  {
+   "description": "Proteção Elétrica Lar",
+   "category": "other",
+   "utility": null,
+   "period_start": null,
+   "period_end": null,
+   "quantity": 0.98,
+   "unit": "meses",
+   "unit_price": 5.95,
+   "amount_cents": 583,
+   "vat_rate": 23
+  },
+  {
+   "description": "IEC Eletricidade: Energia Real",
+   "category": "tax",
+   "utility": "electricity",
+   "period_start": null,
+   "period_end": null,
+   "quantity": 283.0,
+   "unit": "kWh",
+   "unit_price": 0.001,
+   "amount_cents": 28,
+   "vat_rate": 23
+  },
+  {
+   "description": "Taxa Exploração DGEG",
+   "category": "tax",
+   "utility": "electricity",
+   "period_start": null,
+   "period_end": null,
+   "quantity": 1.0,
+   "unit": "Und.",
+   "unit_price": 0.07,
+   "amount_cents": 7,
+   "vat_rate": 23
+  },
+  {
+   "description": "Contribuição Audiovisual",
+   "category": "tax",
+   "utility": "electricity",
+   "period_start": null,
+   "period_end": null,
+   "quantity": 1.0,
+   "unit": "mês",
+   "unit_price": 2.85,
+   "amount_cents": 285,
+   "vat_rate": 6
+  }
+ ]
+}

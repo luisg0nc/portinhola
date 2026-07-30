@@ -95,6 +95,14 @@ def _bill_utilities(bill: Bill, db: Session) -> tuple[list[str], str | None]:
     return sorted(utilities), supplier
 
 
+@router.post("/reparse")
+def reparse_bills(db: Session = Depends(get_db)) -> dict:
+    """Re-run extractors over stored PDFs of partial bills — used after a
+    new supplier extractor ships."""
+    reparsed, skipped = ingest.reparse_partial_bills(db)
+    return {"reparsed": reparsed, "skipped": skipped}
+
+
 @router.post("/upload")
 def upload_bill(file: UploadFile, request: Request, db: Session = Depends(get_db)) -> UploadDraft:
     if file.content_type not in ("application/pdf", "application/x-pdf") and not (

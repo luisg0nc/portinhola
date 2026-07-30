@@ -1,0 +1,161 @@
+{
+ "supplier_name": "Iberdrola",
+ "period_start": "2024-10-18",
+ "period_end": "2024-11-18",
+ "supplies": [
+  {
+   "utility": "gas",
+   "identifier": "PT1601000000000000XX",
+   "tariff_name": "",
+   "power_kva": null,
+   "cycle": null,
+   "gas_tier": 2
+  }
+ ],
+ "lines": [
+  {
+   "description": "Termo Tarifario Fixo",
+   "category": "fixed",
+   "utility": "gas",
+   "period_start": null,
+   "period_end": null,
+   "quantity": 31.0,
+   "unit": "dias",
+   "unit_price": 0.2065,
+   "amount_cents": 640,
+   "vat_rate": null
+  },
+  {
+   "description": "(sem acessos) 11,66 € Consumo Estimado",
+   "category": "energy",
+   "utility": "gas",
+   "period_start": null,
+   "period_end": null,
+   "quantity": 285.32,
+   "unit": "kWh",
+   "unit_price": 0.0964,
+   "amount_cents": 2750,
+   "vat_rate": null
+  },
+  {
+   "description": "Componente Termo Fixo (IVA 23%)",
+   "category": "fixed",
+   "utility": "gas",
+   "period_start": null,
+   "period_end": null,
+   "quantity": 31.0,
+   "unit": "dias",
+   "unit_price": -0.0448,
+   "amount_cents": -139,
+   "vat_rate": 23
+  },
+  {
+   "description": "Componente Termo Fixo (IVA 6%)",
+   "category": "fixed",
+   "utility": "gas",
+   "period_start": null,
+   "period_end": null,
+   "quantity": 31.0,
+   "unit": "dias",
+   "unit_price": 0.0448,
+   "amount_cents": 139,
+   "vat_rate": 6
+  },
+  {
+   "description": "Desconto Termo Fixo",
+   "category": "fixed",
+   "utility": "gas",
+   "period_start": null,
+   "period_end": null,
+   "quantity": null,
+   "unit": null,
+   "unit_price": null,
+   "amount_cents": -14,
+   "vat_rate": null
+  },
+  {
+   "description": "Desconto Termo Fixo",
+   "category": "fixed",
+   "utility": "gas",
+   "period_start": null,
+   "period_end": null,
+   "quantity": null,
+   "unit": null,
+   "unit_price": null,
+   "amount_cents": -7,
+   "vat_rate": null
+  },
+  {
+   "description": "Desconto Consumo Estimado",
+   "category": "energy",
+   "utility": "gas",
+   "period_start": null,
+   "period_end": null,
+   "quantity": null,
+   "unit": null,
+   "unit_price": null,
+   "amount_cents": -29,
+   "vat_rate": null
+  },
+  {
+   "description": "Desconto Consumo Estimado",
+   "category": "energy",
+   "utility": "gas",
+   "period_start": null,
+   "period_end": null,
+   "quantity": null,
+   "unit": null,
+   "unit_price": null,
+   "amount_cents": -59,
+   "vat_rate": null
+  },
+  {
+   "description": "Manutenção Gas Iberdrola (23/10/2024-19/11/2024)",
+   "category": "other",
+   "utility": null,
+   "period_start": null,
+   "period_end": null,
+   "quantity": 0.89,
+   "unit": "meses",
+   "unit_price": 6.95,
+   "amount_cents": 619,
+   "vat_rate": null
+  },
+  {
+   "description": "IE Consumo Gás Natural Estimado",
+   "category": "tax",
+   "utility": "gas",
+   "period_start": null,
+   "period_end": null,
+   "quantity": 285.32,
+   "unit": "kWh",
+   "unit_price": 0.017449,
+   "amount_cents": 498,
+   "vat_rate": null
+  },
+  {
+   "description": "Taxa Ocupação Subsolo (19/08/2024-18/10/2024) (1)",
+   "category": "tax",
+   "utility": "gas",
+   "period_start": null,
+   "period_end": null,
+   "quantity": null,
+   "unit": null,
+   "unit_price": null,
+   "amount_cents": 53,
+   "vat_rate": null
+  },
+  {
+   "description": "Taxa Ocupação Subsolo (19/08/2024-18/10/2024) (1)",
+   "category": "tax",
+   "utility": "gas",
+   "period_start": null,
+   "period_end": null,
+   "quantity": null,
+   "unit": null,
+   "unit_price": null,
+   "amount_cents": 268,
+   "vat_rate": null
+  }
+ ]
+}

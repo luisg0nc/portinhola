@@ -101,6 +101,11 @@ def analyze_upload(path: Path, db: Session) -> tuple[FiscalQR | None, BillData |
                 parsed = extractor.parse(extracted.pages)
             except Exception:  # noqa: BLE001 - any extractor failure degrades to QR-only
                 parsed = None
+            if parsed is not None and not parsed.lines:
+                # An extractor that found no line items didn't really parse
+                # the bill — record it as partial, not parsed.
+                parsed = None
+                extractor_name = None
 
     matches: list[SupplyMatch] = []
     if parsed is not None:
@@ -200,3 +205,71 @@ class DuplicateAtcudError(Exception):
 class InvalidContractRefError(Exception):
     def __init__(self, ref: int) -> None:
         self.ref = ref
+
+
+def reparse_partial_bills(db: Session) -> tuple[int, int]:
+    """Re-run extractors over the stored PDFs of partial bills.
+
+    Useful after a new supplier extractor ships: existing QR-only bills get
+    their line items without re-uploading. Lines are replaced wholesale;
+    each line is assigned to the open contract of its utility when that is
+    unambiguous (exactly one open contract for the utility), else left
+    unassigned. Returns (reparsed, skipped).
+    """
+    open_contracts: dict[str, list[int]] = {}
+    utility_by_sp = {sp.id: sp.utility for sp in db.scalars(select(SupplyPoint)).all()}
+    for contract in db.scalars(select(Contract).where(Contract.end_date.is_(None))).all():
+        utility = utility_by_sp.get(contract.supply_point_id)
+        if utility is not None:
+            open_contracts.setdefault(utility, []).append(contract.id)
+    contract_by_utility = {
+        utility: ids[0] for utility, ids in open_contracts.items() if len(ids) == 1
+    }
+
+    reparsed = 0
+    skipped = 0
+    for bill in db.scalars(select(Bill).where(Bill.parse_status == "partial")).all():
+        extractor = get_extractor(bill.issuer_nif)
+        if (
+            extractor is None
+            or not bill.pdf_path
+            or not Path(bill.pdf_path).exists()
+        ):
+            skipped += 1
+            continue
+        try:
+            parsed = extractor.parse(extract_pdf(Path(bill.pdf_path)).pages)
+        except Exception:  # noqa: BLE001 - a failing extractor leaves the bill as-is
+            parsed = None
+        if parsed is None or not parsed.lines:
+            skipped += 1
+            continue
+        for old_line in list(bill.lines):
+            db.delete(old_line)
+        for line in parsed.lines:
+            db.add(
+                BillLine(
+                    bill_id=bill.id,
+                    contract_id=(
+                        contract_by_utility.get(line.utility) if line.utility else None
+                    ),
+                    description=line.description,
+                    category=line.category,
+                    period_start=line.period_start,
+                    period_end=line.period_end,
+                    quantity=line.quantity,
+                    unit=line.unit,
+                    unit_price=line.unit_price,
+                    amount_cents=line.amount_cents,
+                    vat_rate=line.vat_rate,
+                )
+            )
+        bill.parse_status = "parsed"
+        bill.extractor = extractor.name
+        if bill.period_start is None:
+            bill.period_start = parsed.period_start
+        if bill.period_end is None:
+            bill.period_end = parsed.period_end
+        reparsed += 1
+    db.commit()
+    return reparsed, skipped

@@ -1,0 +1,256 @@
+,saociP
+CE
+,11021
+odatrapA
+:aicnêdnopserroC
+| €000.000.4
+:laicoS
+latipaC
+–
+380
+421
+205
+.C.P.I.N
+–
+aobsiL
+ed
+.C.R.C
+–
+aobsiL
+290-0991
+,3
+osiP
+,03
+ºN
+,onaidireM
+oicífidE
+,II
+oãoJ
+.D
+.vA
+:laicoS
+edeS
+–
+.ADL
+,LAOSSEPINU
+,LAGUTROP
+SETNEILC
+ALORDREBI
+aobsiL
+100-1601
+FATURA Página 1 / 3
+DADOS DE CONTRATO
+Titular: MARIA EXEMPLO SILVA
+(cid:106)(cid:103)(cid:11)(cid:52)(cid:93)(cid:69)(cid:94)(cid:1)(cid:1)
+105
+(cid:79)
+19268
+(cid:45)
+930
+(cid:45)
+0007
+(cid:102)
+8444
+(cid:22)
+45-9
+(cid:14)
+7324
+(cid:100)
+0003
+(cid:98)
+0122
+(cid:33)
+114
+(cid:41)(cid:1)(cid:31)(cid:13)(cid:22)(cid:15)(cid:62)(cid:107)
+MARIA EXEMPLO SILVA
+NIF: 299999998 RUA EXEMPLO 1
+Referência de contrato: 1051926893 4000-000 CIDADE
+Data fim de contrato: 21/01/2025, sujeito a renovação automática
+DADOS DA FATURA DE GÁS
+Tipo de documento: Original
+Período da fatura: 18-10-2024 - 18-11-2024
+Número da fatura: FT 24271/0000001
+Data de emissão: 22-11-2024
+TOTAL A PAGAR 57,80 € HISTÓRICO DE CONSUMOS
+1200
+VALOR TOTAL DA FATURA 57,80 € 1050
+900
+750
+SALDO ANTERIOR EM DÍVIDA 0,00 €
+600
+450
+Data limite de pagamento: 26/12/2024 300
+150
+kWh
+Banco BANCO BANCO EXEMPLO
+IBAN PT50 0023 0000 4558 605* **** * Jr.Fv.Mr.AbM.a.Jn.Jl.Ag.St.Ot.Nv.Dz.Jr.Fv.Mr.AbM.a.Jn.Jl.Ag.St.Ot.Nv.
+BIC ACTVPTP1XXX 23 24
+Identificação do mandato 0000106658 Leitura real Leitura estimada
+Código de mandato 246187383000
+**** Ocultados por segurança O seu consumo médio diário neste último período faturado foi de: 1,86 €
+O seu consumo médio diário nos últimos 12 meses foi de: 1,97 €
+> ver detalhe da fatura no verso
+DICAS E ALERTAS
+A Diretiva ERSE 18/2024 de 29 de maio procede à fixação das tarifas e preços de gás natural, para o período de 1 de outubro de 2024 a
+30 de setembro de 2025. Os consumos atuais incorporam atualização dos termos regulados, quando aplicável.
+9337640-6JFRCCFJ:DUCTADADOS DA INSTALAÇÃO COMPOSIÇÃO DA SUA FATURA
+Referência de contrato: 1051926893
+Morada de fornecimento: RUA EXEMPLO 1
+Código Universal de Instalação (CUI): PT1601000000000000XX
+38.12%
+Nível de Pressão: BP < 10.000m3: Escalão 2 (221-500) 20.17%
+31.00%
+DETALHE DA SUA FATURA 10.71%
+ENERGIA E TERMO FIXO
+Termo Tarifario Fixo 31 dias x 0,2065 €/dia 6,40 € Energia + Potência Tarifa de Acesso
+(sem acessos) 11,66 € Consumo Estimado 285,32 kWh x 0,0964 €/kWh 27,50 € 22,03 €
+Componente Termo Fixo (IVA 23%) 31 dias x -0,0448 €/dia (1,39) €
+Serviços Impostos
+Componente Termo Fixo (IVA 6%) 31 dias x 0,0448 €/dia 1,39 € 6,19 € + Taxas
+17,92 €
+Desconto Termo Fixo 2,13 % s/6,4 € (0,14) €
+Desconto Termo Fixo 1,06 % s/6,4 € (0,07) €
+Desconto Consumo Estimado 1,06 % s/27,5 € (0,29) €
+Desconto Consumo Estimado 2,13 % s/27,5 € (0,59) €
+TOTAL ENERGIA E TERMO FIXO 32,81 €
+SERVIÇOS E OUTRAS RUBRICAS
+Manutenção Gas Iberdrola (23/10/2024-19/11/2024) 0,89 meses x 6,95 €/mês 6,19 €
+TOTAL SERVIÇOS E OUTRAS RUBRICAS 6,19 €
+TAXAS E IMPOSTOS
+IE Consumo Gás Natural Estimado 285,32 kWh x 0,017449 €/kWh 4,98 €
+Taxa Ocupação Subsolo (19/08/2024-18/10/2024) (1) 0,53 €
+Taxa Ocupação Subsolo (19/08/2024-18/10/2024) (1) 2,68 €
+IVA Normal 23 % s/45,8 € 10,53 €
+IVA Reduzido 6 % s/1,39 € 0,08 €
+TOTAL TAXAS E IMPOSTOS 18,80 €
+VALOR TOTAL DA FATURA 57,80 €
+(1) Municipio: VALONGO
+eFKF-Processado por programa certificado nº 2212/AT
+Nº contador: 5000000
+Data de Leitura Tipo Origem da Leitura SIMPLES
+18-Ot. ESTIMADA Calculada 2935
+18-Nv. ESTIMADA Calculada 2960
+LEITURAS/CONSUMO
+Ap. de medição: 5000000
+Data desde Data até Tipo (Leitura/Consumo) Leitura desde Leitura até Cons m3 X FCV X PCS = Consumo kWh
+18/10/2024 18/11/2024 Consumo Estimado 2.935 2.960 25 0,96760 11,7950 285,32
+Consumo Líquido (kWh) 285,32
+O cálculo do consumo de gás em kWh é efectuado multiplicando o consumo medido em m3 pelo Factor de Correção de Volume (FCV) e pelo Poder Calorífico Superior (PCS).
+INFORMAÇÃO ÚTIL
+l O incumprimento da data limite de pagamento pode implicar a cobrança de juros moratórios, nos termos legais e contratuais, dar lugar à interrupção do
+fornecimento de energia, nos termos regulamentarmente estabelecidos ou, quando aplicável, à inibição de mudança de comercializador ou a exigência de
+caução nos termos regulamentarmente expressos.
+l Pode reclamar através do livro de reclamações, quer em formato eletrónico disponível em www.iberdrola.pt e em www.livroreclamacoes.pt; quer em
+formato físico, disponível em todas as lojas Iberdrola.
+aobsiL
+100-1601
+,saociP
+CE
+,11021
+odatrapA
+:aicnêdnopserroC
+| €000.000.4
+:laicoS
+latipaC
+–
+380
+421
+205
+.C.P.I.N
+–
+aobsiL
+ed
+.C.R.C
+–
+aobsiL
+290-0991
+,3 osiP
+,03
+ºN
+,onaidireM
+oicífidE
+,II
+oãoJ
+.D .vA
+:laicoS
+edeS
+–
+.ADL
+,LAOSSEPINU
+,LAGUTROP
+SETNEILC
+ALORDREBI
+Página 2 / 3
+CONTACTOS
+(DECRETO-LEI Nº 28/2019)
+ATCUD:AAAA0007-0000001
+Apoio ao Cliente: 800 606 060 (dias úteis, das 9h
+às 20h, chamada gratuita) www.iberdrola.pt (cid:235)(cid:173)(cid:201)(cid:201)(cid:201)(cid:173)(cid:235)(cid:108)(cid:213)(cid:212)(cid:187)(cid:176)(cid:161)(cid:122)(cid:203)(cid:190)(cid:183)(cid:120)(cid:163)(cid:128)(cid:127)(cid:140)(cid:147)(cid:110)(cid:187)(cid:168)(cid:145)(cid:208)(cid:155)(cid:224)(cid:235)(cid:232)(cid:209)(cid:148)(cid:123)(cid:156)(cid:181)(cid:174)(cid:219)(cid:232)(cid:223)(cid:114)(cid:219)(cid:156)(cid:117)(cid:108)(cid:235)(cid:173)(cid:201)(cid:201)(cid:201)(cid:173)(cid:235)
+(cid:165)(cid:127)(cid:142)(cid:148)(cid:117)(cid:140)(cid:150)(cid:155)(cid:173)(cid:177)(cid:191)(cid:130)(cid:147)(cid:129)(cid:172)(cid:231)(cid:184)(cid:210)(cid:199)(cid:167)(cid:189)(cid:172)(cid:138)(cid:233)(cid:211)(cid:145)(cid:157)(cid:159)(cid:219)(cid:135)(cid:206)(cid:117)(cid:221)(cid:172)(cid:144)(cid:211)(cid:150)(cid:146)(cid:206)(cid:155)(cid:141)(cid:197)(cid:203)(cid:156)(cid:193)(cid:116)(cid:166)(cid:120)(cid:110)(cid:164)(cid:124)(cid:165)(cid:166)
+Avarias: 800 215 215 (24h - chamada gratuita) Email: comercial@iberdrolaclientes.pt (cid:108)(cid:205)(cid:196)(cid:142)(cid:118)(cid:142)(cid:193)(cid:229)(cid:168)(cid:165)(cid:192)(cid:159)(cid:121)(cid:222)(cid:193)(cid:122)(cid:180)(cid:234)(cid:210)(cid:195)(cid:185)(cid:117)(cid:186)(cid:110)(cid:204)(cid:235)(cid:127)(cid:116)(cid:164)(cid:206)(cid:146)(cid:175)(cid:156)(cid:185)(cid:222)(cid:168)(cid:169)(cid:140)(cid:150)(cid:130)(cid:125)(cid:123)(cid:184)(cid:213)(cid:136)(cid:160)(cid:189)(cid:112)(cid:155)(cid:175)(cid:194)(cid:111)(cid:183)
+(cid:221)(cid:211)(cid:148)(cid:204)(cid:139)(cid:196)(cid:150)(cid:212)(cid:123)(cid:157)(cid:131)(cid:112)(cid:125)(cid:149)(cid:223)(cid:151)(cid:124)(cid:157)(cid:110)(cid:135)(cid:141)(cid:216)(cid:153)(cid:159)(cid:139)(cid:164)(cid:150)(cid:212)(cid:155)(cid:200)(cid:187)(cid:157)(cid:144)(cid:173)(cid:216)(cid:155)(cid:211)(cid:162)(cid:153)(cid:111)(cid:136)(cid:125)(cid:192)(cid:205)(cid:219)(cid:196)(cid:118)(cid:116)(cid:187)(cid:173)(cid:193)(cid:182)(cid:191)
+Leitura do contador: 800 500 330 (24h - chamada Pontos de apoio ao cliente (cid:182)(cid:134)(cid:135)(cid:138)(cid:198)(cid:204)(cid:193)(cid:204)(cid:177)(cid:124)(cid:233)(cid:189)(cid:124)(cid:120)(cid:171)(cid:182)(cid:163)(cid:225)(cid:172)(cid:109)(cid:112)(cid:187)(cid:145)(cid:118)(cid:172)(cid:188)(cid:192)(cid:211)(cid:176)(cid:127)(cid:136)(cid:109)(cid:186)(cid:212)(cid:198)(cid:211)(cid:129)(cid:159)(cid:216)(cid:154)(cid:163)(cid:186)(cid:115)(cid:128)(cid:232)(cid:174)(cid:192)(cid:199)(cid:189)(cid:149)(cid:193)(cid:223)(cid:157)
+gratuita) www.iberdrola.pt/02sicb/corporativa/iberdrola/atencao-cliente (cid:123)(cid:208)(cid:217)(cid:215)(cid:189)(cid:120)(cid:150)(cid:118)(cid:181)(cid:151)(cid:207)(cid:154)(cid:170)(cid:230)(cid:234)(cid:203)(cid:184)(cid:152)(cid:210)(cid:172)(cid:115)(cid:109)(cid:149)(cid:143)(cid:134)(cid:153)(cid:228)(cid:212)(cid:165)(cid:196)(cid:221)(cid:221)(cid:154)(cid:123)(cid:182)(cid:212)(cid:217)(cid:208)(cid:129)(cid:154)(cid:230)(cid:171)(cid:223)(cid:223)(cid:174)(cid:141)(cid:182)(cid:178)(cid:166)(cid:233)(cid:134)(cid:120)(cid:155)
+(cid:179)(cid:208)(cid:145)(cid:193)(cid:177)(cid:176)(cid:195)(cid:188)(cid:186)(cid:221)(cid:134)(cid:231)(cid:175)(cid:199)(cid:139)(cid:217)(cid:161)(cid:113)(cid:110)(cid:153)(cid:228)(cid:208)(cid:129)(cid:216)(cid:203)(cid:189)(cid:225)(cid:157)(cid:203)(cid:230)(cid:202)(cid:219)(cid:225)(cid:178)(cid:179)(cid:121)(cid:116)(cid:115)(cid:142)(cid:143)(cid:189)(cid:158)(cid:182)(cid:127)(cid:235)(cid:221)(cid:193)(cid:125)(cid:139)(cid:175)(cid:140)(cid:222)(cid:161)
+Serviço Assistência Técnica 800 606 060 (cid:228)(cid:116)(cid:212)(cid:212)(cid:212)(cid:116)(cid:228)(cid:108)(cid:212)(cid:148)(cid:164)(cid:148)(cid:204)(cid:204)(cid:132)(cid:220)(cid:220)(cid:124)(cid:204)(cid:148)(cid:180)(cid:132)(cid:116)(cid:108)(cid:132)(cid:156)(cid:156)(cid:140)(cid:204)(cid:108)(cid:188)(cid:124)(cid:148)(cid:164)(cid:204)(cid:220)(cid:204)(cid:212)(cid:132)(cid:228)(cid:212)(cid:212)(cid:108)(cid:220)(cid:180)(cid:172)(cid:188)(cid:132)(cid:212)(cid:156)(cid:172)(cid:156)(cid:156)INFORMAÇÃO ÚTIL
+l Em caso de litígio de consumo, pode recorrer a uma Entidade de Resolução Alternativa de Litígios, cuja identificação e contactos podem ser consultados
+aqui: www.consumidor.pt
+l Consulte as condições de acesso à tarifa social em https://www.iberdrola.pt/casa/informacao-util/tarifa-social
+l Pode consultar mais informação sobre ofertas vigentes de gás nas páginas da ERSE (https://simulador.precos.erse.pt/) e do OLMC
+(https://poupaenergia.pt/).
+l 6% de desconto já incluídos no preço da energia consumida e no preço da potência contratada.
+l Para a sua próxima fatura, Envio de leitura aconselhável entre dia 14 e 17 do mês pelo telefone 800 500 330.
+l A energia referente a esta fatura é 100% energia fóssil e o seu consumo provocou a emissão de 52.50 kg de CO2.
+aobsiL
+100-1601
+,saociP
+CE
+,11021
+odatrapA
+:aicnêdnopserroC
+| €000.000.4
+:laicoS
+latipaC
+–
+380
+421
+205
+.C.P.I.N
+–
+aobsiL
+ed
+.C.R.C
+–
+aobsiL
+290-0991
+,3
+osiP
+,03
+ºN
+,onaidireM
+oicífidE
+,II
+oãoJ
+.D
+.vA
+:laicoS
+edeS
+–
+.ADL
+,LAOSSEPINU
+,LAGUTROP
+SETNEILC
+ALORDREBI
+Número da fatura: FT 24271/0000001 Página 3 / 3
+CONTACTOS
+(DECRETO-LEI Nº 28/2019)
+ATCUD:AAAA0007-0000001
+Apoio ao Cliente: 800 606 060 (dias úteis, das 9h
+às 20h, chamada gratuita) www.iberdrola.pt (cid:235)(cid:173)(cid:201)(cid:201)(cid:201)(cid:173)(cid:235)(cid:108)(cid:213)(cid:212)(cid:187)(cid:176)(cid:161)(cid:122)(cid:203)(cid:190)(cid:183)(cid:120)(cid:163)(cid:128)(cid:127)(cid:140)(cid:147)(cid:110)(cid:187)(cid:168)(cid:145)(cid:208)(cid:155)(cid:224)(cid:235)(cid:232)(cid:209)(cid:148)(cid:123)(cid:156)(cid:181)(cid:174)(cid:219)(cid:232)(cid:223)(cid:114)(cid:219)(cid:156)(cid:117)(cid:108)(cid:235)(cid:173)(cid:201)(cid:201)(cid:201)(cid:173)(cid:235)
+(cid:165)(cid:127)(cid:142)(cid:148)(cid:117)(cid:140)(cid:150)(cid:155)(cid:173)(cid:177)(cid:191)(cid:130)(cid:147)(cid:129)(cid:172)(cid:231)(cid:184)(cid:210)(cid:199)(cid:167)(cid:189)(cid:172)(cid:138)(cid:233)(cid:211)(cid:145)(cid:157)(cid:159)(cid:219)(cid:135)(cid:206)(cid:117)(cid:221)(cid:172)(cid:144)(cid:211)(cid:150)(cid:146)(cid:206)(cid:155)(cid:141)(cid:197)(cid:203)(cid:156)(cid:193)(cid:116)(cid:166)(cid:120)(cid:110)(cid:164)(cid:124)(cid:165)(cid:166)
+Avarias: 800 215 215 (24h - chamada gratuita) Email: comercial@iberdrolaclientes.pt (cid:108)(cid:205)(cid:196)(cid:142)(cid:118)(cid:142)(cid:193)(cid:229)(cid:168)(cid:165)(cid:192)(cid:159)(cid:121)(cid:222)(cid:193)(cid:122)(cid:180)(cid:234)(cid:210)(cid:195)(cid:185)(cid:117)(cid:186)(cid:110)(cid:204)(cid:235)(cid:127)(cid:116)(cid:164)(cid:206)(cid:146)(cid:175)(cid:156)(cid:185)(cid:222)(cid:168)(cid:169)(cid:140)(cid:150)(cid:130)(cid:125)(cid:123)(cid:184)(cid:213)(cid:136)(cid:160)(cid:189)(cid:112)(cid:155)(cid:175)(cid:194)(cid:111)(cid:183)
+(cid:221)(cid:211)(cid:148)(cid:204)(cid:139)(cid:196)(cid:150)(cid:212)(cid:123)(cid:157)(cid:131)(cid:112)(cid:125)(cid:149)(cid:223)(cid:151)(cid:124)(cid:157)(cid:110)(cid:135)(cid:141)(cid:216)(cid:153)(cid:159)(cid:139)(cid:164)(cid:150)(cid:212)(cid:155)(cid:200)(cid:187)(cid:157)(cid:144)(cid:173)(cid:216)(cid:155)(cid:211)(cid:162)(cid:153)(cid:111)(cid:136)(cid:125)(cid:192)(cid:205)(cid:219)(cid:196)(cid:118)(cid:116)(cid:187)(cid:173)(cid:193)(cid:182)(cid:191)
+Leitura do contador: 800 500 330 (24h - chamada Pontos de apoio ao cliente (cid:182)(cid:134)(cid:135)(cid:138)(cid:198)(cid:204)(cid:193)(cid:204)(cid:177)(cid:124)(cid:233)(cid:189)(cid:124)(cid:120)(cid:171)(cid:182)(cid:163)(cid:225)(cid:172)(cid:109)(cid:112)(cid:187)(cid:145)(cid:118)(cid:172)(cid:188)(cid:192)(cid:211)(cid:176)(cid:127)(cid:136)(cid:109)(cid:186)(cid:212)(cid:198)(cid:211)(cid:129)(cid:159)(cid:216)(cid:154)(cid:163)(cid:186)(cid:115)(cid:128)(cid:232)(cid:174)(cid:192)(cid:199)(cid:189)(cid:149)(cid:193)(cid:223)(cid:157)
+gratuita) www.iberdrola.pt/02sicb/corporativa/iberdrola/atencao-cliente (cid:123)(cid:208)(cid:217)(cid:215)(cid:189)(cid:120)(cid:150)(cid:118)(cid:181)(cid:151)(cid:207)(cid:154)(cid:170)(cid:230)(cid:234)(cid:203)(cid:184)(cid:152)(cid:210)(cid:172)(cid:115)(cid:109)(cid:149)(cid:143)(cid:134)(cid:153)(cid:228)(cid:212)(cid:165)(cid:196)(cid:221)(cid:221)(cid:154)(cid:123)(cid:182)(cid:212)(cid:217)(cid:208)(cid:129)(cid:154)(cid:230)(cid:171)(cid:223)(cid:223)(cid:174)(cid:141)(cid:182)(cid:178)(cid:166)(cid:233)(cid:134)(cid:120)(cid:155)
+(cid:179)(cid:208)(cid:145)(cid:193)(cid:177)(cid:176)(cid:195)(cid:188)(cid:186)(cid:221)(cid:134)(cid:231)(cid:175)(cid:199)(cid:139)(cid:217)(cid:161)(cid:113)(cid:110)(cid:153)(cid:228)(cid:208)(cid:129)(cid:216)(cid:203)(cid:189)(cid:225)(cid:157)(cid:203)(cid:230)(cid:202)(cid:219)(cid:225)(cid:178)(cid:179)(cid:121)(cid:116)(cid:115)(cid:142)(cid:143)(cid:189)(cid:158)(cid:182)(cid:127)(cid:235)(cid:221)(cid:193)(cid:125)(cid:139)(cid:175)(cid:140)(cid:222)(cid:161)
+Serviço Assistência Técnica 800 606 060 (cid:228)(cid:116)(cid:212)(cid:212)(cid:212)(cid:116)(cid:228)(cid:108)(cid:212)(cid:148)(cid:164)(cid:148)(cid:204)(cid:204)(cid:132)(cid:220)(cid:220)(cid:124)(cid:204)(cid:148)(cid:180)(cid:132)(cid:116)(cid:108)(cid:132)(cid:156)(cid:156)(cid:140)(cid:204)(cid:108)(cid:188)(cid:124)(cid:148)(cid:164)(cid:204)(cid:220)(cid:204)(cid:212)(cid:132)(cid:228)(cid:212)(cid:212)(cid:108)(cid:220)(cid:180)(cid:172)(cid:188)(cid:132)(cid:212)(cid:156)(cid:172)(cid:156)(cid:156)

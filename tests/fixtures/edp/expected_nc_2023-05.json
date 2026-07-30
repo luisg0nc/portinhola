@@ -1,0 +1,20 @@
+{
+ "supplier_name": "EDP Comercial",
+ "period_start": null,
+ "period_end": null,
+ "supplies": [],
+ "lines": [
+  {
+   "description": "Mensalidade - EDP Smart",
+   "category": "other",
+   "utility": null,
+   "period_start": null,
+   "period_end": null,
+   "quantity": -1.0,
+   "unit": null,
+   "unit_price": 6.42,
+   "amount_cents": -642,
+   "vat_rate": 23
+  }
+ ]
+}

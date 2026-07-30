@@ -24,6 +24,8 @@
   let bills = $state<BillItem[]>([]);
   let filter = $state<string>('');
   let loaded = $state(false);
+  let reparsing = $state(false);
+  let reparseMessage = $state('');
 
   const utilityIcons: Record<string, string> = { electricity: '⚡', gas: '🔥', water: '💧' };
   const statusKind: Record<string, string> = {
@@ -44,6 +46,20 @@
   function setFilter(value: string) {
     filter = value;
     load();
+  }
+
+  let hasPartial = $derived(bills.some((bill) => bill.parse_status === 'partial'));
+
+  async function reparse() {
+    reparsing = true;
+    reparseMessage = '';
+    const res = await api('/api/bills/reparse', { method: 'POST' });
+    reparsing = false;
+    if (res.ok) {
+      const body = await res.json();
+      reparseMessage = $_('bills.reparse_done').replace('{n}', String(body.reparsed));
+      await load();
+    }
   }
 </script>
 
@@ -67,6 +83,15 @@
     </button>
   {/each}
 </div>
+
+{#if hasPartial}
+  <div class="reparse-row">
+    <Button variant="secondary" size="sm" onclick={reparse} disabled={reparsing}>
+      {reparsing ? $_('common.loading') : $_('bills.reparse')}
+    </Button>
+    {#if reparseMessage}<span class="ok">{reparseMessage}</span>{/if}
+  </div>
+{/if}
 
 {#if loaded && bills.length === 0}
   <Card>
@@ -101,6 +126,16 @@
 <style>
   .filters {
     margin: 0 0 1rem;
+  }
+  .reparse-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: -0.4rem 0 1rem;
+  }
+  .ok {
+    color: var(--success);
+    font-size: 0.85rem;
   }
   .bill-list {
     list-style: none;

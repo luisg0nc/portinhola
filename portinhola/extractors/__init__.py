@@ -1,1 +1,1 @@
-from portinhola.extractors import bewater, g9  # noqa: F401
+from portinhola.extractors import bewater, edp, g9, iberdrola  # noqa: F401

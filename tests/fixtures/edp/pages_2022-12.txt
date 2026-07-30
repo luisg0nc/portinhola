@@ -1,0 +1,544 @@
+000000000000-000CPDE
+açnarboc
+aob
+sópa
+obicer
+omoc
+odiláV
+- otnemucod
+etse
+evresnoC
+- TA/136
+ºn
+odacifitrec
+amargorp
+rop
+oditimE
+aobsiL
+003-9421
+21 º.n
+,ohluJ
+ed
+42
+adinevA
+laicos
+edeS
+.A.S
+,aigrenE
+ed
+oãçazilaicremoC
+- laicremoC
+PDE
+500 005
+46
+€
+:laicos
+latipaC
+465405305
+CPIN
+e CRC
+an
+otsigeR
+C000000000000000
+*00000000000E00000001$
+MARIA EXEMPLO SILVA
+RUA EXEMPLO 1
+CIDADE
+4000-000 CIDADE
+Documento emitido a: 12 de dezembro 2022
+Período de faturação eletricidade: 25 de outubro a 8 de dezembro 2022
+Período de faturação Gás Natural: 9 de novembro a 8 de dezembro 2022 A
+A B C D Quanto tenho
+a pagar?
+135,43 €
+Débito na minha
+Eletricidade Gás Natural Serviços Taxas e Impostos
+conta a partir de:
+84,16 € 17,96 € 6,42 € 26,89 € 2 jan 2023
+D
+B
+C
+As minhas mensagens
+Conheçatodososdescontos,planosdeenergiaeserviçosdisponíveisem
+edp.pt,atravésdalinhadeatendimento213535353(diasúteisdas9hàs
+20h - chamada para a rede fixa nacional), ou numa loja ou agente EDP.
+O que marca o meu contador
+A Vazio 2 3 9
+Leitura real Ponta 1 6 4
+a 8 de dezembro 2022
+Cheias 4 3 3
+Nº 28202100000000
+B 2 2 8 7 Leitura estimada
+Nº 5000000 a 8 de dezembro 2022 Dê as leituras entre 5 de janeiro e 7 de janeiro 2023 através da app EDP, do
+sitio edpzero.cliente.edp.pt, do WhatsApp (911 955 282) ou do 800 10 53
+53 (24h - chamada gratuita).
+Se enviar fora destas datas, parte do consumo será estimado.
+Os meus dados Área de clientes e contactos
+Nome do titular IBAN Área de cliente
+MARIA EXEMPLO SILVA PT500000000000000000000*0 APP EDP ou edpzero.cliente.edp.pt
+Banco BANCO EXEMPLO, SA Apoio ao cliente
+Morada de fornecimento Ident. credor PT00000000 - 213 53 53 53 (dias úteis das 9h às 20h - chamada para a rede fixa nacional)
+- edp.pt/particulares/apoio-cliente
+RUA EXEMPLO 1
+Para envio de cartas
+CIDADE
+Apartado 12121, Loja CTT Picoas, 1061-819 Lisboa
+CPE (Código Ponto Entrega) Leituras e dados pagamento
+NIF PT0002000000000000XX - Área de cliente na App EDP ou edpzero.cliente.edp.pt
+299999998 4,6 kVA (simples) - 800 10 53 53 - Atendimento automático (24h - chamada grátis)
+- 911 95 52 82 - Atendimento apenas via WhatsApp
+CUI (Código Universal Instalação) Avarias Eletricidade 800 506 506 Avarias Gás 800 215 215
+Código de contrato PT1601000000000000XX (24h - chamada grátis) (24h - chamada grátis)
+160800000000 Escalão 1
+1 de 6
+12122022000000000000-000CPDE
+açnarboc
+aob
+sópa
+obicer
+omoc
+odiláV
+- otnemucod
+etse
+evresnoC
+- TA/136
+ºn
+odacifitrec
+amargorp
+rop
+oditimE
+aobsiL
+003-9421
+21
+º.n
+,ohluJ
+ed
+42
+adinevA
+laicos
+edeS
+.A.S
+,aigrenE
+ed
+oãçazilaicremoC
+- laicremoC
+PDE
+500
+005
+46
+€
+:laicos
+latipaC
+465405305
+CPIN
+e CRC
+an
+otsigeR
+Eletricidade
+Fatura nº FT2022 34/340000000001 De: 12 de dezembro 2022 Valor: 97,96 €
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+Descrição Quantidade x Preço = Valor Desconto Total s/IVA IVA
+Consumo real
+Simples
+25 out a 8 nov 2022 50 kWh 0,2282 € 11,41 € 6% (-0,68 €) 10,73 € (cid:1010)(cid:1081)
+25 out a 8 nov 2022 60 kWh 0,2282 € 13,69 € 6% (-0,82 €) 12,87 € (cid:1006)(cid:1007)(cid:1081)
+9 nov a 6 dez 2022 93 kWh 0,2282 € 21,22 € 6% (-1,27 €) 19,95 € (cid:1010)(cid:1081)
+9 nov a 6 dez 2022 116 kWh 0,2282 € 26,47 € 6% (-1,59 €) 24,88 € (cid:1006)(cid:1007)(cid:1081)
+7 dez a 8 dez 2022 7 kWh 0,2377 € 1,66 € 1,66 € (cid:1010)(cid:1081)
+7 dez a 8 dez 2022 25 kWh 0,2377 € 5,94 € 5,94 € (cid:1006)(cid:1007)(cid:1081)
+A8dedezembrorecebemosumaleiturade239emvazio,164empontae433emcheias.Antesdesta,tínhamosumaleiturade123emvazio,100empontae262emcheiasa
+25deoutubro.Assim,oseuconsumorealentreestasdatasfoi116kWh(239-123)emvazio,64kWh(164-100)empontae171kWh(433-262)emcheias.Umavezquea
+suaofertapressupõeumasóleitura,oconsumomedidoésomadoefaturadodoseguintemodo:simples351kWh(116+64+171).Ovalorfaturadofoidivididodevidoa
+alteração de IVA, alteração de preço e alteração do desconto.
+Potência (3,45 kVA)
+25 out a 8 nov 2022 15 dias 0,19 € 2,85 € 6% (-0,17 €) 2,68 € (cid:1006)(cid:1007)(cid:1081)
+Tarifa de acesso às redes -15 dias 0,0904 € -1,36 € -1,36 € (cid:1006)(cid:1007)(cid:1081)
+Tarifa de acesso às redes (DL 60/2019) 15 dias 0,0904 € 1,36 € 1,36 € (cid:1010)(cid:1081)
+9 nov a 6 dez 2022 28 dias 0,19 € 5,32 € 6% (-0,32 €) 5,00 € (cid:1006)(cid:1007)(cid:1081)
+Tarifa de acesso às redes -28 dias 0,0904 € -2,53 € -2,53 € (cid:1006)(cid:1007)(cid:1081)
+Tarifa de acesso às redes (DL 60/2019) 28 dias 0,0904 € 2,53 € 2,53 € (cid:1010)(cid:1081)
+Potência (4,6 kVA)
+7 dez a 8 dez 2022 2 dias 0,2272 € 0,45 € 0,45 € (cid:1006)(cid:1007)(cid:1081)
+O total da fatura inclui os encargos relativos ao acesso às redes no valor de 3,46 € (antes de IVA), dos quais:
+Potência 3,89 € (0,0904 € x 43dias) 0,24 € (0,1205 € x 2dias)
+Energia Simples -0,67 € (-0,0019 € x 351kWh)
+CIEG [0,97 €]
+O restante valor de 80,70 € (antes de IVA) corresponde a custos com energia e estrutura comercial (valores definidos pelo comercializador).
+A Total 84,16 € sem IVA
+Valor a transportar: 84,16 €
+Que impostos de eletricidade pago? Que impostos de gás natural pago?
+AtaxadeExploraçãoDireçãoGeraldeEnergiaeGeologia(DGEG)correspondeàtaxade ATaxadeOcupaçãodeSubsolo(TOS)correspondeàtaxadeutilizaçãoeaproveitamentodo
+utilizaçãoeexploraçãodasinstalaçõeselétricaseépagaaoEstado.Éumataxafixacujovalor domíniopúblicoeprivadomunicipal.Édefinidaporcadamunicípioedeveserpagapelosseus
+é determinado por Portaria. consumidoresdegásnatural.Estataxaécompostaporumtermovariável,aplicadasobreo
+consumodegásnatural(kWh)eporumtermofixo,aplicadosobreonúmerodediasdo
+OImpostoEspecialdeConsumodeEletricidade(IEC)integradonasubcategoriadeimposto período de faturação.
+sobreosprodutospetrolíferoseenergéticos(ISP)épagoaoEstado.Esteimpostofoicriado
+em2012eéaplicadopeloscomercializadoresdeeletricidadeaosseusclientes.EmPortugal O Imposto Especial de Consumo de Gás Natural Combustível (IECGN) integrado na
+continental a taxa está fixa em 0,001 € por kWh. subcategoriadeimpostosobreosprodutospetrolíferoseenergéticos(ISP)épagoaoEstado.
+Esteimpostofoiintroduzidoem2013eéaplicadopeloscomercializadoresdegásnaturalaos
+A Contribuição para o Audiovisual (CAV) destina-se a financiar o serviço público de seusclientes.Quandoogásnaturaléusadocomocombustívelovalordataxapara2018
+radiodifusão e de televisão, sendo entregue à Autoridade Tributária e Aduaneira que equivalea0,307/GJ.(cf.artigo92.ºdoCódigodosImpostosEspeciaissobreoConsumo,na
+posteriormenteaentregaráàRádioeTelevisãodePortugal,S.A..Estacontribuiçãotemum redação conferida pela Lei do OE para 2018).
+valormensalde2,85€+IVA(6%).Ovalormensaldacontribuiçãoéreduzidopara1€+IVA
+Conheça os critérios de isenção destes impostos e taxas em edp.pt.
+(6%)paraosclienteseconomicamentevulneráveis.Estãoisentosdepagamentoosclientes
+com consumo anual inferior a 400 kWh ou com atividades exclusivamente agrícolas.
+2 de 6
+12122022000000000000-000CPDE
+açnarboc
+aob
+sópa
+obicer
+omoc
+odiláV
+- otnemucod
+etse
+evresnoC
+- TA/136
+ºn
+odacifitrec
+amargorp
+rop
+oditimE
+aobsiL
+003-9421
+21
+º.n
+,ohluJ
+ed
+42
+adinevA
+laicos
+edeS
+.A.S ,aigrenE
+ed
+oãçazilaicremoC
+- laicremoC
+PDE
+500
+005
+46
+€
+:laicos
+latipaC
+465405305
+CPIN
+e CRC
+an
+otsigeR
+Eletricidade
+Fatura nº FT2022 34/340000000001 De: 12 de dezembro 2022 Valor: 97,96 €
+Valor transportado: 84,16 €
+Taxas e Impostos
+Descrição Quantidade x Preço = Valor Abatimentos Total s/IVA IVA
+DGEG 2 meses 0,07 € 0,14 € 0,14 € (cid:1006)(cid:1007)(cid:3)(cid:1081)
+IEC 351 kWh 0,001 € 0,35 € 0,35 € (cid:1006)(cid:1007)(cid:3)(cid:1081)
+25 out a 8 dez 2022
+IVA (47,93 € + 0,14 € + 0,35 €) 48,42 € 23 % 11,14 €
+IVA (36,23 €) 36,23 € 6 % 2,17 €
+D Total 13,80 €
+ZMOi - Processado por programa certificado n.º 631/AT
+Zona de qualidade de serviço - B
+Diferença entre o preço do seu contrato e a tarifa regulada
+Se optasse pela tarifa regulada, pagaria pelo mesmo consumo de eletricidade desta fatura -20,45 € (não incluindo taxas e impostos).
+Por manter o fornecimento de gás natural e eletricidade na EDP Comercial, beneficia atualmente de 1,02 € de desconto no gás natural nesta fatura.
+Oferta em condições de preço regulado
+Informamos que, de momento, a EDP Comercial não disponibiliza uma oferta comercial equiparada ao regime de tarifa regulada para o seu contrato de energia.
+Contribuição Audiovisual
+Fatura nº FT2022 17/170000000001 De: 12 de dezembro 2022 Valor: 6,04 €
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+Descrição Quantidade x Preço = Valor Abatimentos Total s/IVA IVA
+Contribuição Audiovisual 2 meses 2,85 € 5,70 € 5,70 € (cid:1010)(cid:1081)
+IVA (5,70 €) 5,70 € 6 % 0,34 €
+D Total 6,04 € W0H9 - Processado por programa certificado n.º 631/AT
+3 de 6
+12122022000000000000-000CPDE
+açnarboc
+aob
+sópa
+obicer
+omoc
+odiláV
+- otnemucod
+etse
+evresnoC
+- TA/136
+ºn
+odacifitrec
+amargorp
+rop
+oditimE
+aobsiL
+003-9421
+21
+º.n
+,ohluJ
+ed
+42
+adinevA
+laicos
+edeS
+.A.S
+,aigrenE
+ed
+oãçazilaicremoC
+- laicremoC
+PDE
+500
+005
+46
+€
+:laicos
+latipaC
+465405305
+CPIN
+e CRC
+an
+otsigeR
+Gás Natural
+Fatura nº FT2022 34/340000000002 De: 12 de dezembro 2022 Valor: 23,53 €
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+Descrição Quantidade x Preço = Valor Desconto Total s/IVA IVA
+Consumo estimado (Escalão 1)
+9 nov a 5 dez 2022 74 kWh 1 0,2096 € 15,51 € 6% (-0,93 €) 14,58 € (cid:1006)(cid:1007)(cid:1081)
+6 dez a 8 dez 2022 9 kWh 1 0,2096 € 1,89 € 1,89 € (cid:1006)(cid:1007)(cid:1081)
+A8dedezembroestimamosqueoseucontadormarcaria2287.Assim,estimamosqueoseuconsumofoide83kWh.Ovalorfaturadofoidivididodevidoaalteraçãodo
+desconto.
+Termo tarifário fixo
+9 nov a 5 dez 2022 27 dias 0,0526 € 1,42 € 6% (-0,09 €) 1,33 € (cid:1006)(cid:1007)(cid:1081)
+Tarifa de acesso às redes -27 dias 0,0158 € -0,43 € -0,43 € (cid:1006)(cid:1007)(cid:1081)
+Tarifa de acesso às redes (DL 60/2019) 27 dias 0,0158 € 0,43 € 0,43 € (cid:1010)(cid:1081)
+6 dez a 8 dez 2022 3 dias 0,0526 € 0,16 € 0,16 € (cid:1006)(cid:1007)(cid:1081)
+Tarifa de acesso às redes -3 dias 0,0158 € -0,05 € -0,05 € (cid:1006)(cid:1007)(cid:1081)
+Tarifa de acesso às redes (DL 60/2019) 3 dias 0,0158 € 0,05 € 0,05 € (cid:1010)(cid:1081)
+O valor faturado foi dividido devido a alteração do desconto.
+O total da fatura inclui os encargos relativos ao acesso às redes no valor de 3,14 € (antes de IVA), dos quais:
+Termo Tarifário Fixo 0,47 € (0,0158 € x 30dias)
+Energia 2,67 € (0,0321 € x 83kWh)
+O restante valor de 14,82 € (antes de IVA) corresponde a custos com energia e estrutura comercial (valores definidos pelo comercializador).
+B Total 17,96 € sem IVA
+1 Consumo kWh (83) = Consumo m³ (7) x FCV (0,96759000) x PCS (11,60240800)
+OcálculodoconsumodeGásNaturalemkWhéefetuadomultiplicandooconsumomedidoemm³peloFatordeCorreçãodeVolume(FCV)epeloPoder
+Calorífico Superior (PCS).
+Taxas e Impostos
+Descrição Quantidade x Preço = Valor Abatimentos Total s/IVA IVA
+TOS (Valongo)
+Fixo 30 dias 0,0074117 € 0,22 € 0,22 € (cid:1006)(cid:1007)(cid:3)(cid:1081)
+Variável 83 kWh 0,00636697 € 0,53 € 0,53 € (cid:1006)(cid:1007)(cid:3)(cid:1081)
+9 nov a 8 dez 2022
+IECGNC 83 kWh 0,0059292 € 0,49 € 0,49 € (cid:1006)(cid:1007)(cid:3)(cid:1081)
+9 nov a 8 dez 2022
+IVA (0,48 €) 0,48 € 6 % 0,03 €
+IVA((17,48€x23%)+(1,24€x23%)) 4,30 €
+D Total 5,57 €
+KwOQ - Processado por programa certificado n.º 631/AT
+4 de 6
+12122022000000000000-000CPDE
+açnarboc
+aob
+sópa
+obicer
+omoc
+odiláV
+- otnemucod
+etse
+evresnoC
+- TA/136
+ºn
+odacifitrec
+amargorp
+rop
+oditimE
+aobsiL
+003-9421
+21
+º.n
+,ohluJ
+ed
+42
+adinevA
+laicos
+edeS
+.A.S
+,aigrenE
+ed
+oãçazilaicremoC
+- laicremoC
+PDE
+500
+005
+46
+€
+:laicos
+latipaC
+465405305
+CPIN
+e CRC
+an
+otsigeR
+Serviços - EDP Smart
+Fatura nº FT2022 34/340000000003 De: 12 de dezembro 2022 Valor: 7,90 €
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+SIGBLOB
+Descrição Quantidade x Preço = Valor Desconto Total s/IVA IVA
+Mensalidade - EDP Smart 1 6,42 € 6,42 € 6,42 € (cid:1006)(cid:1007)(cid:3)(cid:1081)
+7 dez 2022
+C Total 6,42 € sem IVA
+Taxas e Impostos
+Descrição Quantidade x Preço = Total Total s/IVA IVA
+IVA (6,42 €) 6,42 € 23% 1,48 €
+D Total 1,48 €
+CDnO - Processado por programa certificado n.º 631/AT
+Evite atrasos no pagamento das faturas.
+Oincumprimentodadatalimitedepagamentopodedarlugaràcobrançadejurosdemora,àinterrupçãodofornecimentoe/ouàexigênciadecaução,nostermosdo
+contrato, da legislação e regulamentação aplicáveis. O atraso no pagamento da fatura pode ainda dar lugar à cobrança do valor de 1,5 euros .
+Outras informações.
+Poderáesclarecerassuasdúvidasemqualquermomentonaáreadeapoioaoclienteemedp.pt,atravésdaáreadecliente,daappEDP,dalinhadeatendimento213535353
+(dias úteis das 9h às 20h - chamada para a rede fixa nacional), ou das nossas lojas.
+Para informações sobre resolução de litígios, consulte os procedimentos aplicáveis e a lista de entidades competentes disponível no seu contrato de energia ou em edp.pt.
+Parainformaçõessobreofertasdeenergiaelétricaoudegásnatural,consulteoportalPoupaEnergiadaADENE-AgênciaparaaEnergiaemhttps://poupaenergia.pt,o
+simuladordepreçosdeenergiadaEntidadeReguladoradosServiçosEnergéticos(ERSE)emhttps://simulador.precos.erse.pt/eosimuladorderotulagemdeenergiaelétrica
+da ERSE em https://simulador.rotulagem.erse.pt/
+Poderáapresentarreclamaçõesporescrito,atravésdoLivrodeReclamaçõesemformatoeletrónico,disponívelemedp.pt,doLivrodeReclamaçõesemsuportedepapel,
+disponível nas lojas EDP, ou através dos restantes meios de atendimento disponibilizados pela EDP Comercial e identificados no seu contrato de energia.
+O meu desempenho energético
+Emissões CO
+2
+A
+Eletricidade
+B
+Gás natural
+O meu consumo gerou: O meu consumo gerou:
+0,00 kg CO 15,40 kg CO
+2 2
+Um cliente residencial tem um consumo de eletricidade anual de 2.364 kWh e um consumo de gás natural médio anual de 2.337 kWh, o que equivale à emissão de
+cerca de 1.073 ton de CO . 2
+Para o cálculo de CO foi considerado o fator de emissão de eletricidade e de gás 2
+natural do último ano. O valor de CO negativo resulta do acerto de faturas
+anteriores. 2 Mix energético referente ao 3º trimestre de 2022.
+Saiba mais: edp.pt/origem-energia e https://www.erse.pt/eletricidade/rotulagem/perguntas-frequentes/
+5 de 6
+12122022000000000000-000CPDE
+açnarboc
+aob
+sópa
+obicer
+omoc
+odiláV
+- otnemucod
+etse
+evresnoC
+- TA/136
+ºn
+odacifitrec
+amargorp
+rop
+oditimE
+aobsiL
+003-9421
+21
+º.n
+,ohluJ
+ed
+42
+adinevA
+laicos
+edeS
+.A.S
+,aigrenE
+ed
+oãçazilaicremoC
+- laicremoC
+PDE
+500
+005
+46
+€
+:laicos
+latipaC
+465405305
+CPIN
+e CRC
+an
+otsigeR
+Consumo médio mensal
+kWh/mês
+223
+111
+0
+jan fev mar abr mai jun jul ago set out nov dez
+Eletricidade (leituras reais)
+Gás Natural (leituras estimadas)
+6 de 6
+12122022
