@@ -17,3 +17,6 @@ sample-eredes/
 tools/fixture_replacements_local.py
 tools/tariff_watch/summary.md
 tools/tariff_watch/issues.json
+
+# local design/planning docs, not published
+docs/superpowers/

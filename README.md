@@ -7,8 +7,7 @@ your real consumption curve against every known tariff.
 
 Runs on a Raspberry Pi 5 or any small home server. AGPL-3.0.
 
-**Status: early development.** Design spec:
-`docs/superpowers/specs/2026-07-27-portinhola-design.md`.
+**Status: early development.**
 
 ## Bills
 
