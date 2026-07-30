@@ -234,7 +234,8 @@
     "line_fixed_reduced": "Fixed term (6%)",
     "line_tos": "Subsoil occupation",
     "line_vat": "VAT",
-    "best_deal": "Best deal"
+    "best_deal": "Best deal",
+    "server_error": "The calculation failed on the server — check the Portinhola logs."
   },
   "common": {
     "loading": "Loading…",

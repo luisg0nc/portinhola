@@ -66,7 +66,13 @@
       `/api/calculator/${utility}?supply_point_id=${target.id}&months=${months}`
     );
     if (!res.ok) {
-      errorKey = utility === 'gas' ? 'calculator.no_gas_data' : 'calculator.no_data';
+      // A server failure is not "you have no data" — don't mislead.
+      errorKey =
+        res.status >= 500
+          ? 'calculator.server_error'
+          : utility === 'gas'
+            ? 'calculator.no_gas_data'
+            : 'calculator.no_data';
       return;
     }
     data = await res.json();

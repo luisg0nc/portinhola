@@ -234,7 +234,8 @@
     "line_fixed_reduced": "Termo fixo (6%)",
     "line_tos": "Ocupação subsolo",
     "line_vat": "IVA",
-    "best_deal": "Melhor opção"
+    "best_deal": "Melhor opção",
+    "server_error": "O cálculo falhou no servidor — consulte os registos do Portinhola."
   },
   "common": {
     "loading": "A carregar…",

@@ -10,6 +10,7 @@ WORKDIR /app
 COPY pyproject.toml README.md LICENSE alembic.ini ./
 COPY portinhola/ portinhola/
 COPY alembic/ alembic/
+COPY tariffs/ tariffs/
 RUN pip install --no-cache-dir -e .
 COPY --from=frontend /build/build/ portinhola/frontend_dist/
 
