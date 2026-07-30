@@ -1,0 +1,12 @@
+# G9 dual: the seeded G9 prices were transcribed from the owner's real
+# dual-fuel bill, so they already ARE the dual offer — no further
+# discount to overlay.
+supplier: G9
+name: G9 Luz+Gás
+electricity_tariff: g9-simples
+gas_tariff: g9-gas
+valid_from: 2026-01-01
+valid_to: null
+source_url: bill:FC FAE/0000003
+retrieved: 2026-07-30
+conditions: "Preços já refletem a oferta dual (transcritos de fatura luz+gás)."

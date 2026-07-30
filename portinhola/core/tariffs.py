@@ -110,3 +110,56 @@ def load_tariffs(base_dir: Path | None = None) -> list[Tariff]:
             seen.add(tariff.id)
             tariffs.append(tariff)
     return tariffs
+
+
+class DualDiscounts(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    electricity_energy_pct: float = 0.0
+    gas_energy_pct: float = 0.0
+    fixed_eur_month: float = 0.0
+
+
+class DualBundle(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    id: str = ""
+    supplier: str
+    name: str
+    electricity_tariff: str
+    gas_tariff: str
+    valid_from: date
+    valid_to: date | None = None
+    source_url: str
+    retrieved: date
+    conditions: str | None = None
+    discounts: DualDiscounts = DualDiscounts()
+
+
+def load_dual_bundles(
+    tariffs: list[Tariff], base_dir: Path | None = None
+) -> list[DualBundle]:
+    """Load tariffs/dual/*.yaml, validating references against `tariffs`."""
+    base = base_dir or TARIFFS_DIR
+    directory = base / "dual"
+    if not directory.exists():
+        return []
+    by_id = {t.id: t for t in tariffs}
+    bundles: list[DualBundle] = []
+    for path in sorted(directory.glob("*.yaml")):
+        try:
+            data = yaml.safe_load(path.read_text())
+            bundle = DualBundle.model_validate({**data, "id": path.stem})
+        except (ValidationError, yaml.YAMLError) as exc:
+            raise TariffLoadError(f"{path.name}: {exc}") from exc
+        for ref, utility in (
+            (bundle.electricity_tariff, "electricity"),
+            (bundle.gas_tariff, "gas"),
+        ):
+            tariff = by_id.get(ref)
+            if tariff is None or tariff.utility != utility:
+                raise TariffLoadError(
+                    f"{path.name}: {ref!r} is not a known {utility} tariff"
+                )
+        bundles.append(bundle)
+    return bundles

@@ -235,7 +235,12 @@
     "line_tos": "Ocupação subsolo",
     "line_vat": "IVA",
     "best_deal": "Melhor opção",
-    "server_error": "O cálculo falhou no servidor — consulte os registos do Portinhola."
+    "server_error": "O cálculo falhou no servidor — consulte os registos do Portinhola.",
+    "dual_tab": "Luz+Gás",
+    "dual_discount": "Desconto dual",
+    "mixed_pair": "Par misto",
+    "no_discount_data": "Sem dados de desconto dual — soma simples das duas tarifas.",
+    "no_dual_data": "Para comparar luz+gás são precisos consumos de eletricidade e faturas de gás."
   },
   "common": {
     "loading": "A carregar…",

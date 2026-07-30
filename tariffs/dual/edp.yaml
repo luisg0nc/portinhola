@@ -1,0 +1,15 @@
+# EDP dual offer per selectra/EDP July 2026: 15% off electricity
+# consumption + 5% off gas for dual contracts, first 12 months, with
+# direct debit + e-invoice.
+supplier: EDP Comercial
+name: EDP Luz+Gás
+electricity_tariff: edp-simples
+gas_tariff: edp-gas
+valid_from: 2026-07-01
+valid_to: null
+source_url: https://selectra.pt/energia/empresas/edp/tarifas
+retrieved: 2026-07-30
+conditions: "Desconto dos primeiros 12 meses; exige débito direto e fatura eletrónica."
+discounts:
+  electricity_energy_pct: 15.0
+  gas_energy_pct: 5.0

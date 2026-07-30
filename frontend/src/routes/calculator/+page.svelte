@@ -30,8 +30,24 @@
     conditions: string | null;
   };
   type Sp = { id: number; utility: string; identifier: string; name: string };
+  type DualRow = {
+    kind: 'bundle' | 'mixed' | 'current';
+    supplier: string;
+    name: string;
+    elec_total_cents: number;
+    gas_total_cents: number;
+    discount_cents: number;
+    total_cents: number;
+    delta_cents: number | null;
+    conditions: string | null;
+    no_discount_data: boolean;
+  };
 
-  let utility = $state<'electricity' | 'gas'>('electricity');
+  let utility = $state<'electricity' | 'gas' | 'dual'>('electricity');
+  let dualData = $state<{
+    window: { elec_kwh: number; elec_days: number; gas_kwh: number; gas_days: number };
+    results: DualRow[];
+  } | null>(null);
   let months = $state(12);
   let supplyPoints = $state<Sp[]>([]);
   let data = $state<{
@@ -55,9 +71,19 @@
 
   async function load() {
     data = null;
+    dualData = null;
     errorKey = '';
     calibration = null;
     potencia = null;
+    if (utility === 'dual') {
+      const dualRes = await api(`/api/calculator/dual?months=${months}`);
+      if (!dualRes.ok) {
+        errorKey = dualRes.status >= 500 ? 'calculator.server_error' : 'calculator.no_dual_data';
+        return;
+      }
+      dualData = await dualRes.json();
+      return;
+    }
     const target = sp();
     if (!target) {
       errorKey = utility === 'gas' ? 'calculator.no_gas_data' : 'calculator.no_data';
@@ -123,21 +149,21 @@
 
 <div class="controls">
   <div class="chip-row">
-    {#each ['electricity', 'gas'] as u}
+    {#each ['electricity', 'gas', 'dual'] as u}
       <button
         class="chip"
         class:active={utility === u}
         onclick={() => {
-          utility = u as 'electricity' | 'gas';
+          utility = u as 'electricity' | 'gas' | 'dual';
           load();
         }}
       >
-        {u === 'electricity' ? '⚡' : '🔥'}
-        {$_(`dashboard.utility_${u}`)}
+        {u === 'electricity' ? '⚡' : u === 'gas' ? '🔥' : '⚡🔥'}
+        {u === 'dual' ? $_('calculator.dual_tab') : $_(`dashboard.utility_${u}`)}
       </button>
     {/each}
   </div>
-  {#if utility === 'electricity'}
+  {#if utility === 'electricity' || utility === 'dual'}
     <div class="chip-row">
       {#each [3, 6, 12] as m}
         <button
@@ -157,6 +183,79 @@
 
 {#if errorKey}
   <Card><p class="muted center">{$_(errorKey)}</p></Card>
+{:else if dualData}
+  <p class="muted">
+    ⚡ {dualData.window.elec_kwh} kWh · {dualData.window.elec_days}d
+    &nbsp; 🔥 {dualData.window.gas_kwh} kWh · {dualData.window.gas_days}d
+  </p>
+  <ul class="results">
+    {#each dualData.results as row, index}
+      {@const rowKey = `dual-${index}`}
+      {@const isCurrent = row.kind === 'current'}
+      {@const isBest = index === 0 && !isCurrent}
+      <li class:current={isCurrent} class:best={isBest}>
+        {#if isBest}
+          <div class="crown">
+            <Trophy size={13} strokeWidth={2.4} />
+            {$_('calculator.best_deal')}
+          </div>
+        {/if}
+        <button class="row" onclick={() => (expanded = expanded === rowKey ? null : rowKey)}>
+          <span class="who">
+            <strong>{row.supplier}</strong>
+            <span class="plan muted">{row.name}</span>
+            {#if isCurrent}
+              <span class="badge accent">{$_('calculator.current_plan')}</span>
+            {:else if row.kind === 'mixed'}
+              <span class="badge neutral">{$_('calculator.mixed_pair')}</span>
+            {/if}
+          </span>
+          <span class="numbers">
+            <span class="total money">{fmt(row.total_cents)}</span>
+            {#if row.delta_cents !== null && !isCurrent}
+              <span class={`delta ${row.delta_cents < 0 ? 'save' : 'more'}`}>
+                {row.delta_cents < 0
+                  ? $_('calculator.delta_save').replace('{amount}', fmt(-row.delta_cents))
+                  : $_('calculator.delta_more').replace('{amount}', fmt(row.delta_cents))}
+              </span>
+            {/if}
+          </span>
+          <span class="chev" class:open={expanded === rowKey}>
+            <ChevronDown size={16} />
+          </span>
+        </button>
+        {#if expanded === rowKey}
+          <div class="breakdown">
+            <table>
+              <tbody>
+                <tr>
+                  <td>⚡ {$_('dashboard.utility_electricity')}</td>
+                  <td class="amount money">{fmt(row.elec_total_cents)}</td>
+                </tr>
+                <tr>
+                  <td>🔥 {$_('dashboard.utility_gas')}</td>
+                  <td class="amount money">{fmt(row.gas_total_cents)}</td>
+                </tr>
+                {#if row.discount_cents !== 0}
+                  <tr class="discount-row">
+                    <td>{$_('calculator.dual_discount')}</td>
+                    <td class="amount money">{fmt(row.discount_cents)}</td>
+                  </tr>
+                {/if}
+              </tbody>
+            </table>
+            {#if row.no_discount_data}
+              <p class="muted src">{$_('calculator.no_discount_data')}</p>
+            {/if}
+            {#if row.conditions}
+              <p class="conditions">⚠ {row.conditions}</p>
+            {/if}
+          </div>
+        {/if}
+      </li>
+    {/each}
+  </ul>
+  <p class="muted note">{$_('calculator.staleness_note')}</p>
 {:else if data}
   {#if calibration}
     {@const delta = Math.abs(calibration.delta_cents)}
@@ -426,6 +525,10 @@
     color: var(--success);
     font-weight: 700;
     margin-bottom: 0;
+  }
+  .discount-row td {
+    color: var(--success);
+    font-weight: 700;
   }
   .note {
     margin-top: 1rem;

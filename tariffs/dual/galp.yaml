@@ -1,0 +1,12 @@
+# Galp Combina: the dual benefit is fuel + supermarket cashback (cênt/l
+# at Galp pumps, % at Continente, credited to Cartão Continente) — it
+# does NOT reduce the energy bill, so no energy discounts are modelled.
+supplier: Galp
+name: Galp Combina
+electricity_tariff: galp-simples
+gas_tariff: galp-gas
+valid_from: 2026-01-01
+valid_to: null
+source_url: https://www.galp.com/pt/energias/system/files/2026-01/plano-combina-tabela-de-precos-e-descontos-galp-v2.pdf
+retrieved: 2026-07-30
+conditions: "Benefícios do Combina são em combustível/Continente (saldo Cartão Continente), não na fatura de energia."

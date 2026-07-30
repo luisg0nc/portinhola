@@ -235,7 +235,12 @@
     "line_tos": "Subsoil occupation",
     "line_vat": "VAT",
     "best_deal": "Best deal",
-    "server_error": "The calculation failed on the server — check the Portinhola logs."
+    "server_error": "The calculation failed on the server — check the Portinhola logs.",
+    "dual_tab": "Elec+Gas",
+    "dual_discount": "Dual discount",
+    "mixed_pair": "Mixed pair",
+    "no_discount_data": "No dual-discount data — plain sum of both tariffs.",
+    "no_dual_data": "Comparing elec+gas needs electricity consumption and gas bills."
   },
   "common": {
     "loading": "Loading…",
