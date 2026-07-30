@@ -1,19 +1,25 @@
-# Plenitude; "offers from 0.1292 €/kWh" segment per comparamais July 2026
-# (cheapest-offer anchor; power ladder estimated).
+# Plenitude Tarifa Fácil (fixed 12 months, no lock-in). Energy + 6.9 kVA
+# potência per comparaja (page updated 2026-07-08); 3.45 kVA potência per
+# selectra. 4.6/5.75 interpolated between the two sourced points.
+# Corrected 2026-07-30: the previous seed used an "offers from" 0.1292
+# anchor and a ~2x-too-low estimated potência ladder.
 supplier: Plenitude
 supplier_nif: "509450334"
-name: Plenitude Eletricidade
+name: Plenitude Tarifa Fácil
 utility: electricity
 valid_from: 2026-07-01
 valid_to: null
-source_url: https://www.comparamais.pt/luz-e-gas/tarifas/preco-kWh/
-retrieved: 2026-07-28
+source_url: https://www.comparaja.pt/energia/plenitude
+retrieved: 2026-07-30
 electricity:
   power_eur_day:
-    "3.45": 0.2050
-    "4.6": 0.2733
-    "5.75": 0.3417
-    "6.9": 0.4100
+    "3.45": 0.3917
+    "4.6": 0.5090   # interpolated
+    "5.75": 0.6263  # interpolated
+    "6.9": 0.7435
   energy_eur_kwh:
     simples:
-      total: 0.1292
+      total: 0.1366
+    bi:
+      vazio: 0.1070
+      fora_vazio: 0.1640
