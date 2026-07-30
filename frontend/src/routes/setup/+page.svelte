@@ -4,6 +4,7 @@
   import { api } from '$lib/api';
   import Card from '$lib/ui/Card.svelte';
   import Button from '$lib/ui/Button.svelte';
+  import Logo from '$lib/ui/Logo.svelte';
 
   let password = $state('');
   let error = $state('');
@@ -26,7 +27,7 @@
 </script>
 
 <div class="wrap">
-  <span class="wordmark">Portinhola</span>
+  <span class="wordmark"><Logo size={40} /> Portinhola</span>
   <Card>
     <h1>{$_('auth.setup_title')}</h1>
     <p class="muted">{$_('auth.setup_hint')}</p>
@@ -50,7 +51,10 @@
     gap: 1rem;
   }
   .wordmark {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
     font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: -0.02em;

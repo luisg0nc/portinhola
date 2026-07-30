@@ -8,6 +8,7 @@
   import TabBar from '$lib/ui/TabBar.svelte';
   import Fab from '$lib/ui/Fab.svelte';
   import { House, ReceiptText, Gauge, Scale, Settings, Plus } from '$lib/ui/icons';
+  import Logo from '$lib/ui/Logo.svelte';
 
   let { children } = $props();
   let ready = $state(false);
@@ -46,7 +47,7 @@
   <div class="app">
     {#if showNav}
       <aside>
-        <a class="wordmark" href="/">Portinhola</a>
+        <a class="wordmark" href="/"><Logo size={26} /> Portinhola</a>
         <a class="report" href="/readings/new">
           <Plus size={18} strokeWidth={2.6} />
           {$_('readings.new_reading')}
@@ -115,6 +116,9 @@
       box-shadow: var(--shadow-card);
     }
     .wordmark {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       font-size: 1.15rem;
       font-weight: 800;
       letter-spacing: -0.02em;
