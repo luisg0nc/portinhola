@@ -1,0 +1,27 @@
+name: Tariff seed request
+description: Ask for a supplier plan to be added to the calculator
+labels: [tariff-data]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Adding a tariff yourself is a single YAML file, see docs/CONTRIBUTING-tariffs.md. If you'd rather just request it, fill this in.
+  - type: input
+    id: supplier
+    attributes:
+      label: Supplier and plan
+      placeholder: e.g. Repsol Eletricidade Simples
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Official price sheet URL
+      description: Link to the supplier's own published prices, not a comparator site
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything unusual
+      description: Promo phases, eligibility conditions, dual bundle discounts, indexed pricing...

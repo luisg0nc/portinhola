@@ -1,0 +1,29 @@
+name: Bug report
+description: Something broke or behaves wrong
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If the bug involves a bill PDF: **never attach a real bill**. They contain your name, NIF, address and contract numbers. Make an anonymized text fixture instead (see docs/CONTRIBUTING-extractors.md) or describe the layout.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you do, what did you see, what did you expect instead?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Release tag or commit you are running
+      placeholder: v0.1.0
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant lines from `docker compose logs`. Check for tokens or personal data before pasting.
+      render: text
