@@ -11,17 +11,17 @@ utility: electricity
 valid_from: 2026-01-19
 valid_to: null
 source_url: https://goldenergy.pt/precos-de-referencia/
-retrieved: 2026-07-30
+retrieved: 2026-09-28
 conditions: "Desconto de 12% incluído — exige fatura eletrónica e débito direto."
 electricity:
   power_eur_day:
-    "3.45": 0.3199
-    "4.6": 0.4499
-    "5.75": 0.5549
-    "6.9": 0.6199
+    "3.45": 0.3564
+    "4.6": 0.5062
+    "5.75": 0.605
+    "6.9": 0.692
   energy_eur_kwh:
     simples:
-      total: 0.1420
+      total: 0.1639
     bi:
-      vazio: 0.1008
-      fora_vazio: 0.1660
+      vazio: 0.1983
+      fora_vazio: 0.1579
