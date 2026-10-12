@@ -9,12 +9,12 @@ utility: gas
 valid_from: 2025-10-01
 valid_to: 2026-09-30
 source_url: https://www.tiagofelicia.pt/tarifa-regulada-gas-natural
-retrieved: 2026-07-30
+retrieved: 2026-10-12
 gas:
   tiers:
     "1":
-      fixed_eur_day: 0.0897
-      energy_eur_kwh: 0.0647
+      fixed_eur_day: 0.0959
+      energy_eur_kwh: 0.0688
     "2":
-      fixed_eur_day: 0.1298
-      energy_eur_kwh: 0.0601
+      fixed_eur_day: 0.1378
+      energy_eur_kwh: 0.0639
