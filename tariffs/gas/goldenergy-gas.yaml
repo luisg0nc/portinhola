@@ -8,12 +8,12 @@ utility: gas
 valid_from: 2026-01-19
 valid_to: null
 source_url: https://goldenergy.pt/precos-de-referencia/
-retrieved: 2026-07-30
+retrieved: 2026-10-26
 gas:
   tiers:
     "1":
       fixed_eur_day: 0.0541
-      energy_eur_kwh: 0.1420
+      energy_eur_kwh: 0.143
     "2":
       fixed_eur_day: 0.0685
-      energy_eur_kwh: 0.1275
+      energy_eur_kwh: 0.1283
