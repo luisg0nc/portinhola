@@ -42,10 +42,14 @@ jobs:
           git commit -m "chore: tariff-watch weekly update"
           git push -u origin "$branch" --force
           if ! gh pr list --head "$branch" --state open --json number --jq length | grep -q '^[1-9]'; then
-            gh pr create \
+            if ! gh pr create \
               --title "Tariff watch: price updates $(date -u +%Y-%m-%d)" \
               --body-file tools/tariff_watch/summary.md \
-              --label tariff-watch
+              --label tariff-watch; then
+              echo "::error::could not open a PR, deleting $branch so no orphan branch is left"
+              git push origin --delete "$branch" || true
+              exit 1
+            fi
           fi
 
       - name: Open issues for watch changes and parser failures
